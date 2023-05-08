@@ -1,6 +1,14 @@
-use std::path::PathBuf;
+use std::{path::{PathBuf, Path}, fs::read_to_string};
 
 use serde::Deserialize;
+
+#[derive(thiserror::Error, Debug)]
+pub enum Error {
+    #[error("toml error")]
+    TomlError(#[from] toml::de::Error),
+    #[error("io error")]
+    IoError(#[from] std::io::Error),
+}
 
 #[derive(Deserialize)]
 pub struct Settings {
@@ -13,6 +21,15 @@ impl<'a> Into<grass::Options<'a>> for Settings {
         grass::Options::default()
             .style(self.output_style.into())
             .load_paths(&self.load_paths)
+    }
+}
+
+impl Settings {
+    pub fn from_file<P>(path: P) -> Result<Self, Error>
+    where
+        P: AsRef<Path>,
+    {
+        Ok(toml::de::from_str(&read_to_string(path)?)?)
     }
 }
 

@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 serde = "1.0"
 toml = "0.7.0"
+thiserror = "1.0"
 
 [dependencies.stylist]
 workspace = true
