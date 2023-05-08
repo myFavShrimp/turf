@@ -12,10 +12,7 @@ quote = "1.0"
 proc-macro2 = { version = "1.0" }
 
 [dependencies.stylist]
-version = "0.12"
-features = ["parser"]
+workspace = true
 
 [dependencies.grass]
-version = "0.12"
-default-features = false
-features = ["macro"]
+workspace = true
