@@ -1,4 +1,7 @@
-use std::{path::{PathBuf, Path}, fs::read_to_string};
+use std::{
+    fs::read_to_string,
+    path::{Path, PathBuf},
+};
 
 use serde::Deserialize;
 
@@ -26,15 +29,26 @@ impl<'a> Into<grass::Options<'a>> for Settings {
 
 impl Settings {
     fn from_cargo_manifest_metadata() -> Result<(), Error> {
-        let manifest_path = format!("{}/Cargo.toml", std::env::var("CARGO_MANIFEST_DIR").unwrap());
+        let manifest_path = format!(
+            "{}/Cargo.toml",
+            std::env::var("CARGO_MANIFEST_DIR").unwrap()
+        );
         let manifest: toml::value::Value = toml::de::from_str(&read_to_string(manifest_path)?)?;
         let metadata_table = manifest.as_table().unwrap();
-    
-        let package_metadata = metadata_table.get("package").unwrap().as_table().unwrap().get("metadata").unwrap().as_table().unwrap();
+
+        let package_metadata = metadata_table
+            .get("package")
+            .unwrap()
+            .as_table()
+            .unwrap()
+            .get("metadata")
+            .unwrap()
+            .as_table()
+            .unwrap();
         let turf_metadata = package_metadata.get("turf").unwrap().as_table().unwrap();
-    
+
         dbg!(turf_metadata);
-    
+
         Ok(())
         // Ok(toml::de::from_str(&read_to_string(path)?)?)
     }
