@@ -1,8 +1,11 @@
 [package]
-name = "turf_macros"
+name = "turf"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+
+[dependencies.turf_macros]
+path = "../turf_macros"
