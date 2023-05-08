@@ -1,8 +1,21 @@
 [package]
-name = "turf_macros"
+name = "turf"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+proc_macro = true
 
 [dependencies]
+syn = { version = "1.0", features = ["full"] }
+quote = "1.0"
+proc-macro2 = { version = "1.0" }
+
+[dependencies.stylist]
+version = "0.12"
+features = ["parser"]
+
+[dependencies.grass]
+version = "0.12"
+default-features = false
+features = ["macro"]
