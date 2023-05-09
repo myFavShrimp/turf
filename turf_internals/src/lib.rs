@@ -1,7 +1,4 @@
-use std::{
-    fs::read_to_string,
-    path::{Path, PathBuf},
-};
+use std::{fs::read_to_string, path::PathBuf};
 
 use serde::Deserialize;
 
@@ -11,9 +8,19 @@ pub enum Error {
     TomlError(#[from] toml::de::Error),
     #[error("io error")]
     IoError(#[from] std::io::Error),
+    #[error("error with cargo manifest '{0}'")]
+    ManifestError(#[from] ManifestError),
 }
 
-#[derive(Deserialize)]
+#[derive(thiserror::Error, Debug)]
+pub enum ManifestError {
+    #[error("error reading cargo manifest")]
+    ReadError,
+    #[error("key not found in metadata: {0}")]
+    KeyError(&'static str),
+}
+
+#[derive(Deserialize, Debug)]
 pub struct Settings {
     output_style: OutputStyle,
     load_paths: Vec<PathBuf>,
@@ -28,33 +35,35 @@ impl<'a> Into<grass::Options<'a>> for Settings {
 }
 
 impl Settings {
-    fn from_cargo_manifest_metadata() -> Result<(), Error> {
+    fn from_cargo_manifest_metadata() -> Result<Self, Error> {
         let manifest_path = format!(
             "{}/Cargo.toml",
             std::env::var("CARGO_MANIFEST_DIR").unwrap()
         );
         let manifest: toml::value::Value = toml::de::from_str(&read_to_string(manifest_path)?)?;
-        let metadata_table = manifest.as_table().unwrap();
+        let metadata_table = manifest.as_table().ok_or(ManifestError::ReadError)?;
 
         let package_metadata = metadata_table
             .get("package")
-            .unwrap()
+            .ok_or(ManifestError::KeyError("package"))?
             .as_table()
-            .unwrap()
+            .ok_or(ManifestError::ReadError)?
             .get("metadata")
-            .unwrap()
+            .ok_or(ManifestError::KeyError("metadata"))?
             .as_table()
-            .unwrap();
-        let turf_metadata = package_metadata.get("turf").unwrap().as_table().unwrap();
+            .ok_or(ManifestError::ReadError)?;
+        let turf_metadata = package_metadata
+            .get("turf")
+            .ok_or(ManifestError::KeyError("turf"))?
+            .as_table()
+            .ok_or(ManifestError::ReadError)?;
 
-        dbg!(turf_metadata);
-
-        Ok(())
-        // Ok(toml::de::from_str(&read_to_string(path)?)?)
+        Ok(toml::from_str(&turf_metadata.to_string())?)
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "snake_case")]
 pub enum OutputStyle {
     Expanded,
     Compressed,
@@ -71,6 +80,6 @@ impl Into<grass::OutputStyle> for OutputStyle {
 
 #[test]
 fn dbg_dev_helper() {
-    Settings::from_cargo_manifest_metadata();
+    dbg!(Settings::from_cargo_manifest_metadata());
     assert!(false);
 }

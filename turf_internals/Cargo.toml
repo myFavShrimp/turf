@@ -18,4 +18,8 @@ workspace = true
 
 
 [package.metadata.turf]
-dbg = 123
+load_paths = [
+    "/abc",
+    "/tmp",
+]
+output_style = "expanded"
