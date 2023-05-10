@@ -9,6 +9,3 @@ edition = "2021"
 
 [dependencies.turf_macros]
 path = "../turf_macros"
-
-[dependencies.turf_internals]
-path = "../turf_internals"

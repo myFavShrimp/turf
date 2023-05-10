@@ -11,15 +11,10 @@ toml = "0.7.0"
 thiserror = "1.0"
 
 [dependencies.stylist]
-workspace = true
+version = "0.12"
+features = ["parser"]
 
 [dependencies.grass]
-workspace = true
-
-
-[package.metadata.turf]
-load_paths = [
-    "/abc",
-    "/tmp",
-]
-output_style = "expanded"
+version = "0.12"
+default-features = false
+features = ["macro"]

@@ -15,9 +15,3 @@ pub enum Error {
     #[error("error reading compiled scss - {0}")]
     StylistError(#[from] stylist::Error),
 }
-
-#[test]
-fn dbg_dev_helper() {
-    dbg!(settings::Settings::from_cargo_manifest_metadata());
-    assert!(false);
-}

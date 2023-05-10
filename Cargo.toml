@@ -4,12 +4,3 @@ members = [
     "turf_macros",
     "turf_internals"
 ]
-
-[workspace.dependencies.stylist]
-version = "0.12"
-features = ["parser"]
-
-[workspace.dependencies.grass]
-version = "0.12"
-default-features = false
-features = ["macro"]

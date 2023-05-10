@@ -12,9 +12,3 @@ proc-macro2 = { version = "1.0" }
 
 [dependencies.turf_internals]
 path = "../turf_internals"
-
-[dependencies.stylist]
-workspace = true
-
-[dependencies.grass]
-workspace = true
