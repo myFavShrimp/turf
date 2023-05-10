@@ -1,19 +1,24 @@
 use proc_macro::TokenStream;
-use quote::quote;
+use quote::{quote};
 
 #[proc_macro]
 pub fn style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
 
-    let css = grass::from_path(&input, &grass::Options::default()).unwrap_or_else(|e| panic!("{}", e));
+    let (class_name, style_sheet) = match turf_internals::macro_functions::style_sheet(input).map_err(to_compile_error) {
+        Ok(values) => values,
+        Err(e) => return e,
+    };
 
-    let style = stylist::Style::new(css).unwrap();
-    let class_name = style.get_class_name();
-    let style_sheet = style.get_style_str();
-
-    let output = quote! {
+    quote! {
         static CLASS_NAME: &'static str = #class_name;
         static STYLE_SHEET: &'static str = #style_sheet;
-    };
-    output.into()
+    }.into()
+}
+
+fn to_compile_error(e: turf_internals::Error) -> TokenStream {
+    let message = e.to_string();
+    quote! {
+        compile_error!(#message);
+    }.into()
 }
