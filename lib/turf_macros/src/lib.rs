@@ -4,8 +4,9 @@ use quote::{quote};
 #[proc_macro]
 pub fn style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
+    let sanitized_input = input.trim_matches('"');
 
-    let (class_name, style_sheet) = match turf_internals::macro_functions::style_sheet_with_default_compile_options(input).map_err(to_compile_error) {
+    let (class_name, style_sheet) = match turf_internals::macro_functions::style_sheet_with_default_compile_options(sanitized_input).map_err(to_compile_error) {
         Ok(values) => values,
         Err(e) => return e,
     };
@@ -19,8 +20,9 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn configured_style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
+    let sanitized_input = input.trim_matches('"');
 
-    let (class_name, style_sheet) = match turf_internals::macro_functions::style_sheet(input).map_err(to_compile_error) {
+    let (class_name, style_sheet) = match turf_internals::macro_functions::style_sheet(sanitized_input).map_err(to_compile_error) {
         Ok(values) => values,
         Err(e) => return e,
     };
