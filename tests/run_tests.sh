@@ -2,10 +2,13 @@
 
 set -e
 
-echo "----- Running 'cargo test' -----"
+echo "------ Running 'cargo test' ------"
 cargo test
-echo "--------------------------------"
+echo "----------------------------------"
 
 echo "----- Running negative tests -----"
 !(cd do_not_load_settings_from_cargo_manifest && cargo build --target-dir "../target")
+echo "----------------------------------"
+
+echo "--------- Finished tests ---------"
 echo "----------------------------------"
