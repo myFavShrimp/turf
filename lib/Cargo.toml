@@ -3,5 +3,4 @@ members = [
     "turf",
     "turf_macros",
     "turf_internals",
-    "tests",
 ]
