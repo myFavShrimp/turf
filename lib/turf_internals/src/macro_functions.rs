@@ -2,7 +2,7 @@ use std::path::Path;
 
 fn style_sheet_with_compile_options<'a, P>(path: P, options: &grass::Options) -> Result<(String, String), crate::Error>
 where
-    P: AsRef<Path>,
+    P: AsRef<Path> + std::fmt::Debug,
 {
     let css = grass::from_path(path, options)?;
 
@@ -15,14 +15,14 @@ where
 
 pub fn style_sheet_with_default_compile_options<'a, P>(path: P) -> Result<(String, String), crate::Error>
 where
-    P: AsRef<Path>,
+    P: AsRef<Path> + std::fmt::Debug,
 {
     style_sheet_with_compile_options(path, &grass::Options::default())
 }
 
 pub fn style_sheet<'a, P>(path: P) -> Result<(String, String), crate::Error>
 where
-    P: AsRef<Path>,
+    P: AsRef<Path> + std::fmt::Debug,
 {
     let options = crate::settings::Settings::from_cargo_manifest_metadata()?;
     style_sheet_with_compile_options(path, &options.into())

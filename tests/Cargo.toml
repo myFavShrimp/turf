@@ -1,4 +1,7 @@
 [workspace]
 members = [
-    "settings_in_cargo_manifest",
+    "load_settings_from_cargo_manifest",
+]
+exclude = [
+    "do_not_load_settings_from_cargo_manifest",
 ]

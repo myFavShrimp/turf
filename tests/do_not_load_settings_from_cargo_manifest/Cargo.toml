@@ -1,5 +1,5 @@
 [package]
-name = "settings_in_cargo_manifest"
+name = "do_not_load_settings_from_cargo_manifest"
 version = "0.1.0"
 edition = "2021"
 
