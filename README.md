@@ -1,37 +1,22 @@
-# 🌱 turf [WIP]
+# turf 🌱
 
-```scss
-// 1. Create a nice style sheet for your component
-// This example file is located at `src/HelloWorld.scss`
+`turf` is a powerful Rust crate that allows you to seamlessly build SCSS to CSS during compile time and inject those styles into your binary. 🚀
 
-h1 {
-    color: blue;
-}
+> **Note** Your feedback and suggestions are highly appreciated as I strive to make turf better with every contribution. If you find turf useful and would like to get involved, please feel free to submit pull requests. I am also open to your thoughts and ideas on how to enhance turf to suit your specific needs.
 
-h2 {
-    color: red;
-}
-```
+## Features
 
-```rust
-use leptos::*;
+- 🎨 Compile-time SCSS to CSS: Transform your SCSS files into CSS during the compilation process, saving you time and effort.
+- 🌿 Seamless integration: Inject the generated CSS directly into your binary, ensuring your styles are readily available when needed.
 
-// 2. Use the `style_sheet!` macro and provide the path to your scss file
-leptos_grass::style_sheet!("src/HelloWorld.scss");
+## Contributions
 
-#[component]
-pub fn HelloWorld(cx: Scope, initial_value: i32) -> impl IntoView {
+Contributions to turf are always welcome! Whether you have ideas for new features or improvements, don't hesitate to open an issue or submit a pull request. Let's collaborate and make turf even better together. 🤝
 
-    view! { cx,
-        // 3. Create a `style` tag with `STYLE_SHEET` as content
-        <style>{STYLE_SHEET}</style>
+## License
 
-        // 4. Create a wrapper for your component's content and set the class to `CLASS_NAME`
-        <div class=CLASS_NAME>
-            <h1>"Hello, World!"</h1>
-            <h2>"Hello, Leptos!"</h2>
-        </div>
-        // 5. Enjoy your blue "Hello, World!" and red "Hello, Leptos!"
-    }
-}
-```
+turf is licensed under the MIT license. For more details, please refer to the LICENSE file. 📄
+
+---
+
+Disclaimer: This README was generated using ChatGPT. The crate author acknowledges their own limitations and laziness, and advises that this README should not be solely relied upon for accuracy or completeness.
