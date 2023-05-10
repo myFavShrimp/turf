@@ -8,10 +8,11 @@
 
 - 🎨 Compile-time SCSS to CSS: Transform your SCSS files into CSS during the compilation process, saving you time and effort.
 - 🌿 Seamless integration: Inject the generated CSS directly into your binary, ensuring your styles are readily available when needed.
+- 🌳 Based on [grass](https://github.com/connorskees/grass/) and [stylist](https://github.com/futursolo/stylist-rs/): Built on top of the grass SCSS compiler and the stylist CSS-in-Rust library, turf offers a efficient way to generate and inject styles in your Rust project.
 
-## Project Inspiration
+## Usage
 
-turf is inspired by the projects 'grass' and 'stylist' in the Rust ecosystem. It builds upon their ideas and takes them further, providing a robust solution for SCSS to CSS compilation and binary integration.
+For a complete runnable example project, you can check out the [leptos-example](https://github.com/myFavShrimp/turf/tree/main/examples/leptos-example).
 
 ## Contributions
 
