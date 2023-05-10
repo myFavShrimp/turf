@@ -1,12 +1,11 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, LitStr};
 
 #[proc_macro]
 pub fn style_sheet(input: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(input as LitStr);
-    let path_str = input.value();
-    let css = grass::from_path(path_str, &grass::Options::default()).unwrap();
+    let input = input.to_string();
+
+    let css = grass::from_path(&input, &grass::Options::default()).unwrap_or_else(|e| panic!("{}", e));
 
     let style = stylist::Style::new(css).unwrap();
     let class_name = style.get_class_name();
