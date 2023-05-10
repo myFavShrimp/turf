@@ -5,6 +5,21 @@ use quote::{quote};
 pub fn style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
 
+    let (class_name, style_sheet) = match turf_internals::macro_functions::style_sheet_with_default_compile_options(input).map_err(to_compile_error) {
+        Ok(values) => values,
+        Err(e) => return e,
+    };
+
+    quote! {
+        static CLASS_NAME: &'static str = #class_name;
+        static STYLE_SHEET: &'static str = #style_sheet;
+    }.into()
+}
+
+#[proc_macro]
+pub fn configured_style_sheet(input: TokenStream) -> TokenStream {
+    let input = input.to_string();
+
     let (class_name, style_sheet) = match turf_internals::macro_functions::style_sheet(input).map_err(to_compile_error) {
         Ok(values) => values,
         Err(e) => return e,
