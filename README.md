@@ -9,6 +9,10 @@
 - 🎨 Compile-time SCSS to CSS: Transform your SCSS files into CSS during the compilation process, saving you time and effort.
 - 🌿 Seamless integration: Inject the generated CSS directly into your binary, ensuring your styles are readily available when needed.
 
+## Project Inspiration
+
+turf is inspired by the projects 'grass' and 'stylist' in the Rust ecosystem. It builds upon their ideas and takes them further, providing a robust solution for SCSS to CSS compilation and binary integration.
+
 ## Contributions
 
 Contributions to turf are always welcome! Whether you have ideas for new features or improvements, don't hesitate to open an issue or submit a pull request. Let's collaborate and make turf even better together. 🤝
@@ -16,7 +20,3 @@ Contributions to turf are always welcome! Whether you have ideas for new feature
 ## License
 
 turf is licensed under the MIT license. For more details, please refer to the LICENSE file. 📄
-
----
-
-Disclaimer: This README was generated using ChatGPT. The crate author acknowledges their own limitations and laziness, and advises that this README should not be solely relied upon for accuracy or completeness.
