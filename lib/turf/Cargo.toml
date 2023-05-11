@@ -15,3 +15,4 @@ categories = ["wasm", "web-programming"]
 
 [dependencies.turf_macros]
 path = "../turf_macros"
+version = "0.1.0"
