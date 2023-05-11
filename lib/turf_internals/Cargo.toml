@@ -18,4 +18,3 @@ features = ["parser"]
 [dependencies.grass]
 version = "0.12"
 default-features = false
-features = ["macro"]
