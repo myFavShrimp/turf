@@ -13,6 +13,7 @@ thiserror = "1.0"
 
 [dependencies.stylist]
 version = "0.12"
+default-features = false
 features = ["parser"]
 
 [dependencies.grass]
