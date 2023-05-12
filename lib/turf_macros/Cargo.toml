@@ -1,6 +1,6 @@
 [package]
 name = "turf_macros"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Macros used by turf."
 license = "MIT"
@@ -15,4 +15,4 @@ proc-macro2 = { version = "1.0" }
 
 [dependencies.turf_internals]
 path = "../turf_internals"
-version = "0.1.0"
+version = "0.1.1"
