@@ -2,6 +2,20 @@
 
 `turf` allows you to build SCSS to CSS during compile time and inject those styles into your binary.
 
+[![Crates.io][crates-badge]][crates-url]
+[![Docs.rs][docs-badge]][docs-url]
+[![Build Status][actions-badge]][actions-url]
+[![MIT licensed][lic-badge]][lic-url]
+
+[crates-badge]: https://img.shields.io/crates/v/turf.svg?logo=docsdotrs
+[crates-url]: https://crates.io/crates/turf
+[docs-badge]: https://img.shields.io/docsrs/turf/latest.svg?logo=rust
+[docs-url]: https://docs.rs/turf
+[actions-badge]: https://github.com/myFavShrimp/turf/actions/workflows/rust.yml/badge.svg
+[actions-url]: https://github.com/myFavShrimp/turf/actions/workflows/rust.yml
+[lic-url]: https://github.com/myFavShrimp/turf/blob/master/LICENSE
+[lic-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+
 ## Features
 
 **turf will:**
