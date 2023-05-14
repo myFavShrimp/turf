@@ -41,9 +41,9 @@ For a complete runnable example project, you can check out the [leptos-example](
     }
 }
 ```
-> By following the link [here](https://docs.rs/stylist/latest/stylist/struct.Style.html#style-scoping-and-substitution-rule-for-current-selector) you can gain a deeper understanding of how stylist processes selectors. By understanding these rules, you can effectively utilize the dynamic class names generated and apply styles to specific elements or components in your application.
+> By following the link [here](https://docs.rs/stylist/latest/stylist/struct.Style.html#style-scoping-and-substitution-rule-for-current-selector) you can gain a deeper understanding of how stylist processes selectors. By understanding these rules, you can effectively utilize the dynamic class names generated.
 
-### 2. Use the `style_sheet` macro to include the resulting css in your code
+### 2. Use the `style_sheet` macro to include the resulting CSS in your code
 
 ```rust
 turf::style_sheet!("scss/file/path.scss");
@@ -58,7 +58,7 @@ static STYLE_SHEET: &'static str = "<style_sheet>";
 
 ### 3. Configuration
 
-The configuration for turf's `configured_style_sheet` macro can be specified in the Cargo.toml file using the `[package.metadata.turf]` key. This allows you to conveniently manage your SCSS compilation settings within your project's manifest.
+The configuration for turf can be specified in the Cargo.toml file using the `[package.metadata.turf]` key. This allows you to conveniently manage your SCSS compilation settings within your project's manifest.
 
 The following configuration options are available:
 
