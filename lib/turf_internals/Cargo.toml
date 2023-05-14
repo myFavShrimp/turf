@@ -5,6 +5,7 @@ edition = "2021"
 description = "The inner workings of turf."
 license = "MIT"
 authors = ["myFavShrimp <myfavshrimp@tuta.io>"]
+readme = "README.md"
 
 [dependencies]
 serde = "1.0"

@@ -5,6 +5,7 @@ edition = "2021"
 description = "Macros used by turf."
 license = "MIT"
 authors = ["myFavShrimp <myfavshrimp@tuta.io>"]
+readme = "README.md"
 
 [lib]
 proc_macro = true

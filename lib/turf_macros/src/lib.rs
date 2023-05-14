@@ -1,3 +1,5 @@
+//! You're probably looking for `turf` instead.
+
 use proc_macro::TokenStream;
 use quote::quote;
 

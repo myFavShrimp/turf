@@ -1,8 +1,10 @@
+//! You're probably looking for `turf` instead.
+
+pub mod macro_functions;
 mod manifest;
 mod settings;
-pub mod macro_functions;
 
-pub use settings::{Settings, OutputStyle};
+pub use settings::{OutputStyle, Settings};
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
