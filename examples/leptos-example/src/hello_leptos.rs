@@ -1,6 +1,6 @@
 use leptos::*;
 
-turf::configured_style_sheet!("src/hello_leptos.scss");
+turf::style_sheet!("src/hello_leptos.scss");
 
 #[component]
 pub fn HelloLeptos(cx: Scope) -> impl IntoView {

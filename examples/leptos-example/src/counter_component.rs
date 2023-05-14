@@ -1,6 +1,6 @@
 use leptos::*;
 
-turf::configured_style_sheet!("src/counter_component.scss");
+turf::style_sheet!("src/counter_component.scss");
 
 #[component]
 pub fn CounterComponent(cx: Scope) -> impl IntoView {
