@@ -19,4 +19,4 @@ jobs:
     - name: Build
       run: cd lib && cargo build --verbose
     - name: Run tests
-      run: cd tests && bash run_tests.sh
+      run: cd tests && cargo test
