@@ -12,15 +12,15 @@ pub fn cargo_manifest() -> Result<ManifestWithPackage, crate::Error> {
 
 #[derive(Deserialize, Debug)]
 pub struct ManifestWithPackage {
-    pub package: PackageWithMetadata,
+    pub package: Option<PackageWithMetadata>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct PackageWithMetadata {
-    pub metadata: MetadataWithTurfSettings,
+    pub metadata: Option<MetadataWithTurfSettings>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct MetadataWithTurfSettings {
-    pub turf: crate::settings::Settings,
+    pub turf: Option<crate::settings::Settings>,
 }
