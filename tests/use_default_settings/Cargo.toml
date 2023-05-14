@@ -1,5 +1,5 @@
 [package]
-name = "do_not_load_settings_from_cargo_manifest"
+name = "use_default_settings"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,7 +9,3 @@ edition = "2021"
 path = "../../lib/turf"
 [dependencies.turf_internals]
 path = "../../lib/turf_internals"
-
-[package.metadata.turf]
-load_paths = ["variables"]
-output_style = "expanded"
