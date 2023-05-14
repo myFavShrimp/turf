@@ -31,8 +31,5 @@
 //! output_style = "compressed"
 //! ```
 
-/// generates static variables for a CSS class name and style sheet with a default configuration
+/// generates the static variables `CLASS_NAME` and `STYLE_SHEET` with default settings or the settings specified in the `Cargo.toml`
 pub use turf_macros::style_sheet;
-
-/// generates static variables for a CSS class name and style sheet with the settings specified in the `Cargo.toml`
-pub use turf_macros::configured_style_sheet;
