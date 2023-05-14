@@ -36,7 +36,7 @@ impl Into<grass::OutputStyle> for OutputStyle {
 }
 
 impl Settings {
-    pub fn from_cargo_manifest_metadata() -> Result<Self, crate::Error> {
+    pub fn from_cargo_manifest_metadata_or_default() -> Result<Self, crate::Error> {
         let manifest_data = crate::manifest::cargo_manifest()?;
 
         if let Some(PackageWithMetadata {

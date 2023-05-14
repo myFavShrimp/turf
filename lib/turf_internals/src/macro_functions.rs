@@ -1,6 +1,9 @@
 use std::path::Path;
 
-fn style_sheet_with_compile_options<'a, P>(path: P, options: &grass::Options) -> Result<(String, String), crate::Error>
+fn style_sheet_with_compile_options<'a, P>(
+    path: P,
+    options: &grass::Options,
+) -> Result<(String, String), crate::Error>
 where
     P: AsRef<Path> + std::fmt::Debug,
 {
@@ -13,7 +16,9 @@ where
     Ok((class_name.into(), style_sheet.into()))
 }
 
-pub fn style_sheet_with_default_compile_options<'a, P>(path: P) -> Result<(String, String), crate::Error>
+pub fn style_sheet_with_default_compile_options<'a, P>(
+    path: P,
+) -> Result<(String, String), crate::Error>
 where
     P: AsRef<Path> + std::fmt::Debug,
 {
@@ -24,6 +29,6 @@ pub fn style_sheet<'a, P>(path: P) -> Result<(String, String), crate::Error>
 where
     P: AsRef<Path> + std::fmt::Debug,
 {
-    let options = crate::settings::Settings::from_cargo_manifest_metadata()?;
+    let options = crate::settings::Settings::from_cargo_manifest_metadata_or_default()?;
     style_sheet_with_compile_options(path, &options.into())
 }
