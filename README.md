@@ -26,7 +26,7 @@
 
 ## Usage
 
-For a complete runnable example project, you can check out the [leptos-example](https://github.com/myFavShrimp/turf/tree/main/examples/leptos-example).
+For a complete runnable example project, you can check out the [leptos-example](https://github.com/myFavShrimp/turf/tree/main/examples/leptos-example)/[yew-example](https://github.com/myFavShrimp/turf/tree/main/examples/yew-example).
 
 ### 1. Create SCSS styles for your application.
 
