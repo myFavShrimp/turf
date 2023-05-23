@@ -1,0 +1,17 @@
+[package]
+name = "yew-example"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies.yew]
+version = "0.20"
+features = ["csr"]
+
+[dependencies.turf]
+path = "../../lib/turf"
+
+[package.metadata.turf]
+load_paths = ["variables"]
+output_style = "expanded"
