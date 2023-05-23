@@ -1,4 +1,4 @@
-# Leptos example
+# Yew example
 
 This example shows how to use `turf` in conjunction with `yew`.
 
