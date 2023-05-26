@@ -9,11 +9,7 @@ where
 {
     let css = grass::from_path(path, options)?;
 
-    let style = stylist::Style::new(css)?;
-    let class_name = style.get_class_name();
-    let style_sheet = style.get_style_str();
-
-    Ok((class_name.into(), style_sheet.into()))
+    Ok((String::new(), String::new()))
 }
 
 pub fn style_sheet_with_default_compile_options<'a, P>(
