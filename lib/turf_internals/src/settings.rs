@@ -6,8 +6,8 @@ use crate::manifest::{MetadataWithTurfSettings, PackageWithMetadata};
 
 #[derive(Deserialize, Debug, Default)]
 pub struct Settings {
-    minify: bool,
-    load_paths: Vec<PathBuf>,
+    pub(crate) minify: bool,
+    pub(crate) load_paths: Vec<PathBuf>,
 }
 
 impl<'a> From<Settings> for grass::Options<'a> {

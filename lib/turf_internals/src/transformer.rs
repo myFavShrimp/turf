@@ -38,7 +38,10 @@ pub fn transform_stylesheet(
     stylesheet
         .visit(&mut MyVisitor)
         .expect("css visitor never fails");
-    Ok(stylesheet.to_css(PrinterOptions::default()).unwrap().code)
+
+    let css_result = stylesheet.to_css(settings.into()).unwrap();
+
+    Ok(css_result.code)
 }
 
 #[cfg(test)]
@@ -46,13 +49,12 @@ mod tests {
     use super::transform_stylesheet;
 
     #[test]
-    fn visitor_testing() {
+    fn basic_visitor() {
         let style = r#"
             .test {
                 color: red;
             }
         "#;
-
         let x = transform_stylesheet(style, crate::Settings::default()).unwrap();
 
         assert_eq!(x, ".test {\n  color: red;\n}\n");
