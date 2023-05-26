@@ -6,6 +6,7 @@ use crate::manifest::{MetadataWithTurfSettings, PackageWithMetadata};
 
 #[derive(Deserialize, Debug, Default)]
 pub struct Settings {
+    minify: bool,
     load_paths: Vec<PathBuf>,
 }
 
@@ -14,6 +15,18 @@ impl<'a> Into<grass::Options<'a>> for Settings {
         grass::Options::default()
             .style(grass::OutputStyle::Expanded)
             .load_paths(&self.load_paths)
+    }
+}
+
+impl<'a> Into<lightningcss::printer::PrinterOptions<'a>> for Settings {
+    fn into(self) -> lightningcss::printer::PrinterOptions<'a> {
+        lightningcss::printer::PrinterOptions {
+            minify: self.minify,
+            project_root: None,
+            targets: None,
+            analyze_dependencies: None,
+            pseudo_classes: None,
+        }
     }
 }
 
