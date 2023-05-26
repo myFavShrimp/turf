@@ -10,18 +10,18 @@ pub struct Settings {
     load_paths: Vec<PathBuf>,
 }
 
-impl<'a> Into<grass::Options<'a>> for Settings {
-    fn into(self) -> grass::Options<'a> {
+impl<'a> From<Settings> for grass::Options<'a> {
+    fn from(val: Settings) -> Self {
         grass::Options::default()
             .style(grass::OutputStyle::Expanded)
-            .load_paths(&self.load_paths)
+            .load_paths(&val.load_paths)
     }
 }
 
-impl<'a> Into<lightningcss::printer::PrinterOptions<'a>> for Settings {
-    fn into(self) -> lightningcss::printer::PrinterOptions<'a> {
+impl<'a> From<Settings> for lightningcss::printer::PrinterOptions<'a> {
+    fn from(val: Settings) -> Self {
         lightningcss::printer::PrinterOptions {
-            minify: self.minify,
+            minify: val.minify,
             project_root: None,
             targets: None,
             analyze_dependencies: None,
