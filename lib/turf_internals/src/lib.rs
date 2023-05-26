@@ -5,7 +5,7 @@ mod manifest;
 mod settings;
 mod transformer;
 
-pub use settings::{OutputStyle, Settings};
+pub use settings::Settings;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
