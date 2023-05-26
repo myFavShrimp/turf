@@ -6,16 +6,35 @@ use lightningcss::{
 };
 use std::{collections::HashMap, convert::Infallible};
 
-#[derive(Default)]
+fn random_seed() -> Result<u64, getrandom::Error> {
+    let mut buf = [0u8; 8];
+    getrandom::getrandom(&mut buf)?;
+    Ok(u64::from_ne_bytes(buf))
+}
+
 struct TransformationVisitor {
     classes: HashMap<String, String>,
+    random_number_generator: oorandom::Rand32,
+}
+
+impl Default for TransformationVisitor {
+    fn default() -> Self {
+        Self {
+            classes: Default::default(),
+            random_number_generator: oorandom::Rand32::new(random_seed().unwrap()),
+        }
+    }
 }
 
 impl TransformationVisitor {
     fn randomized_class_name(&mut self, class_name: String) -> String {
-        match self.classes.get(&class_name) {
+        match self.classes.get(&class_name.clone()) {
             Some(random_class_name) => random_class_name.clone(),
-            None => String::new(),
+            None => {
+                let mut new_class_name = class_name.clone();
+                new_class_name.push_str(&self.random_number_generator.rand_u32().to_string());
+                new_class_name
+            }
         }
     }
 }
@@ -31,7 +50,7 @@ impl<'i> Visitor<'i> for TransformationVisitor {
         for selector in selectors.iter_mut_raw_match_order() {
             if let Component::Class(c) = selector {
                 dbg!(&c);
-                *c = format!("{}", c).into();
+                *c = format!("{}", dbg!(self.randomized_class_name(c.to_string()))).into();
             }
         }
 
