@@ -12,6 +12,11 @@ serde = "1.0"
 toml = "0.7.0"
 thiserror = "1.0"
 
+[dependencies.lightningcss]
+version = "1.0.0-alpha.41"
+default-features = false
+features = ["grid", "visitor"]
+
 [dependencies.stylist]
 version = "0.12"
 default-features = false
