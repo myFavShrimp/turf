@@ -1,6 +1,6 @@
 use lightningcss::{
     selector::{Component, Selector},
-    stylesheet::{ParserOptions, PrinterOptions, StyleSheet},
+    stylesheet::{ParserOptions, StyleSheet},
     visit_types,
     visitor::{Visit, VisitTypes, Visitor},
 };
@@ -13,7 +13,7 @@ fn random_seed() -> Result<u64, getrandom::Error> {
 }
 
 struct TransformationVisitor {
-    classes: HashMap<String, String>,
+    pub classes: HashMap<String, String>,
     random_number_generator: oorandom::Rand32,
 }
 
@@ -86,6 +86,7 @@ mod tests {
         "#;
         let x = transform_stylesheet(style, crate::Settings::default()).unwrap();
 
-        assert_eq!(x, ".test {\n  color: red;\n}\n");
+        assert!(x.starts_with("."));
+        assert!(x.ends_with(" {\n  color: red;\n}\n"));
     }
 }
