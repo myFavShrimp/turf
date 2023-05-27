@@ -20,9 +20,10 @@
 //!
 //! **turf will:**
 //!
-//! - 🌿 transform your SCSS files into CSS with [grass](https://github.com/connorskees/grass/), right at compilation time.
-//! - 🪴 simplify your workflow with [stylist](https://github.com/futursolo/stylist-rs/), generating unique and dynamic class names for your CSS during compilation.
-//! - 🎨 inject the generated CSS into your binary, guaranteeing quick access to your styles whenever you need them.
+//! - 🌿 transform your SCSS files into CSS with [grass](https://github.com/connorskees/grass/), right at compilation time
+//! - 🪴 generate unique and dynamic class names for your CSS during compilation
+//! - 🔬 minify and optimize your CSS using [lightningcss](https://github.com/parcel-bundler/lightningcss), ensuring compatibility with various browser targets
+//! - 🎨 inject the generated CSS into your binary, guaranteeing quick access to your styles whenever you need them
 //!
 //! ## Usage
 //!
@@ -33,7 +34,7 @@
 //! ```scss
 //! // file at scss/file/path.scss
 //!
-//! :root {
+//! .TopLevelClass {
 //!     color: red;
 //!
 //!     .SomeClass {
@@ -41,7 +42,6 @@
 //!     }
 //! }
 //! ```
-//! > By following the link [here](https://docs.rs/stylist/latest/stylist/struct.Style.html#style-scoping-and-substitution-rule-for-current-selector) you can gain a deeper understanding of how stylist processes selectors. By understanding these rules, you can effectively utilize the dynamic class names generated.
 //!
 //! ### 2. Use the `style_sheet` macro to include the resulting CSS in your code
 //!
@@ -52,26 +52,79 @@
 //! The macro from the above example will expand to the following code:
 //!
 //! ```rust
-//! static CLASS_NAME: &'static str = "<class_name>";
 //! static STYLE_SHEET: &'static str = "<style_sheet>";
+//! struct ClassName;
+//! impl ClassName {
+//!     pub const TOP_LEVEL_CLASS: &'static str = "<unique_class_name>";
+//!     pub const SOME_CLASS: &'static str = "<another_unique_class_name>";
+//! }
+//! ```
+//!
+//! To access the generated class names, use the `ClassName` struct and its associated constants:
+//!
+//! ```rust
+//! let top_level_class_name = ClassName::TOP_LEVEL_CLASS;
+//! let some_class_name = ClassName::SOME_CLASS;
 //! ```
 //!
 //! ### 3. Configuration
 //!
 //! The configuration for turf can be specified in the Cargo.toml file using the `[package.metadata.turf]` key. This allows you to conveniently manage your SCSS compilation settings within your project's manifest.
 //!
-//! The following configuration options are available:
-//!
-//! - `load_paths` (array of directories): Specifies the directories where SCSS files should be searched during compilation. This option allows you to include SCSS files from different locations, such as external libraries or custom directories.
-//! - `output_style` (string): Defines the format of the generated CSS output. This option supports two values: `expanded` and `compressed`. Use "expanded" if you prefer a more readable and indented CSS output, or "compressed" for a minified and compact version.
-//!
 //! Example configuration:
 //!
 //! ```toml
 //! [package.metadata.turf]
-//! load_paths = ["path/to/scss/files", "another/path"]
-//! output_style = "compressed"
+//! minify = true
+//! load_paths = ["path/to/scss/files", "path/to/other/scss/files"]
+//! class_name_template = "custom-<id>-<original_name>"
+//!
+//! [package.metadata.turf.browser_targets]
+//! chrome = [80, 81, 82]
+//! firefox = 65
+//! safari = [12, 13]
 //! ```
+//!
+//! The following configuration options are available:
+//!
+//! - `minify` (default: `true`): Specifies whether the generated CSS should be minified or not. If set to true, the CSS output will be compressed and optimized for reduced file size. If set to false, the CSS output will be formatted with indentation and line breaks for improved readability.
+//!
+//! - `load_paths`: Specifies additional paths to search for SCSS files to include during compilation. It accepts a list of string values, where each value represents a directory path to be included. This option allows you to import SCSS files from multiple directories.
+//!
+//! - `browser_targets`: Defines the target browser versions for compatibility when generating CSS. It expects a structure that includes specific versions for different browsers. Each browser can have its own version specified.
+//!
+//! - `class_name_template` (default: `"class-<id>"`): Specifies the template for generating randomized CSS class names. The template can include placeholders to customize the output. `<id>` will be replaced with a unique identifier for each CSS class name and `<original_name>` will be replaced with the original class name from the SCSS file.
+//!
+//! #### 3.1 Browser Versions
+//!
+//! The available browsers are as follows:
+//!
+//! - android
+//! - chrome
+//! - edge
+//! - firefox
+//! - ie
+//! - ios_saf
+//! - opera
+//! - safari
+//! - samsung
+//!
+//! #### 3.2 Browser Version Format
+//!
+//! Three formats are supported:
+//!
+//! 1. **major**:
+//! - Use a single integer to specify the major version number.
+//! - Example: `1` or `[1]` represent version `1`
+//!
+//! 2. **major.minor**:
+//! - Use an array `[major, minor]` to specify both the major and minor version numbers.
+//! - Example: `[1, 2]` represents version `1.2`
+//!
+//! 3. **major.minor.patch**:
+//! - Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers.
+//! - Example: `[1, 2, 3]` represents version `1.2.3`.
+//!
 
-/// generates the static variables `CLASS_NAME` and `STYLE_SHEET` with default settings or the settings specified in the `Cargo.toml`
+/// generates the static variable `STYLE_SHEET` and the `ClassName` struct with default settings or the settings specified in the `Cargo.toml`
 pub use turf_macros::style_sheet;
