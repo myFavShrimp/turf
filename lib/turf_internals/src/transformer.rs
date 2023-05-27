@@ -58,19 +58,38 @@ impl<'i> Visitor<'i> for TransformationVisitor {
     }
 }
 
-pub fn transform_stylesheet(
-    css: &'static str,
-    settings: crate::Settings,
-) -> Result<String, crate::Error> {
-    let mut stylesheet = StyleSheet::parse(css, ParserOptions::default())?;
+#[derive(Debug)]
+pub struct LightningcssError(String);
+
+impl From<String> for LightningcssError {
+    fn from(value: String) -> Self {
+        Self(value.to_string())
+    }
+}
+
+impl std::fmt::Display for LightningcssError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl std::error::Error for LightningcssError {}
+
+pub fn transform_stylesheet(css: &str, settings: crate::Settings) -> Result<String, crate::Error> {
+    let mut stylesheet = StyleSheet::parse(css, ParserOptions::default())
+        .map_err(|e| e.to_string())
+        .map_err(LightningcssError::from)?;
 
     stylesheet
         .visit(&mut TransformationVisitor::default())
         .expect("css visitor never fails");
 
-    let css_result = stylesheet.to_css(settings.into()).unwrap();
+    let css_result = stylesheet
+        .to_css(settings.into())
+        .map_err(|e| e.to_string())
+        .map_err(LightningcssError::from)?;
 
-    Ok(css_result.code)
+    Ok(css_result.code.clone())
 }
 
 #[cfg(test)]

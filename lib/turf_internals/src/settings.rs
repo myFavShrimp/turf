@@ -4,7 +4,7 @@ use serde::Deserialize;
 
 use crate::manifest::{MetadataWithTurfSettings, PackageWithMetadata};
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug, Default, Clone)]
 pub struct Settings {
     pub(crate) minify: bool,
     pub(crate) load_paths: Vec<PathBuf>,

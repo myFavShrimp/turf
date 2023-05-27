@@ -17,5 +17,5 @@ pub enum Error {
     #[error("error compiling scss - {0}")]
     GrassError(#[from] Box<grass::Error>),
     #[error("error reading compiled scss - {0}")]
-    CssParseError(#[from] lightningcss::error::Error<lightningcss::error::ParserError<'static>>),
+    CssError(#[from] transformer::LightningcssError),
 }
