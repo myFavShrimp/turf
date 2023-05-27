@@ -79,17 +79,17 @@ impl From<BrowserVersions> for lightningcss::targets::Browsers {
 #[derive(Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum BrowserVersion {
-    WithMajor(u8),
-    WithMinor(u8, u8),
-    WithPatch(u8, u8, u8),
+    Major(u8),
+    MajorMinor(u8, u8),
+    MajorMinorPatch(u8, u8, u8),
 }
 
 impl From<BrowserVersion> for u32 {
     fn from(value: BrowserVersion) -> Self {
         let version = match value {
-            BrowserVersion::WithMajor(major) => (major, 0, 0),
-            BrowserVersion::WithMinor(major, minor) => (major, minor, 0),
-            BrowserVersion::WithPatch(major, minor, path) => (major, minor, path),
+            BrowserVersion::Major(major) => (major, 0, 0),
+            BrowserVersion::MajorMinor(major, minor) => (major, minor, 0),
+            BrowserVersion::MajorMinorPatch(major, minor, path) => (major, minor, path),
         };
         (version.0 as u32 & 0xff) << 16 | (version.1 as u32 & 0xff) << 8 | (version.2 as u32 & 0xff)
     }

@@ -48,8 +48,8 @@ impl<'i> Visitor<'i> for TransformationVisitor {
 
 fn apply_template(original_class_name: &str, class_name_template: &str, id: &str) -> String {
     class_name_template
-        .replace("<original_name>", &original_class_name)
-        .replace("<id>", &id)
+        .replace("<original_name>", original_class_name)
+        .replace("<id>", id)
 }
 
 #[derive(Debug)]
