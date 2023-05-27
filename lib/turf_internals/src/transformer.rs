@@ -33,6 +33,9 @@ impl TransformationVisitor {
             None => {
                 let mut new_class_name = class_name.clone();
                 new_class_name.push_str(&self.random_number_generator.rand_u32().to_string());
+
+                self.classes.insert(class_name, new_class_name.clone());
+
                 new_class_name
             }
         }
@@ -45,12 +48,9 @@ impl<'i> Visitor<'i> for TransformationVisitor {
     const TYPES: VisitTypes = visit_types!(SELECTORS);
 
     fn visit_selector(&mut self, selectors: &mut Selector<'i>) -> Result<(), Self::Error> {
-        dbg!(&selectors);
-
         for selector in selectors.iter_mut_raw_match_order() {
             if let Component::Class(c) = selector {
-                dbg!(&c);
-                *c = format!("{}", dbg!(self.randomized_class_name(c.to_string()))).into();
+                *c = format!("{}", self.randomized_class_name(c.to_string())).into();
             }
         }
 

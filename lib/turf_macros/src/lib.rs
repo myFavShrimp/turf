@@ -38,7 +38,7 @@ fn to_compile_error(e: turf_internals::Error) -> TokenStream {
 fn create_classes_structure(classes: HashMap<String, String>) -> proc_macro2::TokenStream {
     let original_class_names: Vec<proc_macro2::Ident> = classes
         .keys()
-        .map(|class| class.to_case(Case::UpperSnake))
+        .map(|class| class.to_case(Case::ScreamingSnake))
         .map(|class| quote::format_ident!("{}", class.as_str().to_uppercase()))
         .collect();
 
@@ -63,10 +63,10 @@ mod tests {
         let mut class_names = HashMap::new();
         class_names.insert(String::from("test-class"), String::from("abc-123"));
 
-        let y = create_classes_structure(class_names);
+        let out = create_classes_structure(class_names);
 
         assert_eq!(
-            y.to_string(),
+            out.to_string(),
             quote::quote! {
                 struct ClassName;
                 impl ClassName {
