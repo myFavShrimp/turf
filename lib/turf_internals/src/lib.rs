@@ -1,6 +1,5 @@
 //! You're probably looking for `turf` instead.
 
-mod classes_structure;
 pub mod macro_functions;
 mod manifest;
 mod settings;
