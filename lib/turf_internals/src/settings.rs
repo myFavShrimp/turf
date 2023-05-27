@@ -70,11 +70,12 @@ pub enum BrowserVersion {
 
 impl From<BrowserVersion> for u32 {
     fn from(value: BrowserVersion) -> Self {
-        u32::from_ne_bytes(match value {
-            BrowserVersion::WithMajor(major) => [major, 0, 0, 0],
-            BrowserVersion::WithMinor(major, minor) => [major, minor, 0, 0],
-            BrowserVersion::WithPatch(major, minor, path) => [major, minor, path, 0],
-        })
+        let version = match value {
+            BrowserVersion::WithMajor(major) => (major, 0, 0),
+            BrowserVersion::WithMinor(major, minor) => (major, minor, 0),
+            BrowserVersion::WithPatch(major, minor, path) => (major, minor, path),
+        };
+        (version.0 as u32 & 0xff) << 16 | (version.1 as u32 & 0xff) << 8 | (version.2 as u32 & 0xff)
     }
 }
 
