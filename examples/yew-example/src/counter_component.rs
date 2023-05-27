@@ -12,7 +12,7 @@ pub fn CounterComponent() -> Html {
     };
 
     html! {
-        <div class={CLASS_NAME}>
+        <div class={ClassName::COUNTER_BUTTON}>
             <style>{STYLE_SHEET}</style>
             <button onclick={incr_counter}>{"Click me: "} {*state} </button>
         </div>

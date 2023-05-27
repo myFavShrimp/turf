@@ -8,7 +8,7 @@ pub fn CounterComponent(cx: Scope) -> impl IntoView {
 
     view! { cx,
         <style>{STYLE_SHEET}</style>
-        <div class=CLASS_NAME>
+        <div class=ClassName::COUNTER_BUTTON>
             <button on:click=move |_| { set_count.update(|n| *n += 1) }>
                 "Click me: "
                 {move || count.get()}

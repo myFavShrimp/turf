@@ -1,7 +1,7 @@
 @import "color";
 
-:root {
+.counter-button {
     button {
-        color: $headline-color;
+        color: $button-text-color;
     }
 }

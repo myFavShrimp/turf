@@ -1,7 +1,11 @@
 @import "color";
 
-:root {
+.hello-leptos {
     h1 {
-        color: $button-text-color;
+        color: headline-color;
+    }
+
+    .hello-world {
+        color: blue;
     }
 }
