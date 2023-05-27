@@ -12,4 +12,4 @@ path = "../../lib/turf_internals"
 
 [package.metadata.turf]
 load_paths = ["variables"]
-output_style = "expanded"
+minify = false

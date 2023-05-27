@@ -107,6 +107,10 @@ mod tests {
 
         assert!(transformation_result.0.starts_with(".class-"));
         assert!(transformation_result.0.ends_with("{color:red}"));
+        assert!(transformation_result.0.starts_with(&format!(
+            ".{}",
+            transformation_result.1.get("test").unwrap()
+        )));
     }
 
     #[test]
@@ -124,6 +128,10 @@ mod tests {
 
         assert!(transformation_result.0.starts_with(".fancy_style-test-"));
         assert!(transformation_result.0.ends_with("{color:red}"));
+        assert!(transformation_result.0.starts_with(&format!(
+            ".{}",
+            transformation_result.1.get("test").unwrap()
+        )));
     }
 
     #[test]
@@ -140,5 +148,9 @@ mod tests {
         let transformation_result = transform_stylesheet(style, settings).unwrap();
 
         assert_eq!(transformation_result.0, ".fancy_style-test{color:red}");
+        assert!(transformation_result.0.starts_with(&format!(
+            ".{}",
+            transformation_result.1.get("test").unwrap()
+        )));
     }
 }
