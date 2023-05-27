@@ -6,24 +6,10 @@ use lightningcss::{
 };
 use std::{collections::HashMap, convert::Infallible};
 
-fn random_seed() -> Result<u64, getrandom::Error> {
-    let mut buf = [0u8; 8];
-    getrandom::getrandom(&mut buf)?;
-    Ok(u64::from_ne_bytes(buf))
-}
-
-struct TransformationVisitor {
-    pub classes: HashMap<String, String>,
-    random_number_generator: oorandom::Rand32,
-}
-
-impl Default for TransformationVisitor {
-    fn default() -> Self {
-        Self {
-            classes: Default::default(),
-            random_number_generator: oorandom::Rand32::new(random_seed().unwrap()),
-        }
-    }
+pub struct TransformationVisitor {
+    pub(crate) classes: HashMap<String, String>,
+    pub(crate) random_number_generator: oorandom::Rand32,
+    pub(crate) class_name_template: String,
 }
 
 impl TransformationVisitor {
@@ -31,9 +17,11 @@ impl TransformationVisitor {
         match self.classes.get(&class_name) {
             Some(random_class_name) => random_class_name.clone(),
             None => {
-                let mut new_class_name = class_name.clone();
-                new_class_name.push_str(&self.random_number_generator.rand_u32().to_string());
-
+                let new_class_name = apply_template(
+                    &class_name,
+                    &self.class_name_template,
+                    &self.random_number_generator.rand_u32().to_string(),
+                );
                 self.classes.insert(class_name, new_class_name.clone());
 
                 new_class_name
@@ -56,6 +44,12 @@ impl<'i> Visitor<'i> for TransformationVisitor {
 
         Ok(())
     }
+}
+
+fn apply_template(original_class_name: &str, class_name_template: &str, id: &str) -> String {
+    class_name_template
+        .replace("<original_name>", &original_class_name)
+        .replace("<id>", &id)
 }
 
 #[derive(Debug)]
@@ -83,7 +77,7 @@ pub fn transform_stylesheet(
         .map_err(|e| e.to_string())
         .map_err(LightningcssError::from)?;
 
-    let mut visitor = TransformationVisitor::default();
+    let mut visitor = TransformationVisitor::try_from(&settings)?;
 
     stylesheet
         .visit(&mut visitor)
@@ -108,9 +102,43 @@ mod tests {
                 color: red;
             }
         "#;
-        let x = transform_stylesheet(style, crate::Settings::default()).unwrap();
+        let transformation_result =
+            transform_stylesheet(style, crate::Settings::default()).unwrap();
 
-        assert!(x.0.starts_with("."));
-        assert!(x.0.ends_with("{color:red}"));
+        assert!(transformation_result.0.starts_with(".class-"));
+        assert!(transformation_result.0.ends_with("{color:red}"));
+    }
+
+    #[test]
+    fn custom_template() {
+        let style = r#"
+            .test {
+                color: red;
+            }
+        "#;
+        let settings = crate::Settings {
+            class_name_template: Some(String::from("fancy_style-<original_name>-<id>")),
+            ..Default::default()
+        };
+        let transformation_result = transform_stylesheet(style, settings).unwrap();
+
+        assert!(transformation_result.0.starts_with(".fancy_style-test-"));
+        assert!(transformation_result.0.ends_with("{color:red}"));
+    }
+
+    #[test]
+    fn custom_template_without_id() {
+        let style = r#"
+            .test {
+                color: red;
+            }
+        "#;
+        let settings = crate::Settings {
+            class_name_template: Some(String::from("fancy_style-<original_name>")),
+            ..Default::default()
+        };
+        let transformation_result = transform_stylesheet(style, settings).unwrap();
+
+        assert_eq!(transformation_result.0, ".fancy_style-test{color:red}");
     }
 }

@@ -15,6 +15,14 @@ pub enum Error {
     IoError(#[from] std::io::Error),
     #[error("error compiling scss - {0}")]
     GrassError(#[from] Box<grass::Error>),
-    #[error("error reading compiled scss - {0}")]
+    #[error("error transforming css - {0}")]
     CssError(#[from] transformer::LightningcssError),
+    #[error("error obtaining random id - {0}")]
+    RandError(#[from] getrandom::Error),
+}
+
+fn random_seed() -> Result<u64, getrandom::Error> {
+    let mut buf = [0u8; 8];
+    getrandom::getrandom(&mut buf)?;
+    Ok(u64::from_ne_bytes(buf))
 }

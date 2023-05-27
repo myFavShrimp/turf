@@ -9,6 +9,7 @@ pub struct Settings {
     pub(crate) minify: Option<bool>,
     pub(crate) load_paths: Option<Vec<PathBuf>>,
     pub(crate) browser_targets: Option<BrowserVersions>,
+    pub(crate) class_name_template: Option<String>,
 }
 
 impl<'a> From<Settings> for grass::Options<'a> {
@@ -28,6 +29,21 @@ impl<'a> From<Settings> for lightningcss::printer::PrinterOptions<'a> {
             analyze_dependencies: None,
             pseudo_classes: None,
         }
+    }
+}
+
+impl TryFrom<&crate::Settings> for crate::transformer::TransformationVisitor {
+    type Error = crate::Error;
+
+    fn try_from(value: &crate::Settings) -> Result<Self, Self::Error> {
+        Ok(Self {
+            classes: Default::default(),
+            random_number_generator: oorandom::Rand32::new(crate::random_seed()?),
+            class_name_template: value
+                .class_name_template
+                .clone()
+                .unwrap_or(String::from("class-<id>")),
+        })
     }
 }
 
