@@ -28,7 +28,7 @@ impl Default for TransformationVisitor {
 
 impl TransformationVisitor {
     fn randomized_class_name(&mut self, class_name: String) -> String {
-        match self.classes.get(&class_name.clone()) {
+        match self.classes.get(&class_name) {
             Some(random_class_name) => random_class_name.clone(),
             None => {
                 let mut new_class_name = class_name.clone();
@@ -63,7 +63,7 @@ pub struct LightningcssError(String);
 
 impl From<String> for LightningcssError {
     fn from(value: String) -> Self {
-        Self(value.to_string())
+        Self(value)
     }
 }
 
@@ -75,13 +75,18 @@ impl std::fmt::Display for LightningcssError {
 
 impl std::error::Error for LightningcssError {}
 
-pub fn transform_stylesheet(css: &str, settings: crate::Settings) -> Result<String, crate::Error> {
+pub fn transform_stylesheet(
+    css: &str,
+    settings: crate::Settings,
+) -> Result<(String, HashMap<String, String>), crate::Error> {
     let mut stylesheet = StyleSheet::parse(css, ParserOptions::default())
         .map_err(|e| e.to_string())
         .map_err(LightningcssError::from)?;
 
+    let mut visitor = TransformationVisitor::default();
+
     stylesheet
-        .visit(&mut TransformationVisitor::default())
+        .visit(&mut visitor)
         .expect("css visitor never fails");
 
     let css_result = stylesheet
@@ -89,7 +94,7 @@ pub fn transform_stylesheet(css: &str, settings: crate::Settings) -> Result<Stri
         .map_err(|e| e.to_string())
         .map_err(LightningcssError::from)?;
 
-    Ok(css_result.code.clone())
+    Ok((css_result.code, visitor.classes))
 }
 
 #[cfg(test)]
@@ -105,7 +110,7 @@ mod tests {
         "#;
         let x = transform_stylesheet(style, crate::Settings::default()).unwrap();
 
-        assert!(x.starts_with("."));
-        assert!(x.ends_with(" {\n  color: red;\n}\n"));
+        assert!(x.0.starts_with("."));
+        assert!(x.0.ends_with(" {\n  color: red;\n}\n"));
     }
 }
