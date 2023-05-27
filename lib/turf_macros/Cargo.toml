@@ -13,6 +13,7 @@ proc_macro = true
 [dependencies]
 quote = "1.0"
 proc-macro2 = { version = "1.0" }
+convert_case = "0.6.0"
 
 [dependencies.turf_internals]
 path = "../turf_internals"

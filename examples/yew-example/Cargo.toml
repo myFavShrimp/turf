@@ -14,4 +14,10 @@ path = "../../lib/turf"
 
 [package.metadata.turf]
 load_paths = ["variables"]
-output_style = "expanded"
+minify = true
+class_name_template = "yew-example_<original_name>_<id>"
+
+[package.metadata.turf.browser_targets]
+chrome = [80, 81, 82]
+firefox = 65
+safari = [12, 13]
