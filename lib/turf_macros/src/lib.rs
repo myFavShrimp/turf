@@ -44,7 +44,16 @@ fn create_classes_structure(classes: HashMap<String, String>) -> proc_macro2::To
 
     let randomized_class_names: Vec<&String> = classes.values().collect();
 
+    let doc = original_class_names
+        .iter()
+        .zip(randomized_class_names.iter())
+        .fold(String::new(), |mut doc, (variable, class_name)| {
+            doc.push_str(&format!("{} = \"{}\"\n", variable, class_name));
+            doc
+        });
+
     quote::quote! {
+        #[doc=#doc]
         struct ClassName;
         impl ClassName {
             #(pub const #original_class_names: &'static str = #randomized_class_names;)*
@@ -68,6 +77,7 @@ mod tests {
         assert_eq!(
             out.to_string(),
             quote::quote! {
+                #[doc="TEST_CLASS = \"abc-123\"\n"]
                 struct ClassName;
                 impl ClassName {
                     pub const TEST_CLASS: &'static str = "abc-123";
