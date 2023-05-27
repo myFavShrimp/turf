@@ -111,6 +111,6 @@ mod tests {
         let x = transform_stylesheet(style, crate::Settings::default()).unwrap();
 
         assert!(x.0.starts_with("."));
-        assert!(x.0.ends_with(" {\n  color: red;\n}\n"));
+        assert!(x.0.ends_with("{color:red}"));
     }
 }
