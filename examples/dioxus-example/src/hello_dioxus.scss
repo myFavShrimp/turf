@@ -1,0 +1,11 @@
+@import "color";
+
+.hello-dioxus {
+    h1 {
+        color: headline-color;
+    }
+
+    .hello-world {
+        color: blue;
+    }
+}
