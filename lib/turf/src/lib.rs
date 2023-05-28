@@ -27,7 +27,10 @@
 //!
 //! ## Usage
 //!
-//! For a complete runnable example project, you can check out the [leptos-example](https://github.com/myFavShrimp/turf/tree/main/examples/leptos-example) / [yew-example](https://github.com/myFavShrimp/turf/tree/main/examples/yew-example).
+//! For a complete runnable example project, you can check out one of the examples:
+//!
+//! | [leptos-example](https://github.com/myFavShrimp/turf/tree/main/examples/leptos-example) | [yew-example](https://github.com/myFavShrimp/turf/tree/main/examples/yew-example) | [dioxus-example](https://github.com/myFavShrimp/turf/tree/main/examples/dioxus-example) |
+//! | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 //!
 //! ### 1. Create SCSS styles for your application.
 //!
@@ -113,18 +116,10 @@
 //!
 //! Three formats are supported:
 //!
-//! 1. **major**:
-//! - Use a single integer to specify the major version number.
-//! - Example: `1` or `[1]` represent version `1`
-//!
-//! 2. **major.minor**:
-//! - Use an array `[major, minor]` to specify both the major and minor version numbers.
-//! - Example: `[1, 2]` represents version `1.2`
-//!
-//! 3. **major.minor.patch**:
-//! - Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers.
-//! - Example: `[1, 2, 3]` represents version `1.2.3`.
-//!
+//! | major | major.minor | major.minor.patch |
+//! | :---- | :---------- | :---------------- |
+//! | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
+//! | Example: `1` or `[1]` represent version `1` | Example: `[1, 2]` represents version `1.2` | Example: `[1, 2, 3]` represents version `1.2.3`. |
 
 /// generates the static variable `STYLE_SHEET` and the `ClassName` struct with default settings or the settings specified in the `Cargo.toml`
 pub use turf_macros::style_sheet;

@@ -48,7 +48,7 @@ For a complete runnable example project, you can check out one of the examples:
 
 ### 2. Use the `style_sheet` macro to include the resulting CSS in your code
 
-```rust
+```rust,ignore
 turf::style_sheet!("scss/file/path.scss");
 ```
 
