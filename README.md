@@ -121,18 +121,6 @@ Three formats are supported:
 | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
 | Example: `1` or `[1]` represent version `1` | Example: `[1, 2]` represents version `1.2` | Example: `[1, 2, 3]` represents version `1.2.3`. |
 
-1. **major**:
-    - Use a single integer to specify the major version number.
-    - Example: `1` or `[1]` represent version `1`
-
-2. **major.minor**:
-    - Use an array `[major, minor]` to specify both the major and minor version numbers.
-    - Example: `[1, 2]` represents version `1.2`
-
-3. **major.minor.patch**:
-    - Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers.
-    - Example: `[1, 2, 3]` represents version `1.2.3`.
-
 ## Contributions
 
 Contributions to turf are always welcome! Whether you have ideas for new features or improvements, don't hesitate to open an issue or submit a pull request. 🤝
