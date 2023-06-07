@@ -1,6 +1,6 @@
 [package]
 name = "turf"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 description = "Build SCSS to CSS during compile time and inject those styles into your binary."
 readme = "../../README.md"
@@ -15,4 +15,4 @@ categories = ["wasm", "web-programming"]
 
 [dependencies.turf_macros]
 path = "../turf_macros"
-version = "0.3.0"
+version = "0.3.1"
