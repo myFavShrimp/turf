@@ -25,7 +25,7 @@ impl<'a> From<Settings> for lightningcss::printer::PrinterOptions<'a> {
         lightningcss::printer::PrinterOptions {
             minify: val.minify.unwrap_or(true),
             project_root: None,
-            targets: val.browser_targets.map(From::<BrowserVersions>::from),
+            targets: val.browser_targets.map(From::<BrowserVersions>::from).into(),
             analyze_dependencies: None,
             pseudo_classes: None,
         }
