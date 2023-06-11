@@ -111,7 +111,9 @@ impl Settings {
                     .or(Self::prod_from_cargo_manifest_metadata()?)
                     .unwrap_or(Self::default());
 
-                TURF_DEV_SETTINGS.set(turf_dev_settings.clone());
+                TURF_DEV_SETTINGS.set(turf_dev_settings.clone()).expect(
+                    "internal turf-dev settings have already been set, but should be empty",
+                );
 
                 Ok(turf_dev_settings)
             }
@@ -122,7 +124,9 @@ impl Settings {
                 let turf_settings =
                     Self::prod_from_cargo_manifest_metadata()?.unwrap_or(Self::default());
 
-                TURF_SETTINGS.set(turf_settings.clone());
+                TURF_SETTINGS
+                    .set(turf_settings.clone())
+                    .expect("internal turf settings have already been set, but should be empty");
 
                 Ok(turf_settings)
             }
