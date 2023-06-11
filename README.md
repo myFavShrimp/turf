@@ -11,8 +11,8 @@
 [crates-url]: https://crates.io/crates/turf
 [docs-badge]: https://img.shields.io/docsrs/turf/latest.svg?logo=rust
 [docs-url]: https://docs.rs/turf
-[actions-badge]: https://github.com/myFavShrimp/turf/actions/workflows/rust.yml/badge.svg
-[actions-url]: https://github.com/myFavShrimp/turf/actions/workflows/rust.yml
+[actions-badge]: https://github.com/myFavShrimp/turf/actions/workflows/rust-ci.yml/badge.svg
+[actions-url]: https://github.com/myFavShrimp/turf/actions/workflows/rust-ci.yml
 [lic-url]: https://github.com/myFavShrimp/turf/blob/master/LICENSE
 [lic-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 
