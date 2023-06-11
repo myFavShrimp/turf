@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: hecrj/setup-rust-action@v1
       with:
-        rust-version: 1.70
+        rust-version: 1.70.0
     - name: Debug Build turf_internals
       run: cd lib/turf_internals && cargo build --verbose
     - name: Debug Build turf_macros
@@ -28,7 +28,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: hecrj/setup-rust-action@v1
       with:
-        rust-version: 1.70
+        rust-version: 1.70.0
     - name: Debug Build turf_internals
       run: cd lib/turf_internals && cargo build --release
     - name: Debug Build turf_macros
@@ -41,7 +41,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: hecrj/setup-rust-action@v1
       with:
-        rust-version: 1.70
+        rust-version: 1.70.0
     - name: Run turf_internals tests
       run: cd lib/turf_internals && cargo test
     - name: Run turf_macros tests
