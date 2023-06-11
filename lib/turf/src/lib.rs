@@ -90,9 +90,9 @@
 //! class_name_template = "custom-<id>-<original_name>"
 //!
 //! [package.metadata.turf.browser_targets]
-//! chrome = [80, 81, 82]
+//! chrome = [80, 1, 2]
 //! firefox = 65
-//! safari = [12, 13]
+//! safari = [12, 3]
 //! ```
 //!
 //! The following configuration options are available:
@@ -126,7 +126,7 @@
 //! | major | major.minor | major.minor.patch |
 //! | :---- | :---------- | :---------------- |
 //! | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
-//! | Example: `1` or `[1]` represent version `1` | Example: `[1, 2]` represents version `1.2` | Example: `[1, 2, 3]` represents version `1.2.3`. |
+//! | Example: `1` or `[1]` represent version `1.0.0` | Example: `[1, 2]` represents version `1.2.0` | Example: `[1, 2, 3]` represents version `1.2.3`. |
 
 /// generates the static variable `STYLE_SHEET` and the `ClassName` struct with default settings or the settings specified in the `Cargo.toml`
 pub use turf_macros::style_sheet;

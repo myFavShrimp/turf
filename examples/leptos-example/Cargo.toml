@@ -18,6 +18,6 @@ minify = true
 class_name_template = "leptos-example_<original_name>_<id>"
 
 [package.metadata.turf.browser_targets]
-chrome = [80, 81, 82]
+chrome = [80, 1, 2]
 firefox = 65
-safari = [12, 13]
+safari = [12, 3]

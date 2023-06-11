@@ -90,9 +90,9 @@ load_paths = ["path/to/scss/files", "path/to/other/scss/files"]
 class_name_template = "custom-<id>-<original_name>"
 
 [package.metadata.turf.browser_targets]
-chrome = [80, 81, 82]
+chrome = [80, 1, 2]
 firefox = 65
-safari = [12, 13]
+safari = [12, 3]
 ```
 
 The following configuration options are available:
