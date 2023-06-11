@@ -26,5 +26,5 @@ features = ["grid", "visitor"]
 version = "=1.0.0-alpha.39"
 
 [dependencies.grass]
-version = "0.12"
+version = "0.12.4"
 default-features = false
