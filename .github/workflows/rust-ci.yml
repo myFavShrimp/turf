@@ -17,7 +17,7 @@ jobs:
       with:
         rust-version: 1.70
     - name: Debug Build turf_internals
-      run: cd lib/turf_internals && cargo build
+      run: cd lib/turf_internals && cargo build --verbose
     - name: Debug Build turf_macros
       run: cd lib/turf_macros && cargo build
     - name: Debug Build turf
