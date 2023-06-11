@@ -23,4 +23,6 @@ pub struct PackageWithMetadata {
 #[derive(Deserialize, Debug)]
 pub struct MetadataWithTurfSettings {
     pub turf: Option<crate::settings::Settings>,
+    #[serde(rename = "turf-dev")]
+    pub turf_dev: Option<crate::settings::Settings>,
 }

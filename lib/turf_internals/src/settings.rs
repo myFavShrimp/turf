@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, sync::OnceLock};
 
 use serde::Deserialize;
 
@@ -25,7 +25,10 @@ impl<'a> From<Settings> for lightningcss::printer::PrinterOptions<'a> {
         lightningcss::printer::PrinterOptions {
             minify: val.minify.unwrap_or(true),
             project_root: None,
-            targets: val.browser_targets.map(From::<BrowserVersions>::from).into(),
+            targets: val
+                .browser_targets
+                .map(From::<BrowserVersions>::from)
+                .into(),
             analyze_dependencies: None,
             pseudo_classes: None,
         }
@@ -95,20 +98,49 @@ impl From<BrowserVersion> for u32 {
     }
 }
 
+static TURF_SETTINGS: OnceLock<Settings> = OnceLock::new();
+static TURF_DEV_SETTINGS: OnceLock<Settings> = OnceLock::new();
+
 impl Settings {
-    pub fn from_cargo_manifest_metadata_or_default() -> Result<Self, crate::Error> {
+    pub fn get() -> Result<Self, crate::Error> {
+        if cfg!(debug_assertions) {
+            if let Some(turf_dev_settings) = TURF_DEV_SETTINGS.get() {
+                Ok(turf_dev_settings.clone())
+            } else {
+                let turf_dev_settings =
+                    Self::dev_from_cargo_manifest_metadata()?.unwrap_or(Settings::default());
+                TURF_DEV_SETTINGS.set(turf_dev_settings.clone()).unwrap();
+
+                Ok(turf_dev_settings)
+            }
+        } else {
+            if let Some(turf_settings) = TURF_SETTINGS.get() {
+                Ok(turf_settings.clone())
+            } else {
+                let turf_settings =
+                    Self::prod_from_cargo_manifest_metadata()?.unwrap_or(Settings::default());
+                TURF_SETTINGS.set(turf_settings.clone()).unwrap();
+
+                Ok(turf_settings)
+            }
+        }
+    }
+
+    fn dev_from_cargo_manifest_metadata() -> Result<Option<Self>, crate::Error> {
         let manifest_data = crate::manifest::cargo_manifest()?;
 
-        if let Some(PackageWithMetadata {
-            metadata:
-                Some(MetadataWithTurfSettings {
-                    turf: Some(turf_settings),
-                }),
-        }) = manifest_data.package
-        {
-            Ok(turf_settings)
-        } else {
-            Ok(Settings::default())
-        }
+        Ok(manifest_data
+            .package
+            .and_then(|package| package.metadata)
+            .and_then(|metadata| metadata.turf_dev))
+    }
+
+    fn prod_from_cargo_manifest_metadata() -> Result<Option<Self>, crate::Error> {
+        let manifest_data = crate::manifest::cargo_manifest()?;
+
+        Ok(manifest_data
+            .package
+            .and_then(|package| package.metadata)
+            .and_then(|metadata| metadata.turf))
     }
 }

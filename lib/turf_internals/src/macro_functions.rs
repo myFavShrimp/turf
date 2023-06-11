@@ -24,6 +24,6 @@ pub fn style_sheet<P>(path: P) -> Result<(String, HashMap<String, String>), crat
 where
     P: AsRef<Path> + std::fmt::Debug,
 {
-    let settings = crate::settings::Settings::from_cargo_manifest_metadata_or_default()?;
+    let settings = crate::settings::Settings::get()?;
     style_sheet_with_compile_options(path, settings)
 }
