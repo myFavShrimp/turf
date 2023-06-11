@@ -65,7 +65,7 @@ impl ClassName {
 
 To access the generated class names, use the `ClassName` struct and its associated constants:
 
-```rust
+```rust,ignore
 let top_level_class_name = ClassName::TOP_LEVEL_CLASS;
 let some_class_name = ClassName::SOME_CLASS;
 ```
