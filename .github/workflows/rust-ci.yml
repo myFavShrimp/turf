@@ -16,12 +16,8 @@ jobs:
     - uses: hecrj/setup-rust-action@v1
       with:
         rust-version: 1.70.0
-    - name: Debug Build turf_internals
-      run: cd lib/turf_internals && cargo build --verbose
-    - name: Debug Build turf_macros
-      run: cd lib/turf_macros && cargo build
-    - name: Debug Build turf
-      run: cd lib/turf && cargo build
+    - name: Debug Build
+      run: cd lib && cargo build --verbose
   build-release:
     runs-on: ubuntu-latest
     steps:
@@ -29,22 +25,27 @@ jobs:
     - uses: hecrj/setup-rust-action@v1
       with:
         rust-version: 1.70.0
-    - name: Debug Build turf_internals
-      run: cd lib/turf_internals && cargo build --release
-    - name: Debug Build turf_macros
-      run: cd lib/turf_macros && cargo build --release
-    - name: Debug Build turf
-      run: cd lib/turf && cargo build --release
-  test:
+    - name: Release Build
+      run: cd lib && cargo build --release --verbose
+  test-debug:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: hecrj/setup-rust-action@v1
       with:
         rust-version: 1.70.0
-    - name: Run turf_internals tests
-      run: cd lib/turf_internals && cargo test
-    - name: Run turf_macros tests
-      run: cd lib/turf_macros && cargo test
-    - name: Run turf tests
-      run: cd lib/turf && cargo test
+    - name: Run lib tests
+      run: cd lib && cargo test --verbose
+    - name: Run additional tests
+      run: cd tests && cargo test --verbose
+  test-release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hecrj/setup-rust-action@v1
+      with:
+        rust-version: 1.70.0
+    - name: Run lib tests
+      run: cd lib && cargo test --release --verbose
+    - name: Run additional tests
+      run: cd tests && cargo test --release --verbose
