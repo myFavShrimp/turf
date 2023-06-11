@@ -38,7 +38,7 @@ impl<'i> Visitor<'i> for TransformationVisitor {
     fn visit_selector(&mut self, selectors: &mut Selector<'i>) -> Result<(), Self::Error> {
         for selector in selectors.iter_mut_raw_match_order() {
             if let Component::Class(c) = selector {
-                *c = format!("{}", self.randomized_class_name(c.to_string())).into();
+                *c = self.randomized_class_name(c.to_string()).to_string().into();
             }
         }
 
