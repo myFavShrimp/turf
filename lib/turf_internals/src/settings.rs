@@ -104,12 +104,14 @@ static TURF_DEV_SETTINGS: OnceLock<Settings> = OnceLock::new();
 impl Settings {
     pub fn get() -> Result<Self, crate::Error> {
         if cfg!(debug_assertions) {
-            if let Some(turf_dev_settings) = TURF_DEV_SETTINGS.get() {
+            if let Some(turf_dev_settings) = TURF_DEV_SETTINGS.get().or(TURF_SETTINGS.get()) {
                 Ok(turf_dev_settings.clone())
             } else {
-                let turf_dev_settings =
-                    Self::dev_from_cargo_manifest_metadata()?.unwrap_or(Settings::default());
-                TURF_DEV_SETTINGS.set(turf_dev_settings.clone()).unwrap();
+                let turf_dev_settings = Self::dev_from_cargo_manifest_metadata()?
+                    .or(Self::prod_from_cargo_manifest_metadata()?)
+                    .unwrap_or(Self::default());
+
+                TURF_DEV_SETTINGS.set(turf_dev_settings.clone());
 
                 Ok(turf_dev_settings)
             }
@@ -118,8 +120,9 @@ impl Settings {
                 Ok(turf_settings.clone())
             } else {
                 let turf_settings =
-                    Self::prod_from_cargo_manifest_metadata()?.unwrap_or(Settings::default());
-                TURF_SETTINGS.set(turf_settings.clone()).unwrap();
+                    Self::prod_from_cargo_manifest_metadata()?.unwrap_or(Self::default());
+
+                TURF_SETTINGS.set(turf_settings.clone());
 
                 Ok(turf_settings)
             }
