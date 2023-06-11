@@ -1,5 +1,7 @@
 # turf 🌱
 
+> **Warning** | As of 0.4.0 the minimum supported Rust version is 1.70.0!
+
 `turf` allows you to build SCSS to CSS during compile time and inject those styles into your binary.
 
 [![Rust 1.70.0][rust-version-badge]][rust-version-url]
@@ -8,7 +10,7 @@
 [![Build Status][actions-badge]][actions-url]
 [![MIT licensed][lic-badge]][lic-url]
 
-[rust-version-badge]: https://img.shields.io/badge/Rust-1.70.0-orange
+[rust-version-badge]: https://img.shields.io/badge/Rust-1.70.0-orange?logo=rust
 [rust-version-url]: https://blog.rust-lang.org/2023/06/01/Rust-1.70.0.html
 [crates-badge]: https://img.shields.io/crates/v/turf.svg
 [crates-url]: https://crates.io/crates/turf
@@ -75,7 +77,9 @@ let some_class_name = ClassName::SOME_CLASS;
 
 ### 3. Configuration
 
-The configuration for turf can be specified in the Cargo.toml file using the `[package.metadata.turf]` key. This allows you to conveniently manage your SCSS compilation settings within your project's manifest.
+The configuration for turf can be specified in the Cargo.toml file using the `[package.metadata.turf]` and `[package.metadata.turf-dev]` keys. This allows you to conveniently manage your SCSS compilation settings for both development and production builds within your project's manifest.
+
+Both profiles offer the exact same configuration options. However, if you haven't specified a `[package.metadata.turf-dev]` profile, the `[package.metadata.turf]` settings will also be applied to debug builds. This ensures consistency in the compilation process across different build types unless you explicitly define a separate configuration for the development profile.
 
 Example configuration:
 

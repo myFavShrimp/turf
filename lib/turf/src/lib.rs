@@ -1,18 +1,23 @@
 //! # turf 🌱
 //!
+//! > **Warning** | As of 0.4.0 the minimum supported Rust version is 1.70.0!
+//!
 //! `turf` allows you to build SCSS to CSS during compile time and inject those styles into your binary.
 //!
+//! [![Rust 1.70.0][rust-version-badge]][rust-version-url]
 //! [![Crates.io][crates-badge]][crates-url]
 //! [![Docs.rs][docs-badge]][docs-url]
 //! [![Build Status][actions-badge]][actions-url]
 //! [![MIT licensed][lic-badge]][lic-url]
 //!
-//! [crates-badge]: https://img.shields.io/crates/v/turf.svg?logo=docsdotrs
+//! [rust-version-badge]: https://img.shields.io/badge/Rust-1.70.0-orange?logo=rust
+//! [rust-version-url]: https://blog.rust-lang.org/2023/06/01/Rust-1.70.0.html
+//! [crates-badge]: https://img.shields.io/crates/v/turf.svg
 //! [crates-url]: https://crates.io/crates/turf
-//! [docs-badge]: https://img.shields.io/docsrs/turf/latest.svg?logo=rust
+//! [docs-badge]: https://img.shields.io/docsrs/turf/latest.svg?logo=docsdotrs&label=docs.rs
 //! [docs-url]: https://docs.rs/turf
-//! [actions-badge]: https://github.com/myFavShrimp/turf/actions/workflows/rust.yml/badge.svg
-//! [actions-url]: https://github.com/myFavShrimp/turf/actions/workflows/rust.yml
+//! [actions-badge]: https://github.com/myFavShrimp/turf/actions/workflows/rust-ci.yml/badge.svg
+//! [actions-url]: https://github.com/myFavShrimp/turf/actions/workflows/rust-ci.yml
 //! [lic-url]: https://github.com/myFavShrimp/turf/blob/master/LICENSE
 //! [lic-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 //!
@@ -32,7 +37,7 @@
 //! | [leptos-example](https://github.com/myFavShrimp/turf/tree/main/examples/leptos-example) | [yew-example](https://github.com/myFavShrimp/turf/tree/main/examples/yew-example) | [dioxus-example](https://github.com/myFavShrimp/turf/tree/main/examples/dioxus-example) |
 //! | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 //!
-//! ### 1. Create SCSS styles for your application.
+//! ### 1. Create SCSS styles for your application
 //!
 //! ```scss
 //! // file at scss/file/path.scss
@@ -72,7 +77,9 @@
 //!
 //! ### 3. Configuration
 //!
-//! The configuration for turf can be specified in the Cargo.toml file using the `[package.metadata.turf]` key. This allows you to conveniently manage your SCSS compilation settings within your project's manifest.
+//! The configuration for turf can be specified in the Cargo.toml file using the `[package.metadata.turf]` and `[package.metadata.turf-dev]` keys. This allows you to conveniently manage your SCSS compilation settings for both development and production builds within your project's manifest.
+//!
+//! Both profiles offer the exact same configuration options. However, if you haven't specified a `[package.metadata.turf-dev]` profile, the `[package.metadata.turf]` settings will also be applied to debug builds. This ensures consistency in the compilation process across different build types unless you explicitly define a separate configuration for the development profile.
 //!
 //! Example configuration:
 //!
