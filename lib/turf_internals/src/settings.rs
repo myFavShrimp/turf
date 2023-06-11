@@ -2,8 +2,6 @@ use std::{path::PathBuf, sync::OnceLock};
 
 use serde::Deserialize;
 
-use crate::manifest::{MetadataWithTurfSettings, PackageWithMetadata};
-
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Settings {
     pub(crate) minify: Option<bool>,
@@ -117,19 +115,17 @@ impl Settings {
 
                 Ok(turf_dev_settings)
             }
+        } else if let Some(turf_settings) = TURF_SETTINGS.get() {
+            Ok(turf_settings.clone())
         } else {
-            if let Some(turf_settings) = TURF_SETTINGS.get() {
-                Ok(turf_settings.clone())
-            } else {
-                let turf_settings =
-                    Self::prod_from_cargo_manifest_metadata()?.unwrap_or(Self::default());
+            let turf_settings =
+                Self::prod_from_cargo_manifest_metadata()?.unwrap_or(Self::default());
 
-                TURF_SETTINGS
-                    .set(turf_settings.clone())
-                    .expect("internal turf settings have already been set, but should be empty");
+            TURF_SETTINGS
+                .set(turf_settings.clone())
+                .expect("internal turf settings have already been set, but should be empty");
 
-                Ok(turf_settings)
-            }
+            Ok(turf_settings)
         }
     }
 
