@@ -126,7 +126,7 @@ Three formats are supported:
 | major | major.minor | major.minor.patch |
 | :---- | :---------- | :---------------- |
 | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
-| Example: `1` or `[1]` represent version `1` | Example: `[1, 2]` represents version `1.2` | Example: `[1, 2, 3]` represents version `1.2.3`. |
+| Example: `1` or `[1]` represent version `1.0.0` | Example: `[1, 2]` represents version `1.2.0` | Example: `[1, 2, 3]` represents version `1.2.3`. |
 
 ## Contributions
 
