@@ -16,8 +16,12 @@ jobs:
     - uses: hecrj/setup-rust-action@v1
       with:
         rust-version: 1.70
-    - name: Build Debug
-      run: cd lib && cargo build
+    - name: Debug Build turf_internals
+      run: cd lib/turf_internals && cargo build
+    - name: Debug Build turf_macros
+      run: cd lib/turf_macros && cargo build
+    - name: Debug Build turf
+      run: cd lib/turf && cargo build
   build-release:
     runs-on: ubuntu-latest
     steps:
@@ -25,8 +29,12 @@ jobs:
     - uses: hecrj/setup-rust-action@v1
       with:
         rust-version: 1.70
-    - name: Build Release
-      run: cd lib && cargo build --release --all-features
+    - name: Debug Build turf_internals
+      run: cd lib/turf_internals && cargo build --release
+    - name: Debug Build turf_macros
+      run: cd lib/turf_macros && cargo build --release
+    - name: Debug Build turf
+      run: cd lib/turf && cargo build --release
   test:
     runs-on: ubuntu-latest
     steps:
@@ -34,5 +42,9 @@ jobs:
     - uses: hecrj/setup-rust-action@v1
       with:
         rust-version: 1.70
-    - name: Run tests
-      run: cd tests && cargo test && cd ../lib && cargo test
+    - name: Run turf_internals tests
+      run: cd lib/turf_internals && cargo test
+    - name: Run turf_macros tests
+      run: cd lib/turf_macros && cargo test
+    - name: Run turf tests
+      run: cd lib/turf && cargo test
