@@ -1,6 +1,6 @@
 # 0.4.0
 - Minimum supported Rust version is now 1.70.0
-- Added [package.metadata.turf-dev] profile for separate development and production build settings
+- Added `[package.metadata.turf-dev]` profile for separate development and production build settings
 - The configuration is now cached to avoid reading it repeatedly from the config for every macro invocation
 
 # 0.3.2
