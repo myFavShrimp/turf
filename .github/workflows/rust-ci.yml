@@ -1,0 +1,45 @@
+name: Rust-CI
+
+on:
+  push: {}
+  pull_request: {}
+  workflow_dispatch: {}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-debug:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.70
+        override: true
+    - name: Build Debug
+      run: cargo build
+    - name: Build Release
+      run: cargo build --release --all-features
+    - name: Run tests
+      run: cd tests && cargo test
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.70
+        override: true
+    - name: Build Release
+      run: cargo build --release --all-features
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.70
+        override: true
+    - name: Run tests
+      run: cd tests && cargo test
