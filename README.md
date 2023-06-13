@@ -1,6 +1,6 @@
 # turf 🌱
 
-> **Warning** | As of 0.4.0 the minimum supported Rust version is 1.70.0!
+> **Warning** | As of 0.4.0 the minimum supported Rust version will be 1.70.0!
 
 `turf` allows you to build SCSS to CSS during compile time and inject those styles into your binary.
 
