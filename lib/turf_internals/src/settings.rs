@@ -120,6 +120,10 @@ impl Settings {
                     "internal turf-dev settings have already been set, but should be empty",
                 );
 
+                if turf_dev_settings.debug_enabled() {
+                    println!("{:#?}", &turf_dev_settings);
+                }
+
                 Ok(turf_dev_settings)
             }
         } else if let Some(turf_settings) = TURF_SETTINGS.get() {
@@ -131,6 +135,10 @@ impl Settings {
             TURF_SETTINGS
                 .set(turf_settings.clone())
                 .expect("internal turf settings have already been set, but should be empty");
+
+            if turf_settings.debug_enabled() {
+                println!("{:#?}", &turf_settings);
+            }
 
             Ok(turf_settings)
         }
