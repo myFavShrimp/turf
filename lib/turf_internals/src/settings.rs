@@ -47,13 +47,19 @@ impl TryFrom<&crate::Settings> for crate::transformer::TransformationVisitor {
         Ok(Self {
             debug: value.debug.unwrap_or(false),
             classes: Default::default(),
-            random_number_generator: oorandom::Rand32::new(crate::random_seed()?),
+            random_number_generator: oorandom::Rand32::new(random_seed()?),
             class_name_template: value
                 .class_name_template
                 .clone()
                 .unwrap_or(String::from("class-<id>")),
         })
     }
+}
+
+fn random_seed() -> Result<u64, getrandom::Error> {
+    let mut buf = [0u8; 8];
+    getrandom::getrandom(&mut buf)?;
+    Ok(u64::from_ne_bytes(buf))
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]

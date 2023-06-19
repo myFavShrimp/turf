@@ -39,12 +39,6 @@ where
     }
 }
 
-fn random_seed() -> Result<u64, getrandom::Error> {
-    let mut buf = [0u8; 8];
-    getrandom::getrandom(&mut buf)?;
-    Ok(u64::from_ne_bytes(buf))
-}
-
 fn compile_message(message: &str) {
     println!("🌱 turf [INFO]: {message}");
 }
