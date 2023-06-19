@@ -10,6 +10,7 @@ pub struct TransformationVisitor {
     pub(crate) classes: HashMap<String, String>,
     pub(crate) random_number_generator: oorandom::Rand32,
     pub(crate) class_name_template: String,
+    pub(crate) debug: bool,
 }
 
 impl TransformationVisitor {
@@ -38,7 +39,16 @@ impl<'i> Visitor<'i> for TransformationVisitor {
     fn visit_selector(&mut self, selectors: &mut Selector<'i>) -> Result<(), Self::Error> {
         for selector in selectors.iter_mut_raw_match_order() {
             if let Component::Class(c) = selector {
-                *c = self.randomized_class_name(c.to_string()).to_string().into();
+                let original_class_name = c.to_string();
+                let new_class_name = self
+                    .randomized_class_name(original_class_name.clone())
+                    .to_string();
+
+                if self.debug {
+                    println!("{:?} = {:?}", &original_class_name, &new_class_name);
+                }
+
+                *c = new_class_name.into();
             }
         }
 

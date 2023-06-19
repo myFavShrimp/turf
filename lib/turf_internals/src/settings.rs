@@ -45,6 +45,7 @@ impl TryFrom<&crate::Settings> for crate::transformer::TransformationVisitor {
 
     fn try_from(value: &crate::Settings) -> Result<Self, Self::Error> {
         Ok(Self {
+            debug: value.debug.unwrap_or(false),
             classes: Default::default(),
             random_number_generator: oorandom::Rand32::new(crate::random_seed()?),
             class_name_template: value
