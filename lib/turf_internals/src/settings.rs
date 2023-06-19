@@ -4,10 +4,17 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Settings {
+    pub(crate) debug: Option<bool>,
     pub(crate) minify: Option<bool>,
     pub(crate) load_paths: Option<Vec<PathBuf>>,
     pub(crate) browser_targets: Option<BrowserVersions>,
     pub(crate) class_name_template: Option<String>,
+}
+
+impl Settings {
+    pub fn debug_enabled(&self) -> bool {
+        self.debug.unwrap_or(false)
+    }
 }
 
 impl<'a> From<Settings> for grass::Options<'a> {
