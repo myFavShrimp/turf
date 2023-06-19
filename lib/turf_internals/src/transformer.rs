@@ -45,7 +45,10 @@ impl<'i> Visitor<'i> for TransformationVisitor {
                     .to_string();
 
                 if self.debug {
-                    println!("{:?} = {:?}", &original_class_name, &new_class_name);
+                    crate::compile_message(&format!(
+                        "class name mapping - {:?} = {:?}",
+                        &original_class_name, &new_class_name
+                    ));
                 }
 
                 *c = new_class_name.into();

@@ -26,3 +26,7 @@ fn random_seed() -> Result<u64, getrandom::Error> {
     getrandom::getrandom(&mut buf)?;
     Ok(u64::from_ne_bytes(buf))
 }
+
+fn compile_message(message: &str) {
+    println!("🌱 turf [INFO]: {message}");
+}

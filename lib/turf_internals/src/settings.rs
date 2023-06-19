@@ -122,7 +122,7 @@ impl Settings {
                 );
 
                 if turf_dev_settings.debug_enabled() {
-                    println!("{:#?}", &turf_dev_settings);
+                    crate::compile_message(&format!("settings - {:#?}", &turf_dev_settings));
                 }
 
                 Ok(turf_dev_settings)
@@ -138,7 +138,7 @@ impl Settings {
                 .expect("internal turf settings have already been set, but should be empty");
 
             if turf_settings.debug_enabled() {
-                println!("{:#?}", &turf_settings);
+                crate::compile_message(&format!("settings - {:#?}", &turf_settings));
             }
 
             Ok(turf_settings)
