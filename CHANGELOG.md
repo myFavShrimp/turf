@@ -1,7 +1,9 @@
 # 0.4.0 [unreleased]
 - Minimum supported Rust version is now 1.70.0
+- New `once_cell` feature flag for backward compatibility down to 1.64.0
 - Added `[package.metadata.turf-dev]` profile for separate development and production build settings
 - The configuration is now cached to avoid reading it repeatedly from the config for every macro invocation
+- Added a `debug` configuration setting for debug output
 
 # 0.3.2
 - pinned version of `lightningcss` and `lightningcss-derive` to prevent incompatible releases from being used
