@@ -11,6 +11,9 @@ documentation = "https://docs.rs/turf"
 keywords = ["web", "CSS", "SCSS", "macro"]
 categories = ["wasm", "web-programming"]
 
+[features]
+once_cell = ["turf_macros/once_cell"]
+
 [dependencies]
 
 [dependencies.turf_macros]

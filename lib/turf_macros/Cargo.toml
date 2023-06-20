@@ -7,6 +7,9 @@ license = "MIT"
 authors = ["myFavShrimp <myfavshrimp@tuta.io>"]
 readme = "README.md"
 
+[features]
+once_cell = ["turf_internals/once_cell"]
+
 [lib]
 proc_macro = true
 
