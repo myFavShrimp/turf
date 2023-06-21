@@ -48,7 +48,7 @@ jobs:
       with:
         rust-version: 1.70.0
     - name: Debug Build
-      run: cd lib && cargo build --verbose
+      run: cd lib && cargo build --verbose --features once_cell
   build-release-1_64:
     runs-on: ubuntu-latest
     steps:
