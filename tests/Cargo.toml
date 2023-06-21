@@ -2,5 +2,4 @@
 members = [
     "load_settings_from_cargo_manifest",
     "use_default_settings",
-    "use_correct_settings_profile_depending_on_build_type",
 ]

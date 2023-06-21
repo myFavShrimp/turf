@@ -27,48 +27,12 @@ jobs:
         rust-version: 1.70.0
     - name: Release Build
       run: cd lib && cargo build --release --verbose
-  test-debug:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: hecrj/setup-rust-action@v1
       with:
         rust-version: 1.70.0
-    - name: Run lib tests
-      run: cd lib && cargo test --verbose
-    - name: Run additional tests
-      run: cd tests && cargo test --verbose
-  test-release:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: hecrj/setup-rust-action@v1
-      with:
-        rust-version: 1.70.0
-    - name: Run lib tests
-      run: cd lib && cargo test --release --verbose
-    - name: Run additional tests
-      run: cd tests && cargo test --release --verbose
-  test-build-examples:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: hecrj/setup-rust-action@v1
-      with:
-        rust-version: 1.70.0
-    - name: Install wasm32
-      run: rustup target add wasm32-unknown-unknown
-    - name: Install trunk
-      run: cargo install --locked trunk
-    - name: Debug Build leptos-example
-      run: cd examples/leptos-example && trunk build
-    - name: Release Build leptos-example
-      run: cd examples/leptos-example && trunk build --release
-    - name: Debug Build yew-example
-      run: cd examples/yew-example && trunk build
-    - name: Release Build yew-example
-      run: cd examples/yew-example && trunk build --release
-    - name: Debug Build dioxus-example
-      run: cd examples/dioxus-example && trunk build
-    - name: Release Build dioxus-example
-      run: cd examples/dioxus-example && trunk build --release
+    - name: Run tests
+      run: make test

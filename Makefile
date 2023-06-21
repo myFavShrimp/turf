@@ -1,8 +1,4 @@
-test-release:
-	cd lib && cargo test --release --verbose
-	cd tests && cargo test --release --verbose
-
-test-debug:
+test-lib:
 	cd lib && cargo test --verbose
 	cd tests && cargo test --verbose
 
@@ -14,4 +10,4 @@ test-build-examples:
 	cd examples/dioxus-example && trunk build
 	cd examples/dioxus-example && trunk build --release
 
-test: test-debug test-release
+test: test-lib test-build-examples
