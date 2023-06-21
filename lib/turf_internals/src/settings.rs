@@ -125,12 +125,18 @@ impl Settings {
         let dev_settings = Self::dev_profile_settings()?;
         let prod_settings = Self::prod_profile_settings()?;
 
-        Ok(Self::choose_settings(dev_settings, prod_settings))
+        Ok(Self::choose_settings(
+            dev_settings,
+            prod_settings,
+            cfg!(debug_assertions),
+        ))
     }
 
-    fn choose_settings(dev: Option<Settings>, prod: Option<Settings>) -> Self {
-        let is_debug_build = cfg!(debug_assertions);
-
+    fn choose_settings(
+        dev: Option<Settings>,
+        prod: Option<Settings>,
+        is_debug_build: bool,
+    ) -> Self {
         if let (Some(cfg), true) = (dev.or(prod.clone()), is_debug_build) {
             cfg
         } else if let (Some(cfg), false) = (prod, is_debug_build) {
@@ -176,5 +182,70 @@ impl Settings {
         }
 
         Ok(prod_settings_maybe)
+    }
+}
+
+#[cfg(test)]
+mod debug_tests {
+    use super::Settings;
+
+    #[test]
+    fn use_dev_settings_for_debug_build() {
+        let mut dev_settings = Settings::default();
+        dev_settings.class_name_template = Some(String::from("abc"));
+
+        let mut prod_settings = Settings::default();
+        prod_settings.class_name_template = Some(String::from("def"));
+
+        let selected_settings =
+            Settings::choose_settings(Some(dev_settings.clone()), Some(prod_settings), true);
+
+        assert_eq!(
+            selected_settings.class_name_template,
+            dev_settings.class_name_template
+        );
+    }
+
+    #[test]
+    fn use_prod_settings_for_debug_build_when_no_dev_settings_where_given() {
+        let mut prod_settings = Settings::default();
+        prod_settings.class_name_template = Some(String::from("def"));
+
+        let selected_settings = Settings::choose_settings(None, Some(prod_settings.clone()), true);
+
+        assert_eq!(
+            selected_settings.class_name_template,
+            prod_settings.class_name_template
+        );
+    }
+
+    #[test]
+    fn use_prod_settings_for_release_build() {
+        let mut dev_settings = Settings::default();
+        dev_settings.class_name_template = Some(String::from("abc"));
+
+        let mut prod_settings = Settings::default();
+        prod_settings.class_name_template = Some(String::from("def"));
+
+        let selected_settings =
+            Settings::choose_settings(Some(dev_settings), Some(prod_settings.clone()), false);
+
+        assert_eq!(
+            selected_settings.class_name_template,
+            prod_settings.class_name_template
+        );
+    }
+
+    #[test]
+    fn do_not_use_dev_settings_for_release_build() {
+        let mut dev_settings = Settings::default();
+        dev_settings.class_name_template = Some(String::from("abc"));
+
+        let selected_settings = Settings::choose_settings(Some(dev_settings.clone()), None, false);
+
+        assert_ne!(
+            selected_settings.class_name_template,
+            dev_settings.class_name_template
+        );
     }
 }
