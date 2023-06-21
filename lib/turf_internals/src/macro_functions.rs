@@ -19,15 +19,6 @@ where
     crate::transformer::transform_stylesheet(&css, settings)
 }
 
-pub fn style_sheet_with_default_compile_options<P>(
-    path: P,
-) -> Result<(String, HashMap<String, String>), crate::Error>
-where
-    P: AsRef<Path> + std::fmt::Debug,
-{
-    style_sheet_with_compile_options(path, crate::Settings::default())
-}
-
 pub fn style_sheet<P>(path: P) -> Result<(String, HashMap<String, String>), crate::Error>
 where
     P: AsRef<Path> + std::fmt::Debug,
