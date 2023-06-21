@@ -122,57 +122,59 @@ static TURF_DEV_SETTINGS: once_cell::sync::OnceCell<Settings> = once_cell::sync:
 
 impl Settings {
     pub fn get() -> Result<Self, crate::Error> {
-        if cfg!(debug_assertions) {
-            if let Some(turf_dev_settings) = TURF_DEV_SETTINGS.get().or(TURF_SETTINGS.get()) {
-                Ok(turf_dev_settings.clone())
-            } else {
-                let turf_dev_settings = Self::dev_from_cargo_manifest_metadata()?
-                    .or(Self::prod_from_cargo_manifest_metadata()?)
-                    .unwrap_or(Self::default());
+        let dev_settings = Self::dev_profile_settings()?;
+        let prod_settings = Self::prod_profile_settings()?;
 
-                TURF_DEV_SETTINGS.set(turf_dev_settings.clone()).expect(
-                    "internal turf-dev settings have already been set, but should be empty",
-                );
+        Ok(Self::choose_settings(dev_settings, prod_settings))
+    }
 
-                if turf_dev_settings.debug_enabled() {
-                    crate::compile_message(&format!("settings - {:#?}", &turf_dev_settings));
-                }
+    fn choose_settings(dev: Option<Settings>, prod: Option<Settings>) -> Self {
+        let is_debug_build = cfg!(debug_assertions);
 
-                Ok(turf_dev_settings)
-            }
-        } else if let Some(turf_settings) = TURF_SETTINGS.get() {
-            Ok(turf_settings.clone())
+        if let (Some(cfg), true) = (dev.or(prod.clone()), is_debug_build) {
+            cfg
+        } else if let (Some(cfg), false) = (prod, is_debug_build) {
+            cfg
         } else {
-            let turf_settings =
-                Self::prod_from_cargo_manifest_metadata()?.unwrap_or(Self::default());
-
-            TURF_SETTINGS
-                .set(turf_settings.clone())
-                .expect("internal turf settings have already been set, but should be empty");
-
-            if turf_settings.debug_enabled() {
-                crate::compile_message(&format!("settings - {:#?}", &turf_settings));
-            }
-
-            Ok(turf_settings)
+            Settings::default()
         }
     }
 
-    fn dev_from_cargo_manifest_metadata() -> Result<Option<Self>, crate::Error> {
-        let manifest_data = crate::manifest::cargo_manifest()?;
+    fn dev_profile_settings() -> Result<Option<Self>, crate::Error> {
+        if let Some(turf_dev_settings) = TURF_DEV_SETTINGS.get() {
+            return Ok(Some(turf_dev_settings.clone()));
+        }
 
-        Ok(manifest_data
+        let dev_settings_maybe = crate::manifest::cargo_manifest()?
             .package
             .and_then(|package| package.metadata)
-            .and_then(|metadata| metadata.turf_dev))
+            .and_then(|metadata| metadata.turf_dev);
+
+        if let Some(turf_dev_settings) = dev_settings_maybe.clone() {
+            TURF_DEV_SETTINGS
+                .set(turf_dev_settings)
+                .expect("internal turf-dev settings have already been set, but should be empty");
+        }
+
+        Ok(dev_settings_maybe)
     }
 
-    fn prod_from_cargo_manifest_metadata() -> Result<Option<Self>, crate::Error> {
-        let manifest_data = crate::manifest::cargo_manifest()?;
+    fn prod_profile_settings() -> Result<Option<Self>, crate::Error> {
+        if let Some(turf_prod_settings) = TURF_SETTINGS.get() {
+            return Ok(Some(turf_prod_settings.clone()));
+        }
 
-        Ok(manifest_data
+        let prod_settings_maybe = crate::manifest::cargo_manifest()?
             .package
             .and_then(|package| package.metadata)
-            .and_then(|metadata| metadata.turf))
+            .and_then(|metadata| metadata.turf);
+
+        if let Some(turf_prod_settings) = prod_settings_maybe.clone() {
+            TURF_SETTINGS
+                .set(turf_prod_settings)
+                .expect("internal turf settings have already been set, but should be empty");
+        }
+
+        Ok(prod_settings_maybe)
     }
 }
