@@ -57,7 +57,7 @@ jobs:
       with:
         rust-version: 1.64.0
     - name: Release Build
-      run: cd lib && cargo build --release --verbose
+      run: cd lib && cargo build --release --verbose --features once_cell
   test-1_64:
     runs-on: ubuntu-latest
     steps:
@@ -70,4 +70,4 @@ jobs:
     - name: Install trunk
       run: cargo install --locked trunk
     - name: Run lib tests
-      run: make test-lib
+      run: make test-lib-1_64

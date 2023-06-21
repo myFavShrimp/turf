@@ -2,6 +2,10 @@ test-lib:
 	cd lib && cargo test --verbose
 	cd tests && cargo test --verbose
 
+test-lib-1_64:
+	cd lib && cargo test --verbose --features once_cell
+	cd tests && cargo test --verbose --features once_cell
+
 test-build-examples:
 	cd examples/leptos-example && trunk build
 	cd examples/leptos-example && trunk build --release
