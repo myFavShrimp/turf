@@ -5,6 +5,9 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+once_cell = ["turf/once_cell"]
+
 [dependencies.turf]
 path = "../../lib/turf"
 [dependencies.turf_internals]
