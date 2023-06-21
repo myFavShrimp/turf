@@ -40,3 +40,34 @@ jobs:
       run: cargo install --locked trunk
     - name: Run tests
       run: make test
+  build-debug-1_64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hecrj/setup-rust-action@v1
+      with:
+        rust-version: 1.70.0
+    - name: Debug Build
+      run: cd lib && cargo build --verbose
+  build-release-1_64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hecrj/setup-rust-action@v1
+      with:
+        rust-version: 1.64.0
+    - name: Release Build
+      run: cd lib && cargo build --release --verbose
+  test-1_64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hecrj/setup-rust-action@v1
+      with:
+        rust-version: 1.64.0
+    - name: Install wasm32
+      run: rustup target add wasm32-unknown-unknown
+    - name: Install trunk
+      run: cargo install --locked trunk
+    - name: Run lib tests
+      run: make test-lib
