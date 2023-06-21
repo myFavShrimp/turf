@@ -1,6 +1,6 @@
 //! # turf 🌱
 //!
-//! > **Warning** | As of 0.4.0 the minimum supported Rust version is 1.70.0!
+//! > **Warning** | As of 0.4.0, the minimum supported Rust version is 1.70.0 by default! This can be circumvented by using the `once_cell` feature flag, which will lower the minimum supported version to 1.64.0.
 //!
 //! `turf` allows you to build SCSS to CSS during compile time and inject those styles into your binary.
 //!

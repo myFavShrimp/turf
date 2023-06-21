@@ -1,4 +1,4 @@
-# 0.4.0 [unreleased]
+# 0.4.0
 - Minimum supported Rust version is now 1.70.0
 - New `once_cell` feature flag for backward compatibility down to Rust version 1.64.0
 - Added `[package.metadata.turf-dev]` profile for separate development and production build settings
