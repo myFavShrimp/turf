@@ -2,6 +2,7 @@
 
 pub mod macro_functions;
 mod manifest;
+mod path;
 mod settings;
 mod transformer;
 
@@ -41,14 +42,4 @@ where
 
 fn compile_message(message: &str) {
     println!("🌱 turf [INFO]: {message}");
-}
-
-pub fn canonicalize<P>(path: P) -> std::path::PathBuf
-where
-    P: AsRef<Path>,
-{
-    let mut manifest_path = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
-    manifest_path.push(path);
-
-    manifest_path
 }

@@ -1,6 +1,6 @@
 use std::{collections::HashMap, path::Path};
 
-use crate::canonicalize;
+use crate::path::canonicalize;
 
 fn style_sheet_with_compile_options<P>(
     path: P,
