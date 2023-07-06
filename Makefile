@@ -2,7 +2,7 @@ test-lib:
 	cd lib && cargo test --verbose
 	cd tests && cargo test --verbose
 
-test-lib-1_64:
+test-lib-once_cell:
 	cd lib && cargo test --verbose --features once_cell
 	cd tests && cargo test --verbose --features once_cell
 

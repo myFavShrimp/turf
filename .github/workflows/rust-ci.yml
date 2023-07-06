@@ -67,7 +67,5 @@ jobs:
         rust-version: 1.64.0
     - name: Install wasm32
       run: rustup target add wasm32-unknown-unknown
-    - name: Install trunk
-      run: cargo install --locked trunk
     - name: Run lib tests
-      run: make test-lib-1_64
+      run: make test-lib-once_cell
