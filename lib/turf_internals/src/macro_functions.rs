@@ -9,6 +9,10 @@ fn style_sheet_with_compile_options<P>(
 where
     P: AsRef<Path> + std::fmt::Debug,
 {
+    if path.as_ref() == Path::new("") {
+        return Err(crate::Error::NoInputFileError);
+    };
+
     let path = canonicalize(path);
     let css = grass::from_path(&path, &settings.clone().into())
         .map_err(|e| crate::Error::from((e, path)))?;

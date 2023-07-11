@@ -24,6 +24,8 @@ pub enum Error {
     CssError(#[from] transformer::LightningcssError),
     #[error("error obtaining random id - {0}")]
     RandError(#[from] getrandom::Error),
+    #[error("no input file was specified")]
+    NoInputFileError,
 }
 
 impl<P> From<(Box<grass::Error>, P)> for Error
