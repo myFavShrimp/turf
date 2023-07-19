@@ -23,7 +23,7 @@ default-features = false
 features = ["grid", "visitor"]
 
 [dependencies.grass]
-version = "0.12.4"
+version = "0.13.0"
 default-features = false
 
 [dependencies.once_cell]
