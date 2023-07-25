@@ -140,7 +140,8 @@ To ensure that your SCSS files are recompiled whenever they change, you'll need 
 
 ```rust
 fn main() {
-    // Tell Cargo to rerun this build script if any SCSS file in the 'src' directory or its subdirectories changes.
+    // Tell Cargo to rerun this build script if any SCSS file
+    // in the 'src' directory or its subdirectories changes.
     println!("cargo:rerun-if-changed=src/**/*.scss");
 }
 ```
