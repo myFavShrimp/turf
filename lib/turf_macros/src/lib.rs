@@ -20,7 +20,7 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
         };
 
     let mut out = quote! {
-        static STYLE_SHEET: &'static str = #style_sheet;
+        pub static STYLE_SHEET: &'static str = #style_sheet;
     };
     out.extend(create_classes_structure(class_names));
 
