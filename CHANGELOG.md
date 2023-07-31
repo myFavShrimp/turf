@@ -1,3 +1,13 @@
+# 0.5.0
+- Updated grass to `0.13` (see [here](https://github.com/connorskees/grass/blob/master/CHANGELOG.md))
+- Added instructions to trigger recompilation on SCSS style changes
+- `ClassName` is now `pub` (thank you @xeho91 for creating a pull request)
+- `STYLE_SHEET` is now `pub`
+
+# 0.4.1
+- Improved messages of errors with the SCCS input file path
+- Fixed a misleading file path in error messages when using Cargo workspaces
+
 # 0.4.0
 - Minimum supported Rust version is now 1.70.0
 - New `once_cell` feature flag for backward compatibility down to Rust version 1.64.0
