@@ -2,6 +2,8 @@ use std::path::PathBuf;
 
 use serde::Deserialize;
 
+use crate::path::canonicalize;
+
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Settings {
     pub(crate) debug: Option<bool>,
@@ -15,13 +17,22 @@ impl Settings {
     pub fn debug_enabled(&self) -> bool {
         self.debug.unwrap_or(false)
     }
+
+    pub fn canonicalized_load_paths(&self) -> Vec<PathBuf> {
+        self.load_paths
+            .clone()
+            .unwrap_or(Default::default())
+            .into_iter()
+            .map(canonicalize)
+            .collect()
+    }
 }
 
 impl<'a> From<Settings> for grass::Options<'a> {
     fn from(val: Settings) -> Self {
         grass::Options::default()
             .style(grass::OutputStyle::Expanded)
-            .load_paths(&val.load_paths.unwrap_or(Default::default()))
+            .load_paths(&val.canonicalized_load_paths())
     }
 }
 

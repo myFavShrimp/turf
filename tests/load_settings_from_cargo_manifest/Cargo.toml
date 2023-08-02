@@ -14,5 +14,5 @@ path = "../../lib/turf"
 path = "../../lib/turf_internals"
 
 [package.metadata.turf]
-load_paths = ["variables"]
+load_paths = ["../variables"]
 minify = false
