@@ -26,6 +26,8 @@ pub enum Error {
     RandError(#[from] getrandom::Error),
     #[error("no input file was specified")]
     NoInputFileError,
+    #[error("error with compilation state")]
+    MutexError,
 }
 
 impl<P> From<(Box<grass::Error>, P)> for Error
