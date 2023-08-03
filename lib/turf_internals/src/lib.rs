@@ -28,6 +28,24 @@ pub enum Error {
     NoInputFileError,
     #[error("error with compilation state")]
     MutexError,
+    #[error(transparent)]
+    PathResolutionError(#[from] PathResolutionError),
+}
+
+#[derive(thiserror::Error, Debug)]
+#[error("error resolving path '{path}' - {source}")]
+pub struct PathResolutionError {
+    path: PathBuf,
+    source: std::io::Error,
+}
+
+impl From<(PathBuf, std::io::Error)> for PathResolutionError {
+    fn from(value: (PathBuf, std::io::Error)) -> Self {
+        Self {
+            path: value.0,
+            source: value.1,
+        }
+    }
 }
 
 impl<P> From<(Box<grass::Error>, P)> for Error

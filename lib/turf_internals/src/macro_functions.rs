@@ -4,7 +4,7 @@ use std::{
     sync::Mutex,
 };
 
-use crate::{path::canonicalize, Settings};
+use crate::{path::canonicalize, PathResolutionError, Settings};
 
 fn style_sheet_with_compile_options<P>(
     path: P,
@@ -50,31 +50,27 @@ pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, crate::Error> {
         let settings = Settings::get()?;
         *load_paths_tracked = true;
 
-        let result = settings.load_paths.unwrap_or(Vec::new()).into_iter().fold(
-            Vec::new(),
-            |mut acc, path| {
-                acc.extend(get_file_paths_recusively(path).unwrap());
-                acc
-            },
-        );
-        // get_file_paths_recusively()
+        let mut result = Vec::new();
+
+        for path in settings.load_paths.unwrap_or(Vec::new()) {
+            result.extend(get_file_paths_recusively(path)?);
+        }
 
         Ok(result)
     }
 }
 
-fn get_file_paths_recusively(path: PathBuf) -> std::io::Result<Vec<PathBuf>> {
+fn get_file_paths_recusively(path: PathBuf) -> Result<Vec<PathBuf>, PathResolutionError> {
     use std::fs::read_dir;
 
+    let path = canonicalize(path);
     let mut result = Vec::new();
 
-    for item in read_dir(path)? {
-        let item_path = item?.path();
+    for item in read_dir(path.clone()).map_err(|e| (path.clone(), e))? {
+        let item_path = item.map_err(|e| (path.clone(), e))?.path();
 
         if item_path.is_file() {
-            let mut parent = PathBuf::from("..");
-            parent.push(item_path);
-            result.push(dbg!(parent));
+            result.push(canonicalize(item_path));
         } else if item_path.is_dir() {
             result.extend(get_file_paths_recusively(item_path)?);
         }
