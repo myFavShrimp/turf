@@ -16,8 +16,6 @@ pub enum Error {
     TomlParseError(#[from] toml::de::Error),
     #[error("error reading cargo manifest - {0}")]
     ManifestError(#[from] std::io::Error),
-    #[error("error reading path '{1}' - {0}")]
-    PathError(std::io::Error, PathBuf),
     #[error("error compiling scss file '{1}' - {0}")]
     GrassError(Box<grass::Error>, PathBuf),
     #[error("error transforming css - {0}")]
@@ -57,7 +55,11 @@ where
 
         match canonicalized_path {
             Ok(path) => Error::GrassError(value.0, path),
-            Err(e) => Error::PathError(e, value.1.as_ref().to_path_buf()),
+            Err(e) => PathResolutionError {
+                path: value.1.as_ref().to_path_buf(),
+                source: e,
+            }
+            .into(),
         }
     }
 }
