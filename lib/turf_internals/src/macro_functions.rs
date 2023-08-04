@@ -33,7 +33,11 @@ where
     Ok((style_sheet, class_names))
 }
 
+#[cfg(not(feature = "once_cell"))]
 static LOAD_PATHS_TRACKED: std::sync::OnceLock<Mutex<bool>> = std::sync::OnceLock::new();
+#[cfg(feature = "once_cell")]
+static LOAD_PATHS_TRACKED: once_cell::sync::OnceCell<Mutex<bool>> =
+    once_cell::sync::OnceCell::new();
 
 pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, crate::Error> {
     let load_paths_tracked_mutex = LOAD_PATHS_TRACKED.get_or_init(|| Mutex::new(false)).clone();
