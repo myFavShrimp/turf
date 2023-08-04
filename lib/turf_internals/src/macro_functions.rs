@@ -17,8 +17,8 @@ where
         return Err(crate::Error::NoInputFileError);
     };
 
-    let path = canonicalize(path);
-    let css = grass::from_path(&path, &settings.clone().into())
+    let path = canonicalize(path)?;
+    let css = grass::from_path(&path, &settings.clone().try_into()?)
         .map_err(|e| crate::Error::from((e, path)))?;
     crate::transformer::transform_stylesheet(&css, settings)
 }
@@ -67,14 +67,14 @@ pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, crate::Error> {
 fn get_file_paths_recusively(path: PathBuf) -> Result<Vec<PathBuf>, PathResolutionError> {
     use std::fs::read_dir;
 
-    let path = canonicalize(path);
+    let path = dbg!(canonicalize(path)?);
     let mut result = Vec::new();
 
     for item in read_dir(path.clone()).map_err(|e| (path.clone(), e))? {
         let item_path = item.map_err(|e| (path.clone(), e))?.path();
 
         if item_path.is_file() {
-            result.push(canonicalize(item_path));
+            result.push(canonicalize(item_path)?);
         } else if item_path.is_dir() {
             result.extend(get_file_paths_recusively(item_path)?);
         }

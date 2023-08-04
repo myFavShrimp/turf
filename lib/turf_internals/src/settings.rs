@@ -18,21 +18,24 @@ impl Settings {
         self.debug.unwrap_or(false)
     }
 
-    pub fn canonicalized_load_paths(&self) -> Vec<PathBuf> {
-        self.load_paths
+    pub fn canonicalized_load_paths(&self) -> Result<Vec<PathBuf>, crate::PathResolutionError> {
+        dbg!(self
+            .load_paths
             .clone()
             .unwrap_or(Default::default())
             .into_iter()
             .map(canonicalize)
-            .collect()
+            .collect())
     }
 }
 
-impl<'a> From<Settings> for grass::Options<'a> {
-    fn from(val: Settings) -> Self {
-        grass::Options::default()
+impl<'a> TryFrom<Settings> for grass::Options<'a> {
+    type Error = crate::PathResolutionError;
+
+    fn try_from(val: Settings) -> Result<Self, crate::PathResolutionError> {
+        Ok(grass::Options::default()
             .style(grass::OutputStyle::Expanded)
-            .load_paths(&val.canonicalized_load_paths())
+            .load_paths(&val.canonicalized_load_paths()?))
     }
 }
 
