@@ -4,10 +4,10 @@ pub fn canonicalize<P>(path: P) -> Result<PathBuf, crate::PathResolutionError>
 where
     P: AsRef<Path>,
 {
-    let mut manifest_path = PathBuf::from(
+    let mut canonicalized_path = PathBuf::from(
         std::env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR environment variable"),
     );
-    manifest_path.push(path.as_ref().clone());
+    canonicalized_path.push(path.as_ref().clone());
 
-    std::fs::canonicalize(manifest_path).map_err(|e| (path.as_ref().to_path_buf(), e).into())
+    std::fs::canonicalize(canonicalized_path.clone()).map_err(|e| (canonicalized_path, e).into())
 }
