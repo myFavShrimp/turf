@@ -129,26 +129,6 @@
 //! | :---- | :---------- | :---------------- |
 //! | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
 //! | Example: `1` or `[1]` represent version `1.0.0` | Example: `[1, 2]` represents version `1.2.0` | Example: `[1, 2, 3]` represents version `1.2.3`. |
-//!
-//! #### 3.3 Triggering Recompilation on SCSS File Changes
-//!
-//! To ensure that your SCSS files are recompiled whenever they change, you'll need to create a `build.rs` build script in your project root directory, right next to your `src` directory. This build script instructs Cargo to rerun the build process whenever the specified files change. Here's how you can set it up:
-//!
-//!
-//! 1. Create a `build.rs` file in your project root if you don't already have one.
-//! 2. Inside the `build.rs` file, add the following content:
-//!
-//! ```rust
-//! fn main() {
-//!     // Tell Cargo to rerun this build script if any SCSS file
-//!     // in the'src' directory or its subdirectories changes.
-//!     println!("cargo:rerun-if-changed=src/**/*.scss");
-//! }
-//! ```
-//!
-//! If your SCSS files are located in a different directory, make sure to adjust the path accordingly in the `println!` statement.
-//!
-//! Remember to check the [Cargo documentation](https://doc.rust-lang.org/cargo/reference/build-scripts.html) for more details about build scripts and how they interact with Cargo during the build process.
 
 /// generates the static variable `STYLE_SHEET` and the `ClassName` struct with default settings or the settings specified in the `Cargo.toml`
 pub use turf_macros::style_sheet;
