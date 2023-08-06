@@ -1,3 +1,7 @@
+# 0.6.0
+- Added tracking of style sheets and files in `load_paths` (SCSS recompilation on file changes)
+- `load_paths` now need to be relative to the project directory they are specified in
+
 # 0.5.0
 - Updated grass to `0.13` (see [here](https://github.com/connorskees/grass/blob/master/CHANGELOG.md))
 - Added instructions to trigger recompilation on SCSS style changes
