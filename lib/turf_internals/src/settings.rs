@@ -19,13 +19,12 @@ impl Settings {
     }
 
     pub fn canonicalized_load_paths(&self) -> Result<Vec<PathBuf>, crate::PathResolutionError> {
-        dbg!(self
-            .load_paths
+        self.load_paths
             .clone()
             .unwrap_or(Default::default())
             .into_iter()
             .map(canonicalize)
-            .collect())
+            .collect()
     }
 }
 
