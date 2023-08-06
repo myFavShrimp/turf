@@ -7,7 +7,7 @@ where
     let mut canonicalized_path = PathBuf::from(
         std::env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR environment variable"),
     );
-    canonicalized_path.push(path.as_ref().clone());
+    canonicalized_path.push(path.as_ref());
 
     std::fs::canonicalize(canonicalized_path.clone()).map_err(|e| (canonicalized_path, e).into())
 }

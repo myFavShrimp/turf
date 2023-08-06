@@ -40,7 +40,7 @@ static LOAD_PATHS_TRACKED: once_cell::sync::OnceCell<Mutex<bool>> =
     once_cell::sync::OnceCell::new();
 
 pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, crate::Error> {
-    let load_paths_tracked_mutex = LOAD_PATHS_TRACKED.get_or_init(|| Mutex::new(false)).clone();
+    let load_paths_tracked_mutex = LOAD_PATHS_TRACKED.get_or_init(|| Mutex::new(false));
     let mut load_paths_tracked = match load_paths_tracked_mutex.lock() {
         Err(_) => return Err(crate::Error::MutexError),
         Ok(val) => val,
