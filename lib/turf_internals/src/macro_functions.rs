@@ -47,10 +47,8 @@ pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, crate::Error> {
     };
 
     if *load_paths_tracked {
-        println!(" ==== TRACKED ====");
         Ok(Vec::new())
     } else {
-        println!(" ==== UNTRACKED ====");
         let settings = Settings::get()?;
         *load_paths_tracked = true;
 
@@ -67,7 +65,7 @@ pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, crate::Error> {
 fn get_file_paths_recusively(path: PathBuf) -> Result<Vec<PathBuf>, PathResolutionError> {
     use std::fs::read_dir;
 
-    let path = dbg!(canonicalize(path)?);
+    let path = canonicalize(path)?;
     let mut result = Vec::new();
 
     for item in read_dir(path.clone()).map_err(|e| (path.clone(), e))? {
