@@ -9,7 +9,7 @@ use crate::{path::canonicalize, PathResolutionError, Settings};
 fn style_sheet_with_compile_options<P>(
     path: P,
     settings: Settings,
-) -> Result<(String, HashMap<String, String>), crate::Error>
+) -> Result<(String, HashMap<String, String>, PathBuf), crate::Error>
 where
     P: AsRef<Path> + std::fmt::Debug,
 {
@@ -19,18 +19,17 @@ where
 
     let path = canonicalize(path)?;
     let css = grass::from_path(&path, &settings.clone().try_into()?)
-        .map_err(|e| crate::Error::from((e, path)))?;
-    crate::transformer::transform_stylesheet(&css, settings)
+        .map_err(|e| crate::Error::from((e, path.clone())))?;
+    let (style_sheet, class_names) = crate::transformer::transform_stylesheet(&css, settings)?;
+    Ok((style_sheet, class_names, path))
 }
 
-pub fn style_sheet<P>(path: P) -> Result<(String, HashMap<String, String>), crate::Error>
+pub fn style_sheet<P>(path: P) -> Result<(String, HashMap<String, String>, PathBuf), crate::Error>
 where
     P: AsRef<Path> + std::fmt::Debug,
 {
     let settings = Settings::get()?;
-    let (style_sheet, class_names) = style_sheet_with_compile_options(path, settings)?;
-
-    Ok((style_sheet, class_names))
+    style_sheet_with_compile_options(path, settings)
 }
 
 #[cfg(not(feature = "once_cell"))]

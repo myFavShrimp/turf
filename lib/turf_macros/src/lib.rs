@@ -11,7 +11,7 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
     let sanitized_input = input.trim_matches('"');
 
-    let (style_sheet, class_names) =
+    let (style_sheet, class_names, current_file_path) =
         match turf_internals::macro_functions::style_sheet(sanitized_input)
             .map_err(to_compile_error)
         {
@@ -22,9 +22,7 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
         .map_err(to_compile_error)
     {
         Ok(mut values) => {
-            let mut file_path = PathBuf::from("..");
-            file_path.push(PathBuf::from(sanitized_input));
-            values.push(file_path);
+            values.push(current_file_path);
             values
         }
         Err(e) => return e,
