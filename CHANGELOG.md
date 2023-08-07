@@ -1,3 +1,6 @@
+# 0.6.1
+- Fixed an error with the new path resolution which resulted in incorrect paths being used for the file tracking
+
 # 0.6.0
 - Added tracking of style sheets and files in `load_paths` (SCSS recompilation on file changes)
 - `load_paths` are now relative to the project directory they are specified in when using workspaces
