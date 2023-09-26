@@ -1,5 +1,5 @@
 # 0.6.2
-- Fixed failing builds due to a badly specified dependency in one of the turf dependencies (thank you @xeho91 for offering a quick fix)
+- Fixed failing builds due to a badly specified dependency in one of turf's dependencies (thank you @xeho91 for offering a quick fix)
 - Updated lightningcss
 
 # 0.6.1
