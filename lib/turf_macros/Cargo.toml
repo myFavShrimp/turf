@@ -1,6 +1,6 @@
 [package]
 name = "turf_macros"
-version = "0.6.1"
+version = "0.6.2"
 edition = "2021"
 description = "Macros used by turf."
 license = "MIT"
@@ -20,4 +20,4 @@ convert_case = "0.6.0"
 
 [dependencies.turf_internals]
 path = "../turf_internals"
-version = "0.6.1"
+version = "0.6.2"
