@@ -34,7 +34,9 @@ impl TransformationVisitor {
 impl<'i> Visitor<'i> for TransformationVisitor {
     type Error = Infallible;
 
-    const TYPES: VisitTypes = visit_types!(SELECTORS);
+    fn visit_types(&self) -> VisitTypes {
+        visit_types!(SELECTORS)
+    }
 
     fn visit_selector(&mut self, selectors: &mut Selector<'i>) -> Result<(), Self::Error> {
         for selector in selectors.iter_mut_raw_match_order() {
