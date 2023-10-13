@@ -29,6 +29,9 @@ pub enum Error {
     MutexError,
     #[error(transparent)]
     PathResolutionError(#[from] PathResolutionError),
+
+    #[error("error writing global css file '{0}' - {1}")]
+    GlobalCssFileWriteError(PathBuf, std::io::Error),
 }
 
 #[derive(thiserror::Error, Debug)]

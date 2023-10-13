@@ -20,7 +20,13 @@ where
     let path = canonicalize(path)?;
     let css = grass::from_path(&path, &settings.clone().try_into()?)
         .map_err(|e| crate::Error::from((e, path.clone())))?;
-    let (style_sheet, class_names) = crate::transformer::transform_stylesheet(&css, settings)?;
+    let (style_sheet, class_names) =
+        crate::transformer::transform_stylesheet(&css, settings.clone())?;
+
+    if let Some(file_output) = settings.file_output {
+        crate::file_output::perform_css_file_output(file_output, &style_sheet, &path)?;
+    }
+
     Ok((style_sheet, class_names, path))
 }
 
