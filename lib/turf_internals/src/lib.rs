@@ -1,5 +1,6 @@
 //! You're probably looking for `turf` instead.
 
+mod file_output;
 pub mod macro_functions;
 mod manifest;
 mod path;
