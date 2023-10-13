@@ -11,11 +11,19 @@ static DIRS_RESET: std::sync::OnceLock<()> = std::sync::OnceLock::new();
 #[cfg(feature = "once_cell")]
 static DIRS_RESET: once_cell::sync::OnceCell<()> = once_cell::sync::OnceCell::new();
 
+#[derive(Debug, thiserror::Error)]
+pub enum FileOutputError {
+    #[error("error with css output file - {0}")]
+    ManifestError(#[from] std::io::Error),
+    #[error("error writing css file '{0}' - {1}")]
+    CssFileWriteError(PathBuf, std::io::Error),
+}
+
 pub fn perform_css_file_output(
     output_paths: FileOutput,
     style: &str,
     current_scss_path: &PathBuf,
-) -> Result<(), crate::Error> {
+) -> Result<(), FileOutputError> {
     if DIRS_RESET.get().is_none() {
         if let Some(path) = &output_paths.global_css_file_path {
             if let Err(error) = std::fs::remove_file(path) {
@@ -56,7 +64,7 @@ pub fn perform_css_file_output(
 
         output_file
             .write_all(style.as_bytes())
-            .map_err(|error| crate::Error::GlobalCssFileWriteError(output_path, error))?;
+            .map_err(|error| FileOutputError::CssFileWriteError(output_path, error))?;
     }
 
     if let Some(output_path) = output_paths.global_css_file_path {
@@ -67,7 +75,7 @@ pub fn perform_css_file_output(
 
         global_css_file
             .write_all(style.as_bytes())
-            .map_err(|error| crate::Error::GlobalCssFileWriteError(output_path, error))?;
+            .map_err(|error| FileOutputError::CssFileWriteError(output_path, error))?;
     }
 
     Ok(())

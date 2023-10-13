@@ -30,8 +30,8 @@ pub enum Error {
     #[error(transparent)]
     PathResolutionError(#[from] PathResolutionError),
 
-    #[error("error writing global css file '{0}' - {1}")]
-    GlobalCssFileWriteError(PathBuf, std::io::Error),
+    #[error(transparent)]
+    FileOutputError(#[from] file_output::FileOutputError),
 }
 
 #[derive(thiserror::Error, Debug)]
