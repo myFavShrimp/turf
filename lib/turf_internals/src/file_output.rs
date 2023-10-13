@@ -57,7 +57,10 @@ pub fn perform_css_file_output(
         );
         output_path.set_extension("css");
 
-        let mut output_file = File::create(&output_path)
+        let mut output_file = File::options()
+            .create(true)
+            .append(true)
+            .open(&output_path)
             .map_err(|error| CssFileWriteError(output_path.clone(), error))?;
 
         output_file
