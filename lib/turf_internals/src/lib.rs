@@ -31,7 +31,7 @@ pub enum Error {
     PathResolutionError(#[from] PathResolutionError),
 
     #[error(transparent)]
-    FileOutputError(#[from] file_output::FileOutputError),
+    CssFileWriteError(#[from] file_output::CssFileWriteError),
 }
 
 #[derive(thiserror::Error, Debug)]
