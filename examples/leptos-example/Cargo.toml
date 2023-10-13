@@ -21,3 +21,7 @@ class_name_template = "leptos-example_<original_name>_<id>"
 chrome = [80, 1, 2]
 firefox = 65
 safari = [12, 3]
+
+[package.metadata.turf.file_output]
+global_css_file_path = "./test-global.css"
+separate_css_files_path = "./test-separate/"
