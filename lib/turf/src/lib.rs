@@ -132,3 +132,14 @@
 
 /// generates the static variable `STYLE_SHEET` and the `ClassName` struct with default settings or the settings specified in the `Cargo.toml`
 pub use turf_macros::style_sheet;
+
+/// returns a tuple of `(style_sheet: &'static str, class_names: struct)`
+///
+/// In some cases it may be necessary to have a struct's instance (for example when using turf in [askama](https://github.com/djc/askama) templates).
+///
+/// Usage:
+/// ```rust,ingore
+/// let (style_sheet, class_names) = turf::style_sheet_values!("path/to/style.scss");
+/// let some_class_name = class_names.some_class;
+/// ```
+pub use turf_macros::style_sheet_values;

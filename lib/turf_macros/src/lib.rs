@@ -37,6 +37,39 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
     out.into()
 }
 
+#[proc_macro]
+pub fn style_sheet_values(input: TokenStream) -> TokenStream {
+    let input = input.to_string();
+    let sanitized_input = input.trim_matches('"');
+
+    let (style_sheet, class_names, current_file_path) =
+        match turf_internals::macro_functions::style_sheet(sanitized_input)
+            .map_err(to_compile_error)
+        {
+            Ok(values) => values,
+            Err(e) => return e,
+        };
+    let untracked_load_paths = match turf_internals::macro_functions::get_untracked_load_paths()
+        .map_err(to_compile_error)
+    {
+        Ok(mut values) => {
+            values.push(current_file_path);
+            values
+        }
+        Err(e) => return e,
+    };
+
+    let includes = create_include_bytes(untracked_load_paths);
+    let inlines = create_inline_classes_instance(class_names);
+    let out = quote! {{
+        pub static STYLE_SHEET: &'static str = #style_sheet;
+        #includes
+        #inlines
+    }};
+
+    out.into()
+}
+
 fn to_compile_error(e: turf_internals::Error) -> TokenStream {
     let message = e.to_string();
     quote! {
@@ -68,6 +101,40 @@ fn create_classes_structure(classes: HashMap<String, String>) -> proc_macro2::To
         impl ClassName {
             #(pub const #original_class_names: &'static str = #randomized_class_names;)*
         }
+    }
+}
+
+fn create_inline_classes_instance(classes: HashMap<String, String>) -> proc_macro2::TokenStream {
+    let original_class_names: Vec<proc_macro2::Ident> = classes
+        .keys()
+        .map(|class| class.to_case(Case::Snake))
+        .map(|class| quote::format_ident!("{}", class.as_str()))
+        .collect();
+
+    let randomized_class_names: Vec<&String> = classes.values().collect();
+
+    let doc = original_class_names
+        .iter()
+        .zip(randomized_class_names.iter())
+        .fold(String::new(), |mut doc, (variable, class_name)| {
+            doc.push_str(&format!("{} = \"{}\"\n", variable, class_name));
+            doc
+        });
+
+    quote::quote! {
+        #[doc=#doc]
+        pub struct ClassNames {
+            #(pub #original_class_names: &'static str,)*
+        }
+        impl ClassNames {
+            pub fn new() -> Self {
+                Self {
+                    #(#original_class_names: #randomized_class_names,)*
+                }
+            }
+        }
+
+        (STYLE_SHEET, ClassNames::new())
     }
 }
 
