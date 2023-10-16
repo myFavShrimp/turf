@@ -1,5 +1,6 @@
 //! You're probably looking for `turf` instead.
 
+mod file_output;
 pub mod macro_functions;
 mod manifest;
 mod path;
@@ -28,6 +29,9 @@ pub enum Error {
     MutexError,
     #[error(transparent)]
     PathResolutionError(#[from] PathResolutionError),
+
+    #[error(transparent)]
+    CssFileWriteError(#[from] file_output::CssFileWriteError),
 }
 
 #[derive(thiserror::Error, Debug)]

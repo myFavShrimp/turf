@@ -5,12 +5,19 @@ use serde::Deserialize;
 use crate::path::canonicalize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
+pub struct FileOutput {
+    pub(crate) global_css_file_path: Option<PathBuf>,
+    pub(crate) separate_css_files_path: Option<PathBuf>,
+}
+
+#[derive(Deserialize, Debug, Default, Clone)]
 pub struct Settings {
     pub(crate) debug: Option<bool>,
     pub(crate) minify: Option<bool>,
     pub(crate) load_paths: Option<Vec<PathBuf>>,
     pub(crate) browser_targets: Option<BrowserVersions>,
     pub(crate) class_name_template: Option<String>,
+    pub(crate) file_output: Option<FileOutput>,
 }
 
 impl Settings {

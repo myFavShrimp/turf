@@ -93,6 +93,10 @@ class_name_template = "custom-<id>-<original_name>"
 chrome = [80, 1, 2]
 firefox = 65
 safari = [12, 3]
+
+[package.metadata.turf.file_output]
+global_css_file_path = "path/to/global.css"
+separate_css_files_path = "dir/for/separate/css/"
 ```
 
 The following configuration options are available:
@@ -107,7 +111,13 @@ The following configuration options are available:
 
 - `debug` (default: `false`): When set to true, this option will enable debug output of the read configuration and the generated CSS class names. This can be helpful for troubleshooting and understanding how the CSS is being generated.
 
-#### 3.1 Browser Versions
+#### 3.1 File Output
+
+- `global_css_file_path` (optional): Specifies the file path for a global CSS file. If set, a CSS file will be created at the provided path, and all compiled styles will be written to this file. This allows you to have a single CSS file containing all the compiled styles.
+
+- `separate_css_files_path` (optional): Specifies the directory path for separate CSS files. If set, all compiled CSS files will be saved in the specified directory. Each compiled SCSS file will have its corresponding CSS file in this directory, allowing for modular CSS management.
+
+#### 3.2 Browser Versions
 
 The available browsers are as follows:
 
@@ -121,7 +131,7 @@ The available browsers are as follows:
 - safari
 - samsung
 
-#### 3.2 Browser Version Format
+#### 3.3 Browser Version Format
 
 Three formats are supported:
 
