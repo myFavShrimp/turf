@@ -111,7 +111,7 @@ The following configuration options are available:
 
 - `debug` (default: `false`): When set to true, this option will enable debug output of the read configuration and the generated CSS class names. This can be helpful for troubleshooting and understanding how the CSS is being generated.
 
-- `file_output`: Enables output of compiled CSS. It expects a structure that includes two values for a singe global CSS file or separate CSS files for each compiled SCSS file.
+- `file_output`: Enables output of compiled CSS. It expects a structure that includes two values for a single global CSS file or separate CSS files for each compiled SCSS file.
 
 #### 3.1 File Output
 
