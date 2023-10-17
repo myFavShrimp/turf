@@ -1,6 +1,6 @@
 # turf 🌱
 
-> **Warning** | As of 0.4.0, the minimum supported Rust version is 1.70.0 by default! This can be circumvented by using the `once_cell` feature flag, which will lower the minimum supported version to 1.64.0.
+> **Warning** | The repository might reflect the current development state, which may differ from the officially released version. While the repository provides insights into ongoing development and potential upcoming features, it may not necessarily represent the release available through crates.io or other distribution channels.
 
 `turf` allows you to build SCSS to CSS during compile time and inject those styles into your binary.
 
@@ -20,8 +20,6 @@
 [actions-url]: https://github.com/myFavShrimp/turf/actions/workflows/rust-ci.yml
 [lic-url]: https://github.com/myFavShrimp/turf/blob/master/LICENSE
 [lic-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-
-## Features
 
 **turf will:**
 
@@ -153,6 +151,12 @@ The `turf_macros::inline_style_sheet` macro provides an alternative to directly 
 let (style_sheet, class_names) = turf::inline_style_sheet!("path/to/style.scss");
 let some_class_name = class_names.some_class;
 ```
+
+#### 3.5 Features
+
+| Feature | Description |
+| ------------ | ----------- |
+| `once_cell` | As of 0.4.0, the minimum supported Rust version is 1.70.0 by default. This can be circumvented by using the `once_cell` feature flag, which will lower the minimum supported version to 1.64.0. |
 
 ## Contributions
 
