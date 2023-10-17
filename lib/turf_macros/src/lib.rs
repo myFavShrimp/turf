@@ -38,7 +38,7 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
 }
 
 #[proc_macro]
-pub fn style_sheet_values(input: TokenStream) -> TokenStream {
+pub fn inline_style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
     let sanitized_input = input.trim_matches('"');
 

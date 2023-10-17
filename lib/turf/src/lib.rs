@@ -107,7 +107,15 @@
 //!
 //! - `debug` (default: `false`): When set to true, this option will enable debug output of the read configuration and the generated CSS class names. This can be helpful for troubleshooting and understanding how the CSS is being generated.
 //!
-//! #### 3.1 Browser Versions
+//! - `file_output`: Enables output of compiled CSS. It expects a structure that includes two values for a singe global CSS file or separate CSS files for each compiled SCSS file.
+//!
+//! #### 3.1 File Output
+//!
+//! - `global_css_file_path`: Specifies the file path for a global CSS file. If set, a CSS file will be created at the provided path, and all compiled styles will be written to this file. This allows you to have a single CSS file containing all the compiled styles.
+//!
+//! - `separate_css_files_path`: Specifies the directory path for separate CSS files. If set, all compiled CSS files will be saved in the specified directory. Each compiled SCSS file will have its corresponding CSS file in this directory, allowing for modular CSS management.
+//!
+//! #### 3.2 Browser Versions
 //!
 //! The available browsers are as follows:
 //!
@@ -121,7 +129,7 @@
 //! - safari
 //! - samsung
 //!
-//! #### 3.2 Browser Version Format
+//! #### 3.3 Browser Version Format
 //!
 //! Three formats are supported:
 //!
@@ -129,17 +137,31 @@
 //! | :---- | :---------- | :---------------- |
 //! | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
 //! | Example: `1` or `[1]` represent version `1.0.0` | Example: `[1, 2]` represents version `1.2.0` | Example: `[1, 2, 3]` represents version `1.2.3`. |
+//!
+//! #### 3.4 The `inline_style_sheet` Macro
+//!
+//! In some cases, it may be necessary to have a struct's instance (for example when using turf in [askama](https://github.com/djc/askama) templates).
+//! The `turf_macros::inline_style_sheet` macro provides an alternative to directly including the resulting CSS and obtaining the associated class names. It returns a tuple of `(style_sheet: &'static str, class_names: struct)`.
+//!
+//! **Usage:**
+//!
+//! ```rust,ignore
+//! let (style_sheet, class_names) = turf::inline_style_sheet!("path/to/style.scss");
+//! let some_class_name = class_names.some_class;
+//! ```
 
-/// generates the static variable `STYLE_SHEET` and the `ClassName` struct with default settings or the settings specified in the `Cargo.toml`
+/// Generates the static variable `STYLE_SHEET` and the `ClassName` struct with default settings or the settings specified in the `Cargo.toml`
 pub use turf_macros::style_sheet;
 
-/// returns a tuple of `(style_sheet: &'static str, class_names: struct)`
+/// Returns a tuple of `(style_sheet: &'static str, class_names: struct)`
 ///
-/// In some cases it may be necessary to have a struct's instance (for example when using turf in [askama](https://github.com/djc/askama) templates).
+/// In some cases, it may be necessary to have a struct's instance (for example when using turf in [askama](https://github.com/djc/askama) templates).
+/// The `turf::inline_style_sheet` macro simplifies the process of including the resulting CSS and obtaining the associated class names. It allows you to retrieve both the style sheet and the generated class names in a tuple.
 ///
-/// Usage:
-/// ```rust,ingore
-/// let (style_sheet, class_names) = turf::style_sheet_values!("path/to/style.scss");
+/// **Usage:**
+///
+/// ```rust,ignore
+/// let (style_sheet, class_names) = turf::inline_style_sheet!("path/to/style.scss");
 /// let some_class_name = class_names.some_class;
 /// ```
-pub use turf_macros::style_sheet_values;
+pub use turf_macros::inline_style_sheet;
