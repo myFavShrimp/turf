@@ -1,0 +1,11 @@
+@import "color";
+
+.hello-askama {
+    h1 {
+        color: $headline-color;
+    }
+
+    .hello-world {
+        color: blue;
+    }
+}

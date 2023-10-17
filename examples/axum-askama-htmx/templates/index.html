@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% let (style_sheet, class_name) = turf::inline_style_sheet!("templates/hello_askama.scss") %}
+
+    <style>
+        {{ style_sheet }}
+    </style>
+
+    <div class={{class_name.hello_askama}}>
+        <h1>Hello, Askama!</h1>
+        <h2 class={{class_name.hello_world}}>Hello, World!</h2>
+    </div>
+
+    {% include "counter_component.html" %}
+{% endblock %}

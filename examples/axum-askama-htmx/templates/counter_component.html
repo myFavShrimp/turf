@@ -1,0 +1,14 @@
+{% let (style_sheet, class_name) = turf::inline_style_sheet!("templates/counter_component.scss") %}
+
+<div
+    hx-target="this"
+    hx-swap="outerHTML"
+    hx-get="/counter/{{ count + 1 }}"
+    class={{ class_name.counter_button }}
+>
+    <style>{{ style_sheet }}</style>
+    <button>
+        Click me: 
+        {{ count }}
+    </button>
+</div>
