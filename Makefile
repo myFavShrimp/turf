@@ -13,5 +13,7 @@ test-build-examples:
 	cd examples/yew-example && trunk build --release
 	cd examples/dioxus-example && trunk build
 	cd examples/dioxus-example && trunk build --release
+	cd examples/axum-askama-htmx && cargo build
+	cd examples/axum-askama-htmx && cargo build --release
 
 test: test-lib test-build-examples
