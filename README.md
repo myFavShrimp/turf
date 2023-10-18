@@ -35,7 +35,7 @@ For a complete runnable example project, you can check out one of the examples:
 | [leptos-example](https://github.com/myFavShrimp/turf/tree/main/examples/leptos-example) | [yew-example](https://github.com/myFavShrimp/turf/tree/main/examples/yew-example) | [dioxus-example](https://github.com/myFavShrimp/turf/tree/main/examples/dioxus-example) | [axum-askama-htmx](https://github.com/myFavShrimp/turf/tree/main/examples/axum-askama-htmx) |
 | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 
-### 1. Create SCSS styles for your application
+**1. Create SCSS styles for your application**
 
 ```scss
 // file at scss/file/path.scss
@@ -49,7 +49,7 @@ For a complete runnable example project, you can check out one of the examples:
 }
 ```
 
-### 2. Use the `style_sheet` macro to include the resulting CSS in your code
+**2. Use the `style_sheet` macro to include the resulting CSS in your code**
 
 ```rust,ignore
 turf::style_sheet!("scss/file/path.scss");
@@ -66,14 +66,14 @@ impl ClassName {
 }
 ```
 
-To access the generated class names, use the `ClassName` struct and its associated constants:
+**3. Use the `ClassName` struct and its associated constants to access the generated class names**
 
 ```rust,ignore
 let top_level_class_name = ClassName::TOP_LEVEL_CLASS;
 let some_class_name = ClassName::SOME_CLASS;
 ```
 
-### 3. Configuration
+### Configuration
 
 The configuration for turf can be specified in the Cargo.toml file using the `[package.metadata.turf]` and `[package.metadata.turf-dev]` keys. This allows you to conveniently manage your SCSS compilation settings for both development and production builds within your project's manifest.
 
@@ -111,13 +111,13 @@ The following configuration options are available:
 
 - `file_output`: Enables output of compiled CSS. It expects a structure that includes two values for a single global CSS file or separate CSS files for each compiled SCSS file.
 
-#### 3.1 File Output
+#### File Output
 
 - `global_css_file_path`: Specifies the file path for a global CSS file. If set, a CSS file will be created at the provided path, and all compiled styles will be written to this file. This allows you to have a single CSS file containing all the compiled styles.
 
 - `separate_css_files_path`: Specifies the directory path for separate CSS files. If set, all compiled CSS files will be saved in the specified directory. Each compiled SCSS file will have its corresponding CSS file in this directory, allowing for modular CSS management.
 
-#### 3.2 Browser Versions
+#### Browser Versions
 
 The available browsers are as follows:
 
@@ -131,7 +131,7 @@ The available browsers are as follows:
 - safari
 - samsung
 
-#### 3.3 Browser Version Format
+#### Browser Version Format
 
 Three formats are supported:
 
@@ -140,9 +140,15 @@ Three formats are supported:
 | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
 | Example: `1` or `[1]` represent version `1.0.0` | Example: `[1, 2]` represents version `1.2.0` | Example: `[1, 2, 3]` represents version `1.2.3`. |
 
-#### 3.4 The `turf::inline_style_sheet` Macro
+### Features
 
-In some cases, it may be necessary to have a struct's instance (for example when using turf in [askama](https://github.com/djc/askama) templates).
+| Feature | Description |
+| ------------ | ----------- |
+| `once_cell` | As of 0.4.0, the minimum supported Rust version is 1.70.0 by default. This can be circumvented by using the `once_cell` feature flag, which will lower the minimum supported version to 1.64.0. |
+
+### The `inline_style_sheet` Macro
+
+In some cases, it may be necessary to have a struct's instance to access the class names (for example when using turf in [askama](https://github.com/djc/askama) templates).
 The `turf_macros::inline_style_sheet` macro provides an alternative to directly including the resulting CSS and obtaining the associated class names. It returns a tuple of `(style_sheet: &'static str, class_names: struct)`.
 
 **Usage:**
@@ -151,12 +157,6 @@ The `turf_macros::inline_style_sheet` macro provides an alternative to directly 
 let (style_sheet, class_names) = turf::inline_style_sheet!("path/to/style.scss");
 let some_class_name = class_names.some_class;
 ```
-
-#### 3.5 Features
-
-| Feature | Description |
-| ------------ | ----------- |
-| `once_cell` | As of 0.4.0, the minimum supported Rust version is 1.70.0 by default. This can be circumvented by using the `once_cell` feature flag, which will lower the minimum supported version to 1.64.0. |
 
 ## Contributions
 
