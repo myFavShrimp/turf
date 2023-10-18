@@ -29,6 +29,8 @@ pub enum Error {
     MutexError,
     #[error(transparent)]
     PathResolutionError(#[from] PathResolutionError),
+    #[error("class name exclude pattern invalid - {0}")]
+    RegexError(#[from] regex::Error),
 
     #[error(transparent)]
     CssFileWriteError(#[from] file_output::CssFileWriteError),

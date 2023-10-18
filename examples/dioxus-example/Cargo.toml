@@ -15,7 +15,9 @@ path = "../../lib/turf"
 [package.metadata.turf]
 load_paths = ["variables"]
 minify = true
-class_name_template = "dioxus-example_<original_name>_<id>"
+
+[package.metadata.turf.class_names]
+template = "dioxus-example_<original_name>_<id>"
 
 [package.metadata.turf.browser_targets]
 chrome = [80, 1, 2]

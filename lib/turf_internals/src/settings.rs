@@ -1,13 +1,23 @@
 use std::path::PathBuf;
 
+use regex::RegexSet;
 use serde::Deserialize;
 
 use crate::path::canonicalize;
+
+pub(crate) static DEFAULT_CLASS_NAME_TEMPLATE: &'static str = "class-<id>";
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FileOutput {
     pub(crate) global_css_file_path: Option<PathBuf>,
     pub(crate) separate_css_files_path: Option<PathBuf>,
+}
+
+#[derive(Deserialize, Debug, Default, Clone, PartialEq)]
+pub struct ClassNameGeneration {
+    pub(crate) template: Option<String>,
+    #[serde(default)]
+    pub(crate) excludes: Vec<String>,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -16,7 +26,7 @@ pub struct Settings {
     pub(crate) minify: Option<bool>,
     pub(crate) load_paths: Option<Vec<PathBuf>>,
     pub(crate) browser_targets: Option<BrowserVersions>,
-    pub(crate) class_name_template: Option<String>,
+    pub(crate) class_names: Option<ClassNameGeneration>,
     pub(crate) file_output: Option<FileOutput>,
 }
 
@@ -64,14 +74,15 @@ impl TryFrom<&crate::Settings> for crate::transformer::TransformationVisitor {
     type Error = crate::Error;
 
     fn try_from(value: &crate::Settings) -> Result<Self, Self::Error> {
+        let class_name_generation = value.class_names.clone().unwrap_or_default();
         Ok(Self {
             debug: value.debug.unwrap_or(false),
             classes: Default::default(),
             random_number_generator: oorandom::Rand32::new(random_seed()?),
-            class_name_template: value
-                .class_name_template
-                .clone()
-                .unwrap_or(String::from("class-<id>")),
+            class_name_template: class_name_generation
+                .template
+                .unwrap_or(DEFAULT_CLASS_NAME_TEMPLATE.into()),
+            class_name_exclude_patterns: RegexSet::new(class_name_generation.excludes)?,
         })
     }
 }
@@ -207,65 +218,79 @@ impl Settings {
 
 #[cfg(test)]
 mod debug_tests {
+    use crate::settings::ClassNameGeneration;
+
     use super::Settings;
 
     #[test]
     fn use_dev_settings_for_debug_build() {
         let mut dev_settings = Settings::default();
-        dev_settings.class_name_template = Some(String::from("abc"));
+        let class_name_generation = ClassNameGeneration {
+            template: Some(String::from("abc")),
+            ..Default::default()
+        };
+        dev_settings.class_names = Some(class_name_generation);
 
         let mut prod_settings = Settings::default();
-        prod_settings.class_name_template = Some(String::from("def"));
+        let class_name_generation = ClassNameGeneration {
+            template: Some(String::from("def")),
+            ..Default::default()
+        };
+        prod_settings.class_names = Some(class_name_generation);
 
         let selected_settings =
             Settings::choose_settings(Some(dev_settings.clone()), Some(prod_settings), true);
 
-        assert_eq!(
-            selected_settings.class_name_template,
-            dev_settings.class_name_template
-        );
+        assert_eq!(selected_settings.class_names, dev_settings.class_names);
     }
 
     #[test]
     fn use_prod_settings_for_debug_build_when_no_dev_settings_where_given() {
         let mut prod_settings = Settings::default();
-        prod_settings.class_name_template = Some(String::from("def"));
+        let class_name_generation = ClassNameGeneration {
+            template: Some(String::from("def")),
+            ..Default::default()
+        };
+        prod_settings.class_names = Some(class_name_generation);
 
         let selected_settings = Settings::choose_settings(None, Some(prod_settings.clone()), true);
 
-        assert_eq!(
-            selected_settings.class_name_template,
-            prod_settings.class_name_template
-        );
+        assert_eq!(selected_settings.class_names, prod_settings.class_names);
     }
 
     #[test]
     fn use_prod_settings_for_release_build() {
         let mut dev_settings = Settings::default();
-        dev_settings.class_name_template = Some(String::from("abc"));
+        let class_name_generation = ClassNameGeneration {
+            template: Some(String::from("abc")),
+            ..Default::default()
+        };
+        dev_settings.class_names = Some(class_name_generation);
 
         let mut prod_settings = Settings::default();
-        prod_settings.class_name_template = Some(String::from("def"));
+        let class_name_generation = ClassNameGeneration {
+            template: Some(String::from("def")),
+            ..Default::default()
+        };
+        prod_settings.class_names = Some(class_name_generation);
 
         let selected_settings =
             Settings::choose_settings(Some(dev_settings), Some(prod_settings.clone()), false);
 
-        assert_eq!(
-            selected_settings.class_name_template,
-            prod_settings.class_name_template
-        );
+        assert_eq!(selected_settings.class_names, prod_settings.class_names);
     }
 
     #[test]
     fn do_not_use_dev_settings_for_release_build() {
         let mut dev_settings = Settings::default();
-        dev_settings.class_name_template = Some(String::from("abc"));
+        let class_name_generation = ClassNameGeneration {
+            template: Some(String::from("abc")),
+            ..Default::default()
+        };
+        dev_settings.class_names = Some(class_name_generation);
 
         let selected_settings = Settings::choose_settings(Some(dev_settings.clone()), None, false);
 
-        assert_ne!(
-            selected_settings.class_name_template,
-            dev_settings.class_name_template
-        );
+        assert_ne!(selected_settings.class_names, dev_settings.class_names);
     }
 }

@@ -4,12 +4,14 @@ use lightningcss::{
     visit_types,
     visitor::{Visit, VisitTypes, Visitor},
 };
+use regex::RegexSet;
 use std::{collections::HashMap, convert::Infallible};
 
 pub struct TransformationVisitor {
     pub(crate) classes: HashMap<String, String>,
     pub(crate) random_number_generator: oorandom::Rand32,
     pub(crate) class_name_template: String,
+    pub(crate) class_name_exclude_patterns: RegexSet,
     pub(crate) debug: bool,
 }
 
@@ -23,7 +25,6 @@ impl TransformationVisitor {
                     &self.class_name_template,
                     &self.random_number_generator.rand_u32().to_string(),
                 );
-                self.classes.insert(class_name, new_class_name.clone());
 
                 new_class_name
             }
@@ -42,18 +43,37 @@ impl<'i> Visitor<'i> for TransformationVisitor {
         for selector in selectors.iter_mut_raw_match_order() {
             if let Component::Class(c) = selector {
                 let original_class_name = c.to_string();
-                let new_class_name = self
-                    .randomized_class_name(original_class_name.clone())
-                    .to_string();
 
-                if self.debug {
-                    crate::compile_message(&format!(
-                        "class name mapping - {:?} = {:?}",
-                        &original_class_name, &new_class_name
-                    ));
+                if self.class_name_exclude_patterns.is_empty()
+                    || !self
+                        .class_name_exclude_patterns
+                        .is_match(&original_class_name)
+                {
+                    let new_class_name = self
+                        .randomized_class_name(original_class_name.clone())
+                        .to_string();
+                    self.classes
+                        .insert(original_class_name.clone(), new_class_name.clone());
+
+                    if self.debug {
+                        crate::compile_message(&format!(
+                            "class name mapping - {:?} = {:?}",
+                            &original_class_name, &new_class_name
+                        ));
+                    }
+
+                    *c = new_class_name.into();
+                } else {
+                    self.classes
+                        .insert(original_class_name.clone(), original_class_name.clone());
+
+                    if self.debug {
+                        crate::compile_message(&format!(
+                            "class name excluded - {:?}",
+                            &original_class_name
+                        ));
+                    }
                 }
-
-                *c = new_class_name.into();
             }
         }
 
@@ -108,6 +128,8 @@ pub fn transform_stylesheet(
 
 #[cfg(test)]
 mod tests {
+    use crate::settings::ClassNameGeneration;
+
     use super::transform_stylesheet;
 
     #[test]
@@ -135,8 +157,12 @@ mod tests {
                 color: red;
             }
         "#;
+        let class_name_generation = ClassNameGeneration {
+            template: Some(String::from("fancy_style-<original_name>-<id>")),
+            ..Default::default()
+        };
         let settings = crate::Settings {
-            class_name_template: Some(String::from("fancy_style-<original_name>-<id>")),
+            class_names: Some(class_name_generation),
             ..Default::default()
         };
         let transformation_result = transform_stylesheet(style, settings).unwrap();
@@ -156,8 +182,12 @@ mod tests {
                 color: red;
             }
         "#;
+        let class_name_generation = ClassNameGeneration {
+            template: Some(String::from("fancy_style-<original_name>-<id>")),
+            ..Default::default()
+        };
         let settings = crate::Settings {
-            class_name_template: Some(String::from("fancy_style-<original_name>")),
+            class_names: Some(class_name_generation),
             ..Default::default()
         };
         let transformation_result = transform_stylesheet(style, settings).unwrap();
