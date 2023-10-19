@@ -77,7 +77,7 @@ let some_class_name = ClassName::SOME_CLASS;
 
 The configuration for turf can be specified in the Cargo.toml file using the `[package.metadata.turf]` and `[package.metadata.turf-dev]` keys. This allows you to conveniently manage your SCSS compilation settings for both development and production builds within your project's manifest.
 
-    Both profiles offer the exact same configuration options. However, if you haven't specified a `[package.metadata.turf-dev]` profile, the `[package.metadata.turf]` settings will also be applied to debug builds. This ensures consistency in the compilation process across different build types unless you explicitly define a separate configuration for the development profile.
+Both profiles offer the exact same configuration options. However, if you haven't specified a `[package.metadata.turf-dev]` profile, the `[package.metadata.turf]` settings will also be applied to debug builds. This ensures consistency in the compilation process across different build types unless you explicitly define a separate configuration for the development profile.
 
 Example configuration:
 
@@ -88,7 +88,7 @@ load_paths = ["path/to/scss/files", "path/to/other/scss/files"]
 
 [package.metadata.turf.class_names]
 template = "custom-<id>-<original_name>"
-excludes = ["exclude-this-class-please", "abc[123]{4}``"]
+excludes = ["exclude-this-class-please", "^abc-[123]{4}"]
 
 [package.metadata.turf.browser_targets]
 chrome = [80, 1, 2]
