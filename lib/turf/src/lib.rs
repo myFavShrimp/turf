@@ -83,12 +83,19 @@
 //! [package.metadata.turf]
 //! minify = true
 //! load_paths = ["path/to/scss/files", "path/to/other/scss/files"]
-//! class_name_template = "custom-<id>-<original_name>"
+//!
+//! [package.metadata.turf.class_names]
+//! template = "custom-<id>-<original_name>"
+//! excludes = ["exclude-this-class-please", "^abc-[123]{4}"]
 //!
 //! [package.metadata.turf.browser_targets]
 //! chrome = [80, 1, 2]
 //! firefox = 65
 //! safari = [12, 3]
+//!
+//! [package.metadata.turf.file_output]
+//! global_css_file_path = "path/to/global.css"
+//! separate_css_files_path = "dir/for/separate/css/"
 //! ```
 //!
 //! The following configuration options are available:
@@ -97,13 +104,19 @@
 //!
 //! - `load_paths`: Specifies additional paths to search for SCSS files to include during compilation. It accepts a list of string values, where each value represents a directory path to be included. This option allows you to import SCSS files from multiple directories.
 //!
-//! - `browser_targets`: Defines the target browser versions for compatibility when generating CSS. It expects a structure that includes specific versions for different browsers. Each browser can have its own version specified.
+//! - `browser_targets`: Defines the target browser versions for compatibility when generating CSS. It expects a structure that contains specific versions for different browsers. Each browser can have its own version specified.
 //!
-//! - `class_name_template` (default: `"class-<id>"`): Specifies the template for generating randomized CSS class names. The template can include placeholders to customize the output. `<id>` will be replaced with a unique identifier for each CSS class name and `<original_name>` will be replaced with the original class name from the SCSS file.
+//! - `class_names`: Allows configuration of the CSS class name generation. It expects a structure that contains two values for generating CSS class names and excluding class names from the uniquification process.
 //!
 //! - `debug` (default: `false`): When set to true, this option will enable debug output of the read configuration and the generated CSS class names. This can be helpful for troubleshooting and understanding how the CSS is being generated.
 //!
-//! - `file_output`: Enables output of compiled CSS. It expects a structure that includes two values for a single global CSS file or separate CSS files for each compiled SCSS file.
+//! - `file_output`: Enables output of compiled CSS. It expects a structure that contains two values for a single global CSS file or separate CSS files for each compiled SCSS file.
+//!
+//! #### Class Names
+//!
+//! - `template` (default: `"class-<id>"`): Specifies the template for generating randomized CSS class names. The template can include placeholders to customize the output. `<id>` will be replaced with a unique identifier for each CSS class name and `<original_name>` will be replaced with the original class name from the SCSS file.
+//!
+//! - `excludes`: An array of regex patterns that exclude class names in your SCSS files from the class name uniquification process.
 //!
 //! #### File Output
 //!

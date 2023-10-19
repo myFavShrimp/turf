@@ -158,7 +158,7 @@ Three formats are supported:
 ### The `inline_style_sheet` Macro
 
 In some cases, it may be necessary to have a struct's instance to access the class names (for example when using turf in [askama](https://github.com/djc/askama) templates).
-The `turf_macros::inline_style_sheet` macro provides an alternative to directly including the resulting CSS and obtaining the associated class names. It returns a tuple of `(style_sheet: &'static str, class_names: struct)`.
+The `turf::inline_style_sheet` macro provides an alternative to directly including the resulting CSS and obtaining the associated class names. It returns a tuple of `(style_sheet: &'static str, class_names: struct)`.
 
 **Usage:**
 
