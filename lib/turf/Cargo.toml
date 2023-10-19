@@ -10,6 +10,7 @@ repository = "https://github.com/myFavShrimp/turf"
 documentation = "https://docs.rs/turf"
 keywords = ["web", "CSS", "SCSS", "macro"]
 categories = ["wasm", "web-programming"]
+rust-version = "1.65"
 
 [features]
 once_cell = ["turf_macros/once_cell"]

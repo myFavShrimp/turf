@@ -6,6 +6,7 @@ description = "The inner workings of turf."
 license = "MIT"
 authors = ["myFavShrimp <myfavshrimp@tuta.io>"]
 readme = "README.md"
+rust-version = "1.65"
 
 [dependencies]
 toml = "=0.7.0"
