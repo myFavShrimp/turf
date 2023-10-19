@@ -77,7 +77,7 @@ let some_class_name = ClassName::SOME_CLASS;
 
 The configuration for turf can be specified in the Cargo.toml file using the `[package.metadata.turf]` and `[package.metadata.turf-dev]` keys. This allows you to conveniently manage your SCSS compilation settings for both development and production builds within your project's manifest.
 
-Both profiles offer the exact same configuration options. However, if you haven't specified a `[package.metadata.turf-dev]` profile, the `[package.metadata.turf]` settings will also be applied to debug builds. This ensures consistency in the compilation process across different build types unless you explicitly define a separate configuration for the development profile.
+    Both profiles offer the exact same configuration options. However, if you haven't specified a `[package.metadata.turf-dev]` profile, the `[package.metadata.turf]` settings will also be applied to debug builds. This ensures consistency in the compilation process across different build types unless you explicitly define a separate configuration for the development profile.
 
 Example configuration:
 
@@ -85,7 +85,10 @@ Example configuration:
 [package.metadata.turf]
 minify = true
 load_paths = ["path/to/scss/files", "path/to/other/scss/files"]
-class_name_template = "custom-<id>-<original_name>"
+
+[package.metadata.turf.class_names]
+template = "custom-<id>-<original_name>"
+excludes = ["exclude-this-class-please", "abc[123]{4}``"]
 
 [package.metadata.turf.browser_targets]
 chrome = [80, 1, 2]
@@ -103,13 +106,19 @@ The following configuration options are available:
 
 - `load_paths`: Specifies additional paths to search for SCSS files to include during compilation. It accepts a list of string values, where each value represents a directory path to be included. This option allows you to import SCSS files from multiple directories.
 
-- `browser_targets`: Defines the target browser versions for compatibility when generating CSS. It expects a structure that includes specific versions for different browsers. Each browser can have its own version specified.
+- `browser_targets`: Defines the target browser versions for compatibility when generating CSS. It expects a structure that contains specific versions for different browsers. Each browser can have its own version specified.
 
-- `class_name_template` (default: `"class-<id>"`): Specifies the template for generating randomized CSS class names. The template can include placeholders to customize the output. `<id>` will be replaced with a unique identifier for each CSS class name and `<original_name>` will be replaced with the original class name from the SCSS file.
+- `class_names`: Allows configuration of the CSS class name generation. It expects a structure that contains two values for generating CSS class names and excluding class names from the uniquification process.
 
 - `debug` (default: `false`): When set to true, this option will enable debug output of the read configuration and the generated CSS class names. This can be helpful for troubleshooting and understanding how the CSS is being generated.
 
-- `file_output`: Enables output of compiled CSS. It expects a structure that includes two values for a single global CSS file or separate CSS files for each compiled SCSS file.
+- `file_output`: Enables output of compiled CSS. It expacts a structure that contains two values for a single global CSS file or separate CSS files for each compiled SCSS file.
+
+#### Class Names
+
+- `template` (default: `"class-<id>"`): Specifies the template for generating randomized CSS class names. The template can include placeholders to customize the output. `<id>` will be replaced with a unique identifier for each CSS class name and `<original_name>` will be replaced with the original class name from the SCSS file.
+
+- `excludes`: An array of regex patterns that exclude class names in your SCSS files from the class name uniquification process.
 
 #### File Output
 
