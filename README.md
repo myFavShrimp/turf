@@ -112,15 +112,15 @@ The following configuration options are available:
 
 - `debug` (default: `false`): When set to true, this option will enable debug output of the read configuration and the generated CSS class names. This can be helpful for troubleshooting and understanding how the CSS is being generated.
 
-- `file_output`: Enables output of compiled CSS. It expacts a structure that contains two values for a single global CSS file or separate CSS files for each compiled SCSS file.
+- `file_output`: Enables output of compiled CSS. It expects a structure that contains two values for a single global CSS file or separate CSS files for each compiled SCSS file.
 
-#### Class Names
+#### The `class_names` Key
 
 - `template` (default: `"class-<id>"`): Specifies the template for generating randomized CSS class names. The template can include placeholders to customize the output. `<id>` will be replaced with a unique identifier for each CSS class name and `<original_name>` will be replaced with the original class name from the SCSS file.
 
 - `excludes`: An array of regex patterns that exclude class names in your SCSS files from the class name uniquification process.
 
-#### File Output
+#### The `file_output` Key
 
 - `global_css_file_path`: Specifies the file path for a global CSS file. If set, a CSS file will be created at the provided path, and all compiled styles will be written to this file. This allows you to have a single CSS file containing all the compiled styles.
 
@@ -153,7 +153,7 @@ Three formats are supported:
 
 | Feature | Description |
 | ------------ | ----------- |
-| `once_cell` | As of 0.4.0, the minimum supported Rust version is 1.70.0 by default. This can be circumvented by using the `once_cell` feature flag, which will lower the minimum supported version to 1.65.0. |
+| `once_cell` | The minimum supported Rust version is 1.70.0 by default. This can be circumvented by using the `once_cell` feature flag, which will lower the minimum supported version to 1.65.0. |
 
 ### The `inline_style_sheet` Macro
 
