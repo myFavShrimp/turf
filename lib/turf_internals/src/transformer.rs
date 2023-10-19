@@ -183,7 +183,7 @@ mod tests {
             }
         "#;
         let class_name_generation = ClassNameGeneration {
-            template: Some(String::from("fancy_style-<original_name>-<id>")),
+            template: Some(String::from("fancy_style-<original_name>")),
             ..Default::default()
         };
         let settings = crate::Settings {
