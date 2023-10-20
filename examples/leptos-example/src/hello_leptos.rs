@@ -3,8 +3,8 @@ use leptos::*;
 turf::style_sheet!("src/hello_leptos.scss");
 
 #[component]
-pub fn HelloLeptos(cx: Scope) -> impl IntoView {
-    view! { cx,
+pub fn HelloLeptos() -> impl IntoView {
+    view! {
         <style>{STYLE_SHEET}</style>
         <div class=ClassName::HELLO_LEPTOS>
             <h1>"Hello, Leptos!"</h1>

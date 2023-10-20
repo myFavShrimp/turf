@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies.leptos]
-version = "0.4.6"
+version = "0.5.1"
 features = ["csr"]
 
 [dependencies.turf]
@@ -23,7 +23,3 @@ template = "leptos-example_<original_name>_<id>"
 chrome = [80, 1, 2]
 firefox = 65
 safari = [12, 3]
-
-[package.metadata.turf.file_output]
-global_css_file_path = "./test-global.css"
-separate_css_files_path = "./test-separate/"
