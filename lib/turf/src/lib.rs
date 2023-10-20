@@ -5,7 +5,6 @@
 //! [![Rust 1.70.0][rust-version-badge]][rust-version-url]
 //! [![Crates.io][crates-badge]][crates-url]
 //! [![Docs.rs][docs-badge]][docs-url]
-//! [![Build Status][actions-badge]][actions-url]
 //! [![MIT licensed][lic-badge]][lic-url]
 //!
 //! [rust-version-badge]: https://img.shields.io/badge/Rust-1.70.0-orange?logo=rust
@@ -14,8 +13,6 @@
 //! [crates-url]: https://crates.io/crates/turf
 //! [docs-badge]: https://img.shields.io/docsrs/turf/latest.svg?logo=docsdotrs&label=docs.rs
 //! [docs-url]: https://docs.rs/turf
-//! [actions-badge]: https://github.com/myFavShrimp/turf/actions/workflows/rust-ci.yml/badge.svg
-//! [actions-url]: https://github.com/myFavShrimp/turf/actions/workflows/rust-ci.yml
 //! [lic-url]: https://github.com/myFavShrimp/turf/blob/master/LICENSE
 //! [lic-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 //!
