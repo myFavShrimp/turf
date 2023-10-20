@@ -3,6 +3,7 @@
 - Added the alternative `inline_style_sheet` macro which directly returns the CSS style sheet and a class names struct
 - The class name configuration is now located under the `class_names` key
 - Added the `excludes` configuration option for excluding class names from the uniquification process using regex
+- The minimum supported Rust version has been bumped to 1.65.0
 
 # 0.6.2
 - Fixed failing builds due to a badly specified dependency in one of turf's dependencies (thank you @xeho91 for offering a quick fix)
