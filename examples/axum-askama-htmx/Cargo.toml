@@ -13,7 +13,7 @@ tokio = { version = "1.33.0", features = ["full"] }
 tower = { version = "0.4", features = ["util"] }
 
 [dependencies.turf]
-path = "../../lib/turf"
+path = "../../"
 
 [package.metadata.turf]
 load_paths = ["variables"]

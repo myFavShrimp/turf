@@ -9,7 +9,7 @@ edition = "2021"
 once_cell = ["turf/once_cell"]
 
 [dependencies.turf]
-path = "../../turf"
+path = "../../"
 [dependencies.turf_internals]
 path = "../../turf_internals"
 
