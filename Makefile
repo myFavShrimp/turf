@@ -1,9 +1,9 @@
 test-lib:
-	cd lib && cargo test --verbose
+	cargo test --verbose
 	cd tests && cargo test --verbose
 
 test-lib-once_cell:
-	cd lib && cargo test --verbose --features once_cell
+	cargo test --verbose --features once_cell
 	cd tests && cargo test --verbose --features once_cell
 
 test-build-examples:
