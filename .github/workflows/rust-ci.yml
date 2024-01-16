@@ -17,7 +17,7 @@ jobs:
       with:
         rust-version: 1.70.0
     - name: Debug Build
-      run: cd lib && cargo build --verbose
+      run: cargo build --verbose
   build-release:
     runs-on: ubuntu-latest
     steps:
@@ -26,7 +26,7 @@ jobs:
       with:
         rust-version: 1.70.0
     - name: Release Build
-      run: cd lib && cargo build --release --verbose
+      run: cargo build --release --verbose
   test:
     runs-on: ubuntu-latest
     steps:
@@ -48,7 +48,7 @@ jobs:
       with:
         rust-version: 1.65.0
     - name: Debug Build
-      run: cd lib && cargo build --verbose --features once_cell
+      run: cargo build --verbose --features once_cell
   build-release-1_65:
     runs-on: ubuntu-latest
     steps:
@@ -57,7 +57,7 @@ jobs:
       with:
         rust-version: 1.65.0
     - name: Release Build
-      run: cd lib && cargo build --release --verbose --features once_cell
+      run: cargo build --release --verbose --features once_cell
   test-1_65:
     runs-on: ubuntu-latest
     steps:
