@@ -646,14 +646,14 @@ dependencies = [
 
 [[package]]
 name = "turf"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "turf_macros",
 ]
 
 [[package]]
 name = "turf_internals"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "getrandom",
  "grass",
@@ -671,7 +671,7 @@ dependencies = [
 
 [[package]]
 name = "turf_macros"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "convert_case",
  "proc-macro2",
