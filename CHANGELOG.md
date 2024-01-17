@@ -1,3 +1,7 @@
+# 0.7.1
+- Fixed compilation on minimum supported Rust version by pinning dependency versions
+- Restructured project to allow specifying dependency from git repo
+
 # 0.7.0
 - Added optional configurable file output of the resulting CSS
 - Added the alternative `inline_style_sheet` macro which directly returns the CSS style sheet and a class names struct
