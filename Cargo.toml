@@ -8,20 +8,28 @@ exclude = [
     "tests",
 ]
 
-[package]
-name = "turf"
+[workspace.package]
 version = "0.7.1"
 edition = "2021"
-description = "Build SCSS to CSS during compile time and inject those styles into your binary."
-readme = "README.md"
-license = "MIT"
 authors = ["myFavShrimp <myfavshrimp@tuta.io>"]
+license = "MIT"
 repository = "https://github.com/myFavShrimp/turf"
+readme = "README.md"
+publish = true
+
+[package]
+name = "turf"
+description = "Build SCSS to CSS during compile time and inject those styles into your binary."
 documentation = "https://docs.rs/turf"
 keywords = ["web", "CSS", "SCSS", "macro"]
 categories = ["wasm", "web-programming"]
-rust-version = "1.65"
-
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+publish.workspace = true
 [features]
 once_cell = ["turf_macros/once_cell"]
 

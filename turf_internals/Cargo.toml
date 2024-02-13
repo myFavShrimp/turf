@@ -1,12 +1,13 @@
 [package]
 name = "turf_internals"
-version = "0.7.1"
-edition = "2021"
 description = "The inner workings of turf."
-license = "MIT"
-authors = ["myFavShrimp <myfavshrimp@tuta.io>"]
-readme = "README.md"
-rust-version = "1.65"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+publish.workspace = true
 
 [dependencies]
 toml = "=0.7.0"
