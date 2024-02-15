@@ -141,15 +141,8 @@ impl From<BrowserVersion> for u32 {
     }
 }
 
-#[cfg(not(feature = "once_cell"))]
 static TURF_SETTINGS: std::sync::OnceLock<Settings> = std::sync::OnceLock::new();
-#[cfg(not(feature = "once_cell"))]
 static TURF_DEV_SETTINGS: std::sync::OnceLock<Settings> = std::sync::OnceLock::new();
-
-#[cfg(feature = "once_cell")]
-static TURF_SETTINGS: once_cell::sync::OnceCell<Settings> = once_cell::sync::OnceCell::new();
-#[cfg(feature = "once_cell")]
-static TURF_DEV_SETTINGS: once_cell::sync::OnceCell<Settings> = once_cell::sync::OnceCell::new();
 
 impl Settings {
     pub fn get() -> Result<Self, crate::Error> {

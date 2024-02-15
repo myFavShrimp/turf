@@ -6,10 +6,7 @@ use std::{
 
 use crate::settings::FileOutput;
 
-#[cfg(not(feature = "once_cell"))]
 static DIRS_RESET: std::sync::OnceLock<()> = std::sync::OnceLock::new();
-#[cfg(feature = "once_cell")]
-static DIRS_RESET: once_cell::sync::OnceCell<()> = once_cell::sync::OnceCell::new();
 
 #[derive(Debug, thiserror::Error)]
 #[error("error writing css file '{0}' - {1}")]

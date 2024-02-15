@@ -630,7 +630,6 @@ dependencies = [
  "getrandom",
  "grass",
  "lightningcss",
- "once_cell",
  "oorandom",
  "regex",
  "serde",
