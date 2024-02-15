@@ -1891,14 +1891,14 @@ checksum = "3528ecfd12c466c6f163363caf2d02a71161dd5e1cc6ae7b34207ea2d42d81ed"
 
 [[package]]
 name = "turf"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "turf_macros",
 ]
 
 [[package]]
 name = "turf_internals"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "getrandom",
  "grass",
@@ -1906,14 +1906,16 @@ dependencies = [
  "oorandom",
  "regex",
  "serde",
+ "serde_spanned",
  "thiserror",
  "toml 0.7.0",
+ "toml_datetime",
  "toml_edit",
 ]
 
 [[package]]
 name = "turf_macros"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "convert_case",
  "proc-macro2",
