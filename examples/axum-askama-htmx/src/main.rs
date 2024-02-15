@@ -23,8 +23,6 @@ async fn main() {
             get(|Path(count): Path<u64>| async move { CounterTemplate { count } }),
         );
 
-    axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
