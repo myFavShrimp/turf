@@ -1,3 +1,8 @@
+# 0.8.0
+
+- Updated dependencies
+- Removed `once_cell` feature flag
+
 # 0.7.1
 - Fixed compilation on minimum supported Rust version by pinning dependency versions
 - Restructured project to allow specifying dependency from git repo

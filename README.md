@@ -4,14 +4,11 @@
 
 `turf` allows you to build SCSS to CSS during compile time and inject those styles into your binary.
 
-[![Rust 1.70.0][rust-version-badge]][rust-version-url]
 [![Crates.io][crates-badge]][crates-url]
 [![Docs.rs][docs-badge]][docs-url]
 [![Build Status][actions-badge]][actions-url]
 [![MIT licensed][lic-badge]][lic-url]
 
-[rust-version-badge]: https://img.shields.io/badge/Rust-1.70.0-orange?logo=rust
-[rust-version-url]: https://blog.rust-lang.org/2023/06/01/Rust-1.70.0.html
 [crates-badge]: https://img.shields.io/crates/v/turf.svg
 [crates-url]: https://crates.io/crates/turf
 [docs-badge]: https://img.shields.io/docsrs/turf/latest.svg?logo=docsdotrs&label=docs.rs
@@ -148,12 +145,6 @@ Three formats are supported:
 | :---- | :---------- | :---------------- |
 | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
 | Example: `1` or `[1]` represent version `1.0.0` | Example: `[1, 2]` represents version `1.2.0` | Example: `[1, 2, 3]` represents version `1.2.3`. |
-
-### Features
-
-| Feature | Description |
-| ------------ | ----------- |
-| `once_cell` | The minimum supported Rust version is 1.70.0 by default. This can be circumvented by using the `once_cell` feature flag, which will lower the minimum supported version to 1.65.0. |
 
 ### The `inline_style_sheet` Macro
 
