@@ -6,8 +6,8 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
-readme.workspace = true
 publish.workspace = true
+readme = "README.md"
 
 [lib]
 proc_macro = true
@@ -19,4 +19,4 @@ convert_case = "0.6.0"
 
 [dependencies.turf_internals]
 path = "../turf_internals"
-version = "0.7.1"
+version = "0.8.0"
