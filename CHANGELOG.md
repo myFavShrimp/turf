@@ -2,6 +2,7 @@
 
 - Updated dependencies
 - Removed `once_cell` feature flag
+- Removed support for Rust 1.65
 
 # 0.7.1
 - Fixed compilation on minimum supported Rust version by pinning dependency versions
