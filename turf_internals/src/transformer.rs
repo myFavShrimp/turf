@@ -90,12 +90,6 @@ fn apply_template(original_class_name: &str, class_name_template: &str, id: &str
 #[derive(Debug)]
 pub struct LightningcssError(String);
 
-impl From<String> for LightningcssError {
-    fn from(value: String) -> Self {
-        Self(value)
-    }
-}
-
 impl std::fmt::Display for LightningcssError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.0.fmt(f)
@@ -110,7 +104,7 @@ pub fn transform_stylesheet(
 ) -> Result<(String, HashMap<String, String>), crate::Error> {
     let mut stylesheet = StyleSheet::parse(css, ParserOptions::default())
         .map_err(|e| e.to_string())
-        .map_err(LightningcssError::from)?;
+        .map_err(LightningcssError)?;
 
     let mut visitor = TransformationVisitor::try_from(&settings)?;
 
@@ -121,7 +115,7 @@ pub fn transform_stylesheet(
     let css_result = stylesheet
         .to_css(settings.into())
         .map_err(|e| e.to_string())
-        .map_err(LightningcssError::from)?;
+        .map_err(LightningcssError)?;
 
     Ok((css_result.code, visitor.classes))
 }
