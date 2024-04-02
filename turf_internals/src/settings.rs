@@ -5,40 +5,67 @@ use serde::Deserialize;
 
 use crate::path::canonicalize;
 
-pub(crate) static DEFAULT_CLASS_NAME_TEMPLATE: &'static str = "class-<id>";
-
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FileOutput {
     pub(crate) global_css_file_path: Option<PathBuf>,
     pub(crate) separate_css_files_path: Option<PathBuf>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone, PartialEq)]
+pub(crate) static DEFAULT_CLASS_NAME_TEMPLATE: &'static str = "class-<id>";
+
+#[derive(Deserialize, Debug, Clone, PartialEq)]
 pub struct ClassNameGeneration {
-    pub(crate) template: Option<String>,
+    pub(crate) template: String,
     #[serde(default)]
     pub(crate) excludes: Vec<String>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+impl Default for ClassNameGeneration {
+    fn default() -> Self {
+        Self {
+            template: DEFAULT_CLASS_NAME_TEMPLATE.to_owned(),
+            excludes: vec![],
+        }
+    }
+}
+
+pub(crate) static DEFAULT_MINIFY: bool = true;
+
+fn default_minify() -> bool {
+    DEFAULT_MINIFY
+}
+
+#[derive(Deserialize, Debug, Clone)]
 pub struct Settings {
-    pub(crate) debug: Option<bool>,
-    pub(crate) minify: Option<bool>,
-    pub(crate) load_paths: Option<Vec<PathBuf>>,
+    #[serde(default)]
+    pub(crate) debug: bool,
+    #[serde(default = "default_minify")]
+    pub(crate) minify: bool,
+    #[serde(default)]
+    pub(crate) load_paths: Vec<PathBuf>,
     pub(crate) browser_targets: Option<BrowserVersions>,
-    pub(crate) class_names: Option<ClassNameGeneration>,
+    #[serde(default)]
+    pub(crate) class_names: ClassNameGeneration,
     pub(crate) file_output: Option<FileOutput>,
 }
 
-impl Settings {
-    pub fn debug_enabled(&self) -> bool {
-        self.debug.unwrap_or(false)
+impl Default for Settings {
+    fn default() -> Self {
+        Self {
+            debug: false,
+            minify: DEFAULT_MINIFY,
+            load_paths: Vec::new(),
+            browser_targets: None,
+            class_names: ClassNameGeneration::default(),
+            file_output: None,
+        }
     }
+}
 
+impl Settings {
     pub fn canonicalized_load_paths(&self) -> Result<Vec<PathBuf>, crate::PathResolutionError> {
         self.load_paths
             .clone()
-            .unwrap_or(Default::default())
             .into_iter()
             .map(canonicalize)
             .collect()
@@ -58,7 +85,7 @@ impl<'a> TryFrom<Settings> for grass::Options<'a> {
 impl<'a> From<Settings> for lightningcss::printer::PrinterOptions<'a> {
     fn from(val: Settings) -> Self {
         lightningcss::printer::PrinterOptions {
-            minify: val.minify.unwrap_or(true),
+            minify: val.minify,
             project_root: None,
             targets: val
                 .browser_targets
@@ -74,14 +101,12 @@ impl TryFrom<&crate::Settings> for crate::transformer::TransformationVisitor {
     type Error = crate::Error;
 
     fn try_from(value: &crate::Settings) -> Result<Self, Self::Error> {
-        let class_name_generation = value.class_names.clone().unwrap_or_default();
+        let class_name_generation = value.class_names.clone();
         Ok(Self {
-            debug: value.debug.unwrap_or(false),
+            debug: value.debug,
             classes: Default::default(),
             random_number_generator: oorandom::Rand32::new(random_seed()?),
-            class_name_template: class_name_generation
-                .template
-                .unwrap_or(DEFAULT_CLASS_NAME_TEMPLATE.into()),
+            class_name_template: class_name_generation.template,
             class_name_exclude_patterns: RegexSet::new(class_name_generation.excludes)?,
         })
     }
@@ -219,17 +244,17 @@ mod debug_tests {
     fn use_dev_settings_for_debug_build() {
         let mut dev_settings = Settings::default();
         let class_name_generation = ClassNameGeneration {
-            template: Some(String::from("abc")),
+            template: String::from("abc"),
             ..Default::default()
         };
-        dev_settings.class_names = Some(class_name_generation);
+        dev_settings.class_names = class_name_generation;
 
         let mut prod_settings = Settings::default();
         let class_name_generation = ClassNameGeneration {
-            template: Some(String::from("def")),
+            template: String::from("def"),
             ..Default::default()
         };
-        prod_settings.class_names = Some(class_name_generation);
+        prod_settings.class_names = class_name_generation;
 
         let selected_settings =
             Settings::choose_settings(Some(dev_settings.clone()), Some(prod_settings), true);
@@ -241,10 +266,10 @@ mod debug_tests {
     fn use_prod_settings_for_debug_build_when_no_dev_settings_where_given() {
         let mut prod_settings = Settings::default();
         let class_name_generation = ClassNameGeneration {
-            template: Some(String::from("def")),
+            template: String::from("def"),
             ..Default::default()
         };
-        prod_settings.class_names = Some(class_name_generation);
+        prod_settings.class_names = class_name_generation;
 
         let selected_settings = Settings::choose_settings(None, Some(prod_settings.clone()), true);
 
@@ -255,17 +280,17 @@ mod debug_tests {
     fn use_prod_settings_for_release_build() {
         let mut dev_settings = Settings::default();
         let class_name_generation = ClassNameGeneration {
-            template: Some(String::from("abc")),
+            template: String::from("abc"),
             ..Default::default()
         };
-        dev_settings.class_names = Some(class_name_generation);
+        dev_settings.class_names = class_name_generation;
 
         let mut prod_settings = Settings::default();
         let class_name_generation = ClassNameGeneration {
-            template: Some(String::from("def")),
+            template: String::from("def"),
             ..Default::default()
         };
-        prod_settings.class_names = Some(class_name_generation);
+        prod_settings.class_names = class_name_generation;
 
         let selected_settings =
             Settings::choose_settings(Some(dev_settings), Some(prod_settings.clone()), false);
@@ -277,10 +302,10 @@ mod debug_tests {
     fn do_not_use_dev_settings_for_release_build() {
         let mut dev_settings = Settings::default();
         let class_name_generation = ClassNameGeneration {
-            template: Some(String::from("abc")),
+            template: String::from("abc"),
             ..Default::default()
         };
-        dev_settings.class_names = Some(class_name_generation);
+        dev_settings.class_names = class_name_generation;
 
         let selected_settings = Settings::choose_settings(Some(dev_settings.clone()), None, false);
 

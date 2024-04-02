@@ -152,11 +152,11 @@ mod tests {
             }
         "#;
         let class_name_generation = ClassNameGeneration {
-            template: Some(String::from("fancy_style-<original_name>-<id>")),
+            template: String::from("fancy_style-<original_name>-<id>"),
             ..Default::default()
         };
         let settings = crate::Settings {
-            class_names: Some(class_name_generation),
+            class_names: class_name_generation,
             ..Default::default()
         };
         let transformation_result = transform_stylesheet(style, settings).unwrap();
@@ -177,11 +177,11 @@ mod tests {
             }
         "#;
         let class_name_generation = ClassNameGeneration {
-            template: Some(String::from("fancy_style-<original_name>")),
+            template: String::from("fancy_style-<original_name>"),
             ..Default::default()
         };
         let settings = crate::Settings {
-            class_names: Some(class_name_generation),
+            class_names: class_name_generation,
             ..Default::default()
         };
         let transformation_result = transform_stylesheet(style, settings).unwrap();

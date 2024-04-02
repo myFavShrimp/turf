@@ -55,7 +55,7 @@ pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, crate::Error> {
 
         let mut result = Vec::new();
 
-        for path in settings.load_paths.unwrap_or(Vec::new()) {
+        for path in settings.load_paths {
             result.extend(get_file_paths_recusively(path)?);
         }
 
