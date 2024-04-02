@@ -22,7 +22,7 @@ features = ["derive"]
 
 [dependencies.lightningcss]
 # the alpha version matches newer versions as well if pinned
-version = "=1.0.0-alpha.53"
+version = "=1.0.0-alpha.55"
 default-features = false
 features = ["grid", "visitor"]
 
