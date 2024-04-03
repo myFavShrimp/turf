@@ -627,9 +627,9 @@ checksum = "4ec2a862134d2a7d32d7983ddcdd1c4923530833c9f2ea1a44fc5fa473989058"
 
 [[package]]
 name = "lightningcss"
-version = "1.0.0-alpha.53"
+version = "1.0.0-alpha.55"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ae8ba2b1b450cefc6a7a6ee93868992f56f662869b90404de2a7319da18640f"
+checksum = "3bd5bed3814fb631bfc1e24c2be6f7e86a9837c660909acab79a38374dcb8798"
 dependencies = [
  "ahash",
  "bitflags 2.4.2",
@@ -1347,14 +1347,14 @@ dependencies = [
 
 [[package]]
 name = "turf"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "turf_macros",
 ]
 
 [[package]]
 name = "turf_internals"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "getrandom",
  "grass",
@@ -1368,7 +1368,7 @@ dependencies = [
 
 [[package]]
 name = "turf_macros"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "convert_case",
  "proc-macro2",
