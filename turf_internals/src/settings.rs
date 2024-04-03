@@ -5,7 +5,7 @@ use serde::Deserialize;
 
 use crate::{
     manifest::ManifestError,
-    path::{canonicalize, PathResolutionError},
+    path_utils::{canonicalize, PathResolutionError},
 };
 
 #[derive(Deserialize, Debug, Default, Clone)]

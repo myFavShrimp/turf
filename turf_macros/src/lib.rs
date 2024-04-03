@@ -12,21 +12,18 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
     let sanitized_input = input.trim_matches('"');
 
     let (style_sheet, class_names, current_file_path) =
-        match turf_internals::macro_functions::style_sheet(sanitized_input)
-            .map_err(to_compile_error)
-        {
+        match turf_internals::style_sheet(sanitized_input).map_err(to_compile_error) {
             Ok(values) => values,
             Err(e) => return e,
         };
-    let untracked_load_paths = match turf_internals::macro_functions::get_untracked_load_paths()
-        .map_err(to_compile_error)
-    {
-        Ok(mut values) => {
-            values.push(current_file_path);
-            values
-        }
-        Err(e) => return e,
-    };
+    let untracked_load_paths =
+        match turf_internals::get_untracked_load_paths().map_err(to_compile_error) {
+            Ok(mut values) => {
+                values.push(current_file_path);
+                values
+            }
+            Err(e) => return e,
+        };
 
     let mut out = quote! {
         pub static STYLE_SHEET: &'static str = #style_sheet;
@@ -43,21 +40,18 @@ pub fn inline_style_sheet(input: TokenStream) -> TokenStream {
     let sanitized_input = input.trim_matches('"');
 
     let (style_sheet, class_names, current_file_path) =
-        match turf_internals::macro_functions::style_sheet(sanitized_input)
-            .map_err(to_compile_error)
-        {
+        match turf_internals::style_sheet(sanitized_input).map_err(to_compile_error) {
             Ok(values) => values,
             Err(e) => return e,
         };
-    let untracked_load_paths = match turf_internals::macro_functions::get_untracked_load_paths()
-        .map_err(to_compile_error)
-    {
-        Ok(mut values) => {
-            values.push(current_file_path);
-            values
-        }
-        Err(e) => return e,
-    };
+    let untracked_load_paths =
+        match turf_internals::get_untracked_load_paths().map_err(to_compile_error) {
+            Ok(mut values) => {
+                values.push(current_file_path);
+                values
+            }
+            Err(e) => return e,
+        };
 
     let includes = create_include_bytes(untracked_load_paths);
     let inlines = create_inline_classes_instance(class_names);
