@@ -7,7 +7,7 @@ mod path;
 mod settings;
 mod transformer;
 
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 pub use settings::Settings;
 use settings::SettingsError;
@@ -21,46 +21,12 @@ pub enum Error {
     #[error("no input file was specified")]
     NoInputFileError,
     #[error(transparent)]
-    PathResolutionError(#[from] PathResolutionError),
+    PathResolutionError(#[from] path::PathResolutionError),
 
     #[error(transparent)]
     CssFileWriteError(#[from] file_output::CssFileWriteError),
     #[error(transparent)]
     Settings(#[from] SettingsError),
-}
-
-#[derive(thiserror::Error, Debug)]
-#[error("error resolving path '{path}' - {source}")]
-pub struct PathResolutionError {
-    path: PathBuf,
-    source: std::io::Error,
-}
-
-impl From<(PathBuf, std::io::Error)> for PathResolutionError {
-    fn from(value: (PathBuf, std::io::Error)) -> Self {
-        Self {
-            path: value.0,
-            source: value.1,
-        }
-    }
-}
-
-impl<P> From<(Box<grass::Error>, P)> for Error
-where
-    P: AsRef<Path> + std::fmt::Debug,
-{
-    fn from(value: (Box<grass::Error>, P)) -> Self {
-        let canonicalized_path = value.1.as_ref().canonicalize();
-
-        match canonicalized_path {
-            Ok(path) => Error::GrassError(value.0, path),
-            Err(e) => PathResolutionError {
-                path: value.1.as_ref().to_path_buf(),
-                source: e,
-            }
-            .into(),
-        }
-    }
 }
 
 fn compile_message(message: &str) {

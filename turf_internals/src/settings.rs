@@ -3,7 +3,10 @@ use std::path::PathBuf;
 use regex::RegexSet;
 use serde::Deserialize;
 
-use crate::{manifest::ManifestError, path::canonicalize};
+use crate::{
+    manifest::ManifestError,
+    path::{canonicalize, PathResolutionError},
+};
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FileOutput {
@@ -63,7 +66,7 @@ impl Default for Settings {
 }
 
 impl Settings {
-    pub fn canonicalized_load_paths(&self) -> Result<Vec<PathBuf>, crate::PathResolutionError> {
+    pub fn canonicalized_load_paths(&self) -> Result<Vec<PathBuf>, PathResolutionError> {
         self.load_paths
             .clone()
             .into_iter()
@@ -73,9 +76,9 @@ impl Settings {
 }
 
 impl<'a> TryFrom<Settings> for grass::Options<'a> {
-    type Error = crate::PathResolutionError;
+    type Error = PathResolutionError;
 
-    fn try_from(val: Settings) -> Result<Self, crate::PathResolutionError> {
+    fn try_from(val: Settings) -> Result<Self, PathResolutionError> {
         Ok(grass::Options::default()
             .style(grass::OutputStyle::Expanded)
             .load_paths(&val.canonicalized_load_paths()?))

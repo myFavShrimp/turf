@@ -4,7 +4,11 @@ use std::{
     sync::Mutex,
 };
 
-use crate::{path::canonicalize, settings::SettingsError, PathResolutionError, Settings};
+use crate::{
+    path::{canonicalize, PathResolutionError},
+    settings::SettingsError,
+    Settings,
+};
 
 fn style_sheet_with_compile_options<P>(
     path: P,
