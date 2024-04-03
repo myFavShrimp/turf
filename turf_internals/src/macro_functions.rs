@@ -4,7 +4,7 @@ use std::{
     sync::Mutex,
 };
 
-use crate::{path::canonicalize, PathResolutionError, Settings};
+use crate::{path::canonicalize, settings::SettingsError, PathResolutionError, Settings};
 
 fn style_sheet_with_compile_options<P>(
     path: P,
@@ -40,10 +40,20 @@ where
 
 static LOAD_PATHS_TRACKED: std::sync::OnceLock<Mutex<bool>> = std::sync::OnceLock::new();
 
-pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, crate::Error> {
+#[derive(Debug, thiserror::Error)]
+pub enum LoadPathTrackingError {
+    #[error("Could not read internal state")]
+    Mutex,
+    #[error(transparent)]
+    Settings(#[from] SettingsError),
+    #[error(transparent)]
+    PathResolution(#[from] PathResolutionError),
+}
+
+pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, LoadPathTrackingError> {
     let load_paths_tracked_mutex = LOAD_PATHS_TRACKED.get_or_init(|| Mutex::new(false));
     let mut load_paths_tracked = match load_paths_tracked_mutex.lock() {
-        Err(_) => return Err(crate::Error::MutexError),
+        Err(_) => return Err(LoadPathTrackingError::Mutex),
         Ok(val) => val,
     };
 

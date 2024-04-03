@@ -70,7 +70,10 @@ pub fn inline_style_sheet(input: TokenStream) -> TokenStream {
     out.into()
 }
 
-fn to_compile_error(e: turf_internals::Error) -> TokenStream {
+fn to_compile_error<E>(e: E) -> TokenStream
+where
+    E: std::error::Error,
+{
     let message = e.to_string();
     quote! {
         compile_error!(#message);

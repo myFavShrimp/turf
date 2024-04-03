@@ -87,24 +87,21 @@ fn apply_template(original_class_name: &str, class_name_template: &str, id: &str
         .replace("<id>", id)
 }
 
-#[derive(Debug)]
-pub struct LightningcssError(String);
-
-impl std::fmt::Display for LightningcssError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0.fmt(f)
-    }
+#[derive(Debug, thiserror::Error)]
+pub enum TransformationError {
+    #[error("error transforming css - {0}")]
+    Lightningcss(String),
+    #[error("Initialization of css tranformer failed")]
+    Initialization(#[from] crate::settings::TransformationVisitorInitializationError),
 }
-
-impl std::error::Error for LightningcssError {}
 
 pub fn transform_stylesheet(
     css: &str,
     settings: crate::Settings,
-) -> Result<(String, HashMap<String, String>), crate::Error> {
+) -> Result<(String, HashMap<String, String>), TransformationError> {
     let mut stylesheet = StyleSheet::parse(css, ParserOptions::default())
         .map_err(|e| e.to_string())
-        .map_err(LightningcssError)?;
+        .map_err(TransformationError::Lightningcss)?;
 
     let mut visitor = TransformationVisitor::try_from(&settings)?;
 
@@ -115,7 +112,7 @@ pub fn transform_stylesheet(
     let css_result = stylesheet
         .to_css(settings.into())
         .map_err(|e| e.to_string())
-        .map_err(LightningcssError)?;
+        .map_err(TransformationError::Lightningcss)?;
 
     Ok((css_result.code, visitor.classes))
 }

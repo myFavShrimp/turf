@@ -10,30 +10,23 @@ mod transformer;
 use std::path::{Path, PathBuf};
 
 pub use settings::Settings;
+use settings::SettingsError;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
-    #[error("error parsing cargo manifest - {0}")]
-    TomlParseError(#[from] toml::de::Error),
-    #[error("error reading cargo manifest - {0}")]
-    ManifestError(#[from] std::io::Error),
     #[error("error compiling scss file '{1}' - {0}")]
     GrassError(Box<grass::Error>, PathBuf),
     #[error("error transforming css - {0}")]
-    CssError(#[from] transformer::LightningcssError),
-    #[error("error obtaining random id - {0}")]
-    RandError(#[from] getrandom::Error),
+    CssError(#[from] transformer::TransformationError),
     #[error("no input file was specified")]
     NoInputFileError,
-    #[error("error with compilation state")]
-    MutexError,
     #[error(transparent)]
     PathResolutionError(#[from] PathResolutionError),
-    #[error("class name exclude pattern invalid - {0}")]
-    RegexError(#[from] regex::Error),
 
     #[error(transparent)]
     CssFileWriteError(#[from] file_output::CssFileWriteError),
+    #[error(transparent)]
+    Settings(#[from] SettingsError),
 }
 
 #[derive(thiserror::Error, Debug)]

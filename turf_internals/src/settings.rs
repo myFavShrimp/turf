@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::RegexSet;
 use serde::Deserialize;
 
-use crate::path::canonicalize;
+use crate::{manifest::ManifestError, path::canonicalize};
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FileOutput {
@@ -97,8 +97,16 @@ impl<'a> From<Settings> for lightningcss::printer::PrinterOptions<'a> {
     }
 }
 
+#[derive(thiserror::Error, Debug)]
+pub enum TransformationVisitorInitializationError {
+    #[error("error obtaining random id - {0}")]
+    RandError(#[from] getrandom::Error),
+    #[error("class name exclude pattern invalid - {0}")]
+    RegexError(#[from] regex::Error),
+}
+
 impl TryFrom<&crate::Settings> for crate::transformer::TransformationVisitor {
-    type Error = crate::Error;
+    type Error = TransformationVisitorInitializationError;
 
     fn try_from(value: &crate::Settings) -> Result<Self, Self::Error> {
         let class_name_generation = value.class_names.clone();
@@ -169,8 +177,12 @@ impl From<BrowserVersion> for u32 {
 static TURF_SETTINGS: std::sync::OnceLock<Settings> = std::sync::OnceLock::new();
 static TURF_DEV_SETTINGS: std::sync::OnceLock<Settings> = std::sync::OnceLock::new();
 
+#[derive(Debug, thiserror::Error)]
+#[error("Could not obtain turf settings from the Cargo manifest")]
+pub struct SettingsError(#[from] ManifestError);
+
 impl Settings {
-    pub fn get() -> Result<Self, crate::Error> {
+    pub fn get() -> Result<Self, SettingsError> {
         let dev_settings = Self::dev_profile_settings()?;
         let prod_settings = Self::prod_profile_settings()?;
 
@@ -195,7 +207,7 @@ impl Settings {
         }
     }
 
-    fn dev_profile_settings() -> Result<Option<Self>, crate::Error> {
+    fn dev_profile_settings() -> Result<Option<Self>, SettingsError> {
         if let Some(turf_dev_settings) = TURF_DEV_SETTINGS.get() {
             return Ok(Some(turf_dev_settings.clone()));
         }
@@ -214,7 +226,7 @@ impl Settings {
         Ok(dev_settings_maybe)
     }
 
-    fn prod_profile_settings() -> Result<Option<Self>, crate::Error> {
+    fn prod_profile_settings() -> Result<Option<Self>, SettingsError> {
         if let Some(turf_prod_settings) = TURF_SETTINGS.get() {
             return Ok(Some(turf_prod_settings.clone()));
         }
