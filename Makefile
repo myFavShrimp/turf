@@ -1,6 +1,6 @@
 test-lib:
-	cargo test --verbose
-	cd tests && cargo test --verbose
+	cargo test --verbose --workspace
+	cd tests && cargo test --verbose --workspace
 
 test-build-examples:
 	cd examples/leptos-example && trunk build
