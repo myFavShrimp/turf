@@ -10,13 +10,15 @@ use quote::quote;
 #[proc_macro]
 pub fn style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
-    let sanitized_input = input.trim_matches('"');
+    let sanitized_path = PathBuf::from(input.trim_matches('"'));
 
     let CompiledStyleSheet {
         css,
         class_names,
         original_style_sheet,
-    } = match turf_internals::style_sheet(sanitized_input).map_err(to_compile_error) {
+    } = match turf_internals::style_sheet(StyleSheetKind::File(sanitized_path))
+        .map_err(to_compile_error)
+    {
         Ok(values) => values,
         Err(e) => return e,
     };
@@ -44,13 +46,15 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn inline_style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
-    let sanitized_input = input.trim_matches('"');
+    let sanitized_path = PathBuf::from(input.trim_matches('"'));
 
     let CompiledStyleSheet {
         css,
         class_names,
         original_style_sheet,
-    } = match turf_internals::style_sheet(sanitized_input).map_err(to_compile_error) {
+    } = match turf_internals::style_sheet(StyleSheetKind::File(sanitized_path))
+        .map_err(to_compile_error)
+    {
         Ok(values) => values,
         Err(e) => return e,
     };

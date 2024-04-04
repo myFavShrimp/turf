@@ -1,35 +1,31 @@
 //! You're probably looking for `turf` instead.
 
+mod css_compilation;
 mod file_output;
 mod manifest;
 mod path_utils;
 mod settings;
 mod transformer;
 
-use std::{
-    collections::HashMap,
-    path::{Path, PathBuf},
-    sync::Mutex,
-};
+use std::{collections::HashMap, path::PathBuf, sync::Mutex};
 
 pub use settings::Settings;
-use settings::SettingsError;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
-    #[error("error compiling scss file '{1}' - {0}")]
-    GrassError(Box<grass::Error>, PathBuf),
-    #[error("error transforming css - {0}")]
-    CssError(#[from] transformer::TransformationError),
-    #[error("no input file was specified")]
-    NoInputFileError,
     #[error(transparent)]
-    PathResolutionError(#[from] path_utils::PathResolutionError),
+    CssCompilation(#[from] css_compilation::CssCompilationError),
+    #[error("error transforming css - {0}")]
+    CssTransformation(#[from] transformer::TransformationError),
+    #[error("no input file was specified")]
+    NoInputFile,
+    #[error(transparent)]
+    PathResolution(#[from] path_utils::PathResolutionError),
 
     #[error(transparent)]
-    CssFileWriteError(#[from] file_output::CssFileWriteError),
+    CssFileWrite(#[from] file_output::CssFileWriteError),
     #[error(transparent)]
-    Settings(#[from] SettingsError),
+    Settings(#[from] settings::SettingsError),
 }
 
 fn compile_message(message: &str) {
@@ -51,11 +47,7 @@ fn style_sheet_with_compile_options(
     style_sheet_input: StyleSheetKind,
     settings: Settings,
 ) -> Result<CompiledStyleSheet, crate::Error> {
-    let css = match style_sheet_input {
-        StyleSheetKind::File(ref path) => grass::from_path(&path, &settings.clone().try_into()?)
-            .map_err(|e| crate::Error::from((e, path.clone())))?,
-        StyleSheetKind::Inline(_) => todo!(),
-    };
+    let css = css_compilation::compile_style_sheet(&style_sheet_input, &settings)?;
 
     let (style_sheet_css, class_names) = transformer::transform_stylesheet(&css, settings.clone())?;
 
@@ -75,17 +67,21 @@ fn style_sheet_with_compile_options(
     })
 }
 
-pub fn style_sheet<P>(path: P) -> Result<CompiledStyleSheet, crate::Error>
-where
-    P: AsRef<Path> + std::fmt::Debug,
-{
+pub fn style_sheet(style_sheet: StyleSheetKind) -> Result<CompiledStyleSheet, crate::Error> {
     let settings = Settings::get()?;
-    if path.as_ref() == Path::new("") {
-        return Err(crate::Error::NoInputFileError);
+
+    let style_sheet = match style_sheet {
+        StyleSheetKind::File(path) => {
+            if path == PathBuf::from("") {
+                return Err(crate::Error::NoInputFile);
+            };
+            let canonicalized_path = path_utils::canonicalize(path)?;
+            StyleSheetKind::File(canonicalized_path)
+        }
+        StyleSheetKind::Inline(inline_style_sheet) => StyleSheetKind::Inline(inline_style_sheet),
     };
 
-    let canonicalized_path = path_utils::canonicalize(path)?;
-    style_sheet_with_compile_options(StyleSheetKind::File(canonicalized_path), settings)
+    style_sheet_with_compile_options(style_sheet, settings)
 }
 
 static LOAD_PATHS_TRACKED: std::sync::OnceLock<Mutex<bool>> = std::sync::OnceLock::new();
@@ -95,7 +91,7 @@ pub enum LoadPathTrackingError {
     #[error("Could not read internal state")]
     Mutex,
     #[error(transparent)]
-    Settings(#[from] SettingsError),
+    Settings(#[from] settings::SettingsError),
     #[error(transparent)]
     PathResolution(#[from] path_utils::PathResolutionError),
 }
