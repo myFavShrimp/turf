@@ -36,36 +36,56 @@ fn compile_message(message: &str) {
     println!("🌱 turf [INFO]: {message}");
 }
 
-fn style_sheet_with_compile_options<P>(
-    path: P,
-    settings: Settings,
-) -> Result<(String, HashMap<String, String>, PathBuf), crate::Error>
-where
-    P: AsRef<Path> + std::fmt::Debug,
-{
-    if path.as_ref() == Path::new("") {
-        return Err(crate::Error::NoInputFileError);
-    };
-
-    let path = path_utils::canonicalize(path)?;
-    let css = grass::from_path(&path, &settings.clone().try_into()?)
-        .map_err(|e| crate::Error::from((e, path.clone())))?;
-    let (style_sheet, class_names) =
-        crate::transformer::transform_stylesheet(&css, settings.clone())?;
-
-    if let Some(file_output) = settings.file_output {
-        crate::file_output::perform_css_file_output(file_output, &style_sheet, &path)?;
-    }
-
-    Ok((style_sheet, class_names, path))
+pub enum StyleSheetKind {
+    File(PathBuf),
+    Inline(String),
 }
 
-pub fn style_sheet<P>(path: P) -> Result<(String, HashMap<String, String>, PathBuf), crate::Error>
+pub struct CompiledStyleSheet {
+    pub css: String,
+    pub class_names: HashMap<String, String>,
+    pub original_style_sheet: StyleSheetKind,
+}
+
+fn style_sheet_with_compile_options(
+    style_sheet_input: StyleSheetKind,
+    settings: Settings,
+) -> Result<CompiledStyleSheet, crate::Error> {
+    let css = match style_sheet_input {
+        StyleSheetKind::File(ref path) => grass::from_path(&path, &settings.clone().try_into()?)
+            .map_err(|e| crate::Error::from((e, path.clone())))?,
+        StyleSheetKind::Inline(_) => todo!(),
+    };
+
+    let (style_sheet_css, class_names) = transformer::transform_stylesheet(&css, settings.clone())?;
+
+    match style_sheet_input {
+        StyleSheetKind::File(ref path) => {
+            if let Some(file_output) = settings.file_output {
+                file_output::perform_css_file_output(file_output, &style_sheet_css, &path)?;
+            }
+        }
+        StyleSheetKind::Inline(_) => todo!(),
+    };
+
+    Ok(CompiledStyleSheet {
+        css: style_sheet_css,
+        class_names,
+        original_style_sheet: style_sheet_input,
+    })
+}
+
+pub fn style_sheet<P>(path: P) -> Result<CompiledStyleSheet, crate::Error>
 where
     P: AsRef<Path> + std::fmt::Debug,
 {
     let settings = Settings::get()?;
-    style_sheet_with_compile_options(path, settings)
+    if path.as_ref() == Path::new("") {
+        return Err(crate::Error::NoInputFileError);
+    };
+
+    let canonicalized_path = path_utils::canonicalize(path)?;
+    style_sheet_with_compile_options(StyleSheetKind::File(canonicalized_path), settings)
 }
 
 static LOAD_PATHS_TRACKED: std::sync::OnceLock<Mutex<bool>> = std::sync::OnceLock::new();
