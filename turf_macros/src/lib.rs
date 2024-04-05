@@ -44,7 +44,7 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
 }
 
 #[proc_macro]
-pub fn inline_style_sheet(input: TokenStream) -> TokenStream {
+pub fn style_sheet_values(input: TokenStream) -> TokenStream {
     let input = input.to_string();
     let sanitized_path = PathBuf::from(input.trim_matches('"'));
 
@@ -55,6 +55,77 @@ pub fn inline_style_sheet(input: TokenStream) -> TokenStream {
     } = match turf_internals::style_sheet(StyleSheetKind::File(sanitized_path))
         .map_err(to_compile_error)
     {
+        Ok(values) => values,
+        Err(e) => return e,
+    };
+
+    let untracked_load_paths =
+        match turf_internals::get_untracked_load_paths().map_err(to_compile_error) {
+            Ok(mut values) => {
+                if let StyleSheetKind::File(current_file_path) = original_style_sheet {
+                    values.push(current_file_path);
+                }
+                values
+            }
+            Err(e) => return e,
+        };
+
+    let includes = create_include_bytes(untracked_load_paths);
+    let inlines = create_inline_classes_instance(class_names);
+    let out = quote! {{
+        pub static STYLE_SHEET: &'static str = #css;
+        #includes
+        #inlines
+    }};
+
+    out.into()
+}
+
+#[proc_macro]
+pub fn inline_style_sheet(input: TokenStream) -> TokenStream {
+    let input = input.to_string();
+
+    let CompiledStyleSheet {
+        css,
+        class_names,
+        original_style_sheet,
+    } = match turf_internals::style_sheet(StyleSheetKind::Inline(input)).map_err(to_compile_error) {
+        Ok(values) => values,
+        Err(e) => return e,
+    };
+
+    let untracked_load_paths =
+        match turf_internals::get_untracked_load_paths().map_err(to_compile_error) {
+            Ok(mut values) => {
+                match original_style_sheet {
+                    StyleSheetKind::File(current_file_path) => {
+                        values.push(current_file_path);
+                    }
+                    StyleSheetKind::Inline(_) => {}
+                };
+                values
+            }
+            Err(e) => return e,
+        };
+
+    let mut out = quote! {
+        pub static STYLE_SHEET: &'static str = #css;
+    };
+    out.extend(create_classes_structure(class_names));
+    out.extend(create_include_bytes(untracked_load_paths));
+
+    out.into()
+}
+
+#[proc_macro]
+pub fn inline_style_sheet_values(input: TokenStream) -> TokenStream {
+    let input = input.to_string();
+
+    let CompiledStyleSheet {
+        css,
+        class_names,
+        original_style_sheet,
+    } = match turf_internals::style_sheet(StyleSheetKind::Inline(input)).map_err(to_compile_error) {
         Ok(values) => values,
         Err(e) => return e,
     };

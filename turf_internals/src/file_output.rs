@@ -4,7 +4,7 @@ use std::{
     path::PathBuf,
 };
 
-use crate::settings::FileOutput;
+use crate::{path_utils::PathResolutionError, settings::FileOutput, StyleSheetKind};
 
 static DIRS_RESET: std::sync::OnceLock<()> = std::sync::OnceLock::new();
 
@@ -41,14 +41,20 @@ fn reset_file_output(output_paths: &FileOutput) -> Result<(), CssFileWriteError>
 fn append_to_separate_file(
     style: &str,
     mut separate_files_dir: PathBuf,
-    current_scss_path: &PathBuf,
+    style_sheet: &StyleSheetKind,
 ) -> Result<(), CssFileWriteError> {
-    separate_files_dir.push(
-        current_scss_path
-            .file_name()
-            .expect("current scss file exists"),
-    );
-    separate_files_dir.set_extension("css");
+    match style_sheet {
+        StyleSheetKind::File(path) => {
+            separate_files_dir.push(path.file_name().expect("current css file exists"));
+            separate_files_dir.set_extension("css");
+        }
+        StyleSheetKind::Inline(style_sheet) => {
+            let mut hasher = xxhash_rust::xxh64::Xxh64::new(0);
+            hasher.update(style_sheet.as_bytes());
+            let hash = hasher.digest();
+            separate_files_dir.push(&format!("{hash:x?}.css"));
+        }
+    };
 
     let mut output_file = File::options()
         .create(true)
@@ -80,7 +86,7 @@ fn append_to_global_file(style: &str, global_file_path: &PathBuf) -> Result<(), 
 pub fn perform_css_file_output(
     output_paths: FileOutput,
     style: &str,
-    current_scss_path: &PathBuf,
+    style_sheet_kind: &StyleSheetKind,
 ) -> Result<(), CssFileWriteError> {
     if DIRS_RESET.get().is_none() {
         reset_file_output(&output_paths)?;
@@ -91,7 +97,7 @@ pub fn perform_css_file_output(
     }
 
     if let Some(output_path) = output_paths.separate_css_files_path {
-        append_to_separate_file(style, output_path, current_scss_path)?;
+        append_to_separate_file(style, output_path, style_sheet_kind)?;
     }
 
     if let Some(output_path) = output_paths.global_css_file_path {

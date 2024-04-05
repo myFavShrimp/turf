@@ -32,11 +32,13 @@ fn compile_message(message: &str) {
     println!("🌱 turf [INFO]: {message}");
 }
 
+#[derive(Debug)]
 pub enum StyleSheetKind {
     File(PathBuf),
     Inline(String),
 }
 
+#[derive(Debug)]
 pub struct CompiledStyleSheet {
     pub css: String,
     pub class_names: HashMap<String, String>,
@@ -51,14 +53,9 @@ fn style_sheet_with_compile_options(
 
     let (style_sheet_css, class_names) = transformer::transform_stylesheet(&css, settings.clone())?;
 
-    match style_sheet_input {
-        StyleSheetKind::File(ref path) => {
-            if let Some(file_output) = settings.file_output {
-                file_output::perform_css_file_output(file_output, &style_sheet_css, &path)?;
-            }
-        }
-        StyleSheetKind::Inline(_) => todo!(),
-    };
+    if let Some(file_output) = settings.file_output {
+        file_output::perform_css_file_output(file_output, &style_sheet_css, &style_sheet_input)?;
+    }
 
     Ok(CompiledStyleSheet {
         css: style_sheet_css,

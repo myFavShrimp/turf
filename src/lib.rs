@@ -168,14 +168,18 @@ pub use turf_macros::style_sheet;
 /// Returns a tuple of `(style_sheet: &'static str, class_names: struct)`
 ///
 /// In some cases, it may be necessary to have a struct's instance (for example when using turf in [askama](https://github.com/djc/askama) templates).
-/// The `turf::inline_style_sheet` macro simplifies the process of including the resulting CSS and obtaining the associated class names. It allows you to retrieve both the style sheet and the generated class names in a tuple.
+/// The `turf::style_sheet_values` macro simplifies the process of including the resulting CSS and obtaining the associated class names. It allows you to retrieve both the style sheet and the generated class names in a tuple.
 ///
 /// **Usage:**
 ///
 /// ```rust,ignore
-/// let (style_sheet, class_names) = turf::inline_style_sheet!("path/to/style.scss");
+/// let (style_sheet, class_names) = turf::style_sheet_values!("path/to/style.scss");
 ///
 /// let style_sheet_str = style_sheet;
 /// let some_class_name = class_names.some_class;
 /// ```
+pub use turf_macros::style_sheet_values;
+
 pub use turf_macros::inline_style_sheet;
+
+pub use turf_macros::inline_style_sheet_values;
