@@ -4,7 +4,7 @@ use std::{
     path::PathBuf,
 };
 
-use crate::{path_utils::PathResolutionError, settings::FileOutput, StyleSheetKind};
+use crate::{settings::FileOutput, StyleSheetKind};
 
 static DIRS_RESET: std::sync::OnceLock<()> = std::sync::OnceLock::new();
 
