@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% let (style_sheet, class_name) = turf::inline_style_sheet!("templates/hello_askama.scss") %}
+    {% let (style_sheet, class_name) = turf::style_sheet_values!("templates/hello_askama.scss") %}
 
     <style>
         {{ style_sheet }}
