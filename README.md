@@ -146,15 +146,60 @@ Three formats are supported:
 | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
 | Example: `1` or `[1]` represent version `1.0.0` | Example: `[1, 2]` represents version `1.2.0` | Example: `[1, 2, 3]` represents version `1.2.3`. |
 
-### The `inline_style_sheet` Macro
+### Additional Macros
+
+turf provides a few additional macros for other use cases.
+
+#### The `style_sheet_values` Macro
 
 In some cases, it may be necessary to have a struct's instance to access the class names (for example when using turf in [askama](https://github.com/djc/askama) templates).
-The `turf::inline_style_sheet` macro provides an alternative to directly including the resulting CSS and obtaining the associated class names. It returns a tuple of `(style_sheet: &'static str, class_names: struct)`.
+The `turf::style_sheet_values` macro provides an alternative to directly including the resulting CSS and obtaining the associated class names. It returns a tuple of `(style_sheet: &'static str, class_names: struct)`.
 
 **Usage:**
 
 ```rust,ignore
-let (style_sheet, class_names) = turf::inline_style_sheet!("path/to/style.scss");
+let (style_sheet, class_names) = turf::style_sheet_values!("path/to/style.scss");
+let some_class_name = class_names.some_class;
+```
+
+#### The `inline_style_sheet` Macro
+
+If you don't want your style sheet to live in another file, you can use the `turf::inline_style_sheet` macro. It allows you to write inline SCSS which will then be compiled to CSS.
+
+**Usage:**
+
+```rust,ignore
+turf::inline_style_sheet! {
+    .TopLevelClass {
+        color: red;
+
+        .SomeClass {
+            color: blue;
+        }
+    }
+}
+
+// ...
+
+let some_class_name = ClassName::SOME_CLASS;
+```
+
+#### The `inline_style_sheet_values` Macro
+
+This macro combines the functionality of both the `style_sheet_values` and `inline_style_sheet` macros. It allows you to write inline SCSS and returns an tuple of `(style_sheet: &'static str, class_names: struct)`.
+
+**Usage:**
+
+```rust,ignore
+let (style_sheet, class_names) = turf::inline_style_sheet_values! {
+    .TopLevelClass {
+        color: red;
+
+        .SomeClass {
+            color: blue;
+        }
+    }
+};
 let some_class_name = class_names.some_class;
 ```
 
