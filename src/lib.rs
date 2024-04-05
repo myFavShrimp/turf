@@ -116,7 +116,7 @@
 //!
 //! - `global_css_file_path`: Specifies the file path for a global CSS file. If set, a CSS file will be created at the provided path, and all compiled styles will be written to this file. This allows you to have a single CSS file containing all the compiled styles.
 //!
-//! - `separate_css_files_path`: Specifies the directory path for separate CSS files. If set, all compiled CSS files will be saved in the specified directory. Each compiled SCSS file will have its corresponding CSS file in this directory, allowing for modular CSS management.
+//! - `separate_css_files_path`: Specifies the directory path for separate CSS files. If set, all compiled CSS files will be saved in the specified directory. Each compiled SCSS file will have its corresponding CSS file in this directory, allowing for modular CSS management. The file name for inline SCSS style definitions will be a 64 bit hash that is computed from the original SCSS style.
 //!
 //! #### Browser Versions
 //!
