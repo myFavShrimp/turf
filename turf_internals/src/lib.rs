@@ -81,7 +81,7 @@ pub fn style_sheet(style_sheet: StyleSheetKind) -> Result<CompiledStyleSheet, cr
     style_sheet_with_compile_options(style_sheet, settings)
 }
 
-static LOAD_PATHS_TRACKED: std::sync::OnceLock<Mutex<bool>> = std::sync::OnceLock::new();
+static LOAD_PATHS_TRACKED: Mutex<bool> = Mutex::new(false);
 
 #[derive(Debug, thiserror::Error)]
 pub enum LoadPathTrackingError {
@@ -94,8 +94,7 @@ pub enum LoadPathTrackingError {
 }
 
 pub fn get_untracked_load_paths() -> Result<Vec<PathBuf>, LoadPathTrackingError> {
-    let load_paths_tracked_mutex = LOAD_PATHS_TRACKED.get_or_init(|| Mutex::new(false));
-    let mut load_paths_tracked = match load_paths_tracked_mutex.lock() {
+    let mut load_paths_tracked = match LOAD_PATHS_TRACKED.lock() {
         Err(_) => return Err(LoadPathTrackingError::Mutex),
         Ok(val) => val,
     };
