@@ -1,3 +1,9 @@
+# 0.9.0
+
+- Updated dependencies
+- Renamed the `inline_style_sheet` macro to `style_sheet_values` to avoid confusion
+- Added the `inline_style_sheet` and `inline_style_sheet_values` macros to allow inline SCSS style definitions
+
 # 0.8.0
 
 - Updated dependencies
