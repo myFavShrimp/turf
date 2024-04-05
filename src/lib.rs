@@ -225,6 +225,45 @@ pub use turf_macros::style_sheet;
 /// ```
 pub use turf_macros::style_sheet_values;
 
+/// Generates the static variable `STYLE_SHEET` and the `ClassName` struct from inline SCSS styles with default settings or the settings specified in the `Cargo.toml`
+///
+/// If you don't want your style sheet to live in another file, you can use the `turf::inline_style_sheet` macro. It allows you to write inline SCSS which will then be compiled to CSS.
+///
+/// **Usage:**
+///
+/// ```rust,ignore
+/// turf::inline_style_sheet! {
+///     .TopLevelClass {
+///         color: red;
+///
+///         .SomeClass {
+///             color: blue;
+///         }
+///     }
+/// }
+///
+/// // ...
+///
+/// let some_class_name = ClassName::SOME_CLASS;
+/// ```
 pub use turf_macros::inline_style_sheet;
 
+/// Returns a tuple of `(style_sheet: &'static str, class_names: struct)` from inline SCSS styles
+///
+/// This macro combines the functionality of both the `style_sheet_values` and `inline_style_sheet` macros. It allows you to write inline SCSS and returns an tuple of `(style_sheet: &'static str, class_names: struct)`.
+///
+/// **Usage:**
+///     
+/// ```rust,ignore
+/// let (style_sheet, class_names) = turf::inline_style_sheet_values! {
+///     .TopLevelClass {
+///         color: red;
+///         
+///         .SomeClass {
+///             color: blue;
+///         }
+///     }
+/// };
+/// let some_class_name = class_names.some_class;
+/// ```
 pub use turf_macros::inline_style_sheet_values;
