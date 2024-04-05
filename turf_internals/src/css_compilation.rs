@@ -35,7 +35,7 @@ pub fn compile_style_sheet(
     settings: &Settings,
 ) -> Result<String, CssCompilationError> {
     Ok(match style_sheet {
-        StyleSheetKind::File(ref path) => grass::from_path(&path, &settings.clone().try_into()?)
+        StyleSheetKind::File(ref path) => grass::from_path(path, &settings.clone().try_into()?)
             .map_err(|e| CssCompilationError::from((e, path.clone())))?,
         StyleSheetKind::Inline(ref style_sheet) => {
             grass::from_string(style_sheet, &settings.clone().try_into()?)?

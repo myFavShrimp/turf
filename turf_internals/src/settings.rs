@@ -14,7 +14,7 @@ pub struct FileOutput {
     pub(crate) separate_css_files_path: Option<PathBuf>,
 }
 
-pub(crate) static DEFAULT_CLASS_NAME_TEMPLATE: &'static str = "class-<id>";
+pub(crate) static DEFAULT_CLASS_NAME_TEMPLATE: &str = "class-<id>";
 
 #[derive(Deserialize, Debug, Clone, PartialEq)]
 pub struct ClassNameGeneration {

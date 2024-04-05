@@ -19,15 +19,11 @@ impl TransformationVisitor {
     fn randomized_class_name(&mut self, class_name: String) -> String {
         match self.classes.get(&class_name) {
             Some(random_class_name) => random_class_name.clone(),
-            None => {
-                let new_class_name = apply_template(
-                    &class_name,
-                    &self.class_name_template,
-                    &self.random_number_generator.rand_u32().to_string(),
-                );
-
-                new_class_name
-            }
+            None => apply_template(
+                &class_name,
+                &self.class_name_template,
+                &self.random_number_generator.rand_u32().to_string(),
+            ),
         }
     }
 }
