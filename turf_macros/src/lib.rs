@@ -12,27 +12,19 @@ pub fn style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
     let sanitized_path = PathBuf::from(input.trim_matches('"'));
 
-    let CompiledStyleSheet {
+    let ProcessedStyleSheet {
+        untracked_load_paths,
         css,
         class_names,
-        original_style_sheet,
-    } = match turf_internals::style_sheet(StyleSheetKind::File(sanitized_path))
-        .map_err(to_compile_error)
-    {
-        Ok(values) => values,
-        Err(e) => return e,
-    };
-
-    let untracked_load_paths =
-        match turf_internals::get_untracked_load_paths().map_err(to_compile_error) {
-            Ok(mut values) => {
-                if let StyleSheetKind::File(current_file_path) = original_style_sheet {
-                    values.push(current_file_path);
-                }
-                values
+    } = match handle_style_sheet(StyleSheetKind::File(sanitized_path)) {
+        Ok(result) => result,
+        Err(e) => {
+            return match e {
+                Error::Turf(e) => to_compile_error(e),
+                Error::LoadPathTracking(e) => to_compile_error(e),
             }
-            Err(e) => return e,
-        };
+        }
+    };
 
     let mut out = quote! {
         pub static STYLE_SHEET: &'static str = #css;
@@ -48,27 +40,19 @@ pub fn style_sheet_values(input: TokenStream) -> TokenStream {
     let input = input.to_string();
     let sanitized_path = PathBuf::from(input.trim_matches('"'));
 
-    let CompiledStyleSheet {
+    let ProcessedStyleSheet {
+        untracked_load_paths,
         css,
         class_names,
-        original_style_sheet,
-    } = match turf_internals::style_sheet(StyleSheetKind::File(sanitized_path))
-        .map_err(to_compile_error)
-    {
-        Ok(values) => values,
-        Err(e) => return e,
-    };
-
-    let untracked_load_paths =
-        match turf_internals::get_untracked_load_paths().map_err(to_compile_error) {
-            Ok(mut values) => {
-                if let StyleSheetKind::File(current_file_path) = original_style_sheet {
-                    values.push(current_file_path);
-                }
-                values
+    } = match handle_style_sheet(StyleSheetKind::File(sanitized_path)) {
+        Ok(result) => result,
+        Err(e) => {
+            return match e {
+                Error::Turf(e) => to_compile_error(e),
+                Error::LoadPathTracking(e) => to_compile_error(e),
             }
-            Err(e) => return e,
-        };
+        }
+    };
 
     let includes = create_include_bytes(untracked_load_paths);
     let inlines = create_inline_classes_instance(class_names);
@@ -85,28 +69,19 @@ pub fn style_sheet_values(input: TokenStream) -> TokenStream {
 pub fn inline_style_sheet(input: TokenStream) -> TokenStream {
     let input = input.to_string();
 
-    let CompiledStyleSheet {
+    let ProcessedStyleSheet {
+        untracked_load_paths,
         css,
         class_names,
-        original_style_sheet,
-    } = match turf_internals::style_sheet(StyleSheetKind::Inline(input)).map_err(to_compile_error) {
-        Ok(values) => values,
-        Err(e) => return e,
-    };
-
-    let untracked_load_paths =
-        match turf_internals::get_untracked_load_paths().map_err(to_compile_error) {
-            Ok(mut values) => {
-                match original_style_sheet {
-                    StyleSheetKind::File(current_file_path) => {
-                        values.push(current_file_path);
-                    }
-                    StyleSheetKind::Inline(_) => {}
-                };
-                values
+    } = match handle_style_sheet(StyleSheetKind::Inline(input)) {
+        Ok(result) => result,
+        Err(e) => {
+            return match e {
+                Error::Turf(e) => to_compile_error(e),
+                Error::LoadPathTracking(e) => to_compile_error(e),
             }
-            Err(e) => return e,
-        };
+        }
+    };
 
     let mut out = quote! {
         pub static STYLE_SHEET: &'static str = #css;
@@ -121,25 +96,19 @@ pub fn inline_style_sheet(input: TokenStream) -> TokenStream {
 pub fn inline_style_sheet_values(input: TokenStream) -> TokenStream {
     let input = input.to_string();
 
-    let CompiledStyleSheet {
+    let ProcessedStyleSheet {
+        untracked_load_paths,
         css,
         class_names,
-        original_style_sheet,
-    } = match turf_internals::style_sheet(StyleSheetKind::Inline(input)).map_err(to_compile_error) {
-        Ok(values) => values,
-        Err(e) => return e,
-    };
-
-    let untracked_load_paths =
-        match turf_internals::get_untracked_load_paths().map_err(to_compile_error) {
-            Ok(mut values) => {
-                if let StyleSheetKind::File(current_file_path) = original_style_sheet {
-                    values.push(current_file_path);
-                }
-                values
+    } = match handle_style_sheet(StyleSheetKind::Inline(input)) {
+        Ok(result) => result,
+        Err(e) => {
+            return match e {
+                Error::Turf(e) => to_compile_error(e),
+                Error::LoadPathTracking(e) => to_compile_error(e),
             }
-            Err(e) => return e,
-        };
+        }
+    };
 
     let includes = create_include_bytes(untracked_load_paths);
     let inlines = create_inline_classes_instance(class_names);
@@ -232,6 +201,42 @@ fn create_include_bytes(untracked_load_paths: Vec<PathBuf>) -> proc_macro2::Toke
     quote::quote! {
         #(const _: &[u8] = include_bytes!(#untracked_load_path_values);)*
     }
+}
+
+enum Error {
+    Turf(turf_internals::Error),
+    LoadPathTracking(turf_internals::LoadPathTrackingError),
+}
+
+struct ProcessedStyleSheet {
+    untracked_load_paths: Vec<PathBuf>,
+    css: String,
+    class_names: HashMap<String, String>,
+}
+
+fn handle_style_sheet(style_sheet: StyleSheetKind) -> Result<ProcessedStyleSheet, Error> {
+    let CompiledStyleSheet {
+        css,
+        class_names,
+        original_style_sheet,
+    } = turf_internals::style_sheet(style_sheet).map_err(Error::Turf)?;
+
+    let untracked_load_paths = {
+        let mut values =
+            turf_internals::get_untracked_load_paths().map_err(Error::LoadPathTracking)?;
+
+        if let StyleSheetKind::File(current_file_path) = original_style_sheet {
+            values.push(current_file_path);
+        }
+
+        values
+    };
+
+    Ok(ProcessedStyleSheet {
+        untracked_load_paths,
+        css,
+        class_names,
+    })
 }
 
 #[cfg(test)]
