@@ -3,6 +3,7 @@
 - Updated dependencies
 - Renamed the `inline_style_sheet` macro to `style_sheet_values` to avoid confusion
 - Added the `inline_style_sheet` and `inline_style_sheet_values` macros to allow inline SCSS style definitions
+- Changed `randomized_class_name` to use base64 ids rather than numeric ids for randomizing class ids
 
 # 0.8.0
 
