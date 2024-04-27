@@ -3,6 +3,7 @@
 - Updated dependencies
 - Renamed the `inline_style_sheet` macro to `style_sheet_values` to avoid confusion
 - Added the `inline_style_sheet` and `inline_style_sheet_values` macros to allow inline SCSS style definitions
+- Added support for `any`, `has`, `host`, `is`, `not`, `slotted` and `where` CSS pseudo classes.
 
 # 0.8.0
 
