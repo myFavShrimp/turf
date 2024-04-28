@@ -7,6 +7,8 @@ use lightningcss::{
 use regex::RegexSet;
 use std::{collections::HashMap, convert::Infallible};
 
+const CHARSET: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
+
 pub struct TransformationVisitor {
     pub(crate) classes: HashMap<String, String>,
     pub(crate) random_number_generator: oorandom::Rand32,
@@ -16,14 +18,32 @@ pub struct TransformationVisitor {
 }
 
 impl TransformationVisitor {
+    fn randomized_class_id(&mut self, length: u32) -> String {
+        // Creates a random id as part of a class template. The id consists of `length` characters.
+        // With the exception of the first character, each character can be an alphanumeric, `_` or `-`.
+        // The first character can only be a letter or `_` to stay compliant with the CSS spec.
+        assert!(length <= 6, "Can be no longer than 6 characters, was {}", length); // Limited by rand_u32, must be rand_u64 for larger values
+        let mut encoded_chars = String::new();
+        if length <= 0 { return encoded_chars; }
+        // Only allow a letter or `_` for the first character, doesn't allow a number or `-`
+        let mut char_index = self.random_number_generator.rand_range(10..63) as usize;
+        encoded_chars.push(CHARSET[char_index] as char);
+        let mut random_bits = self.random_number_generator.rand_u32();
+        for _ in 0..(length - 1) {
+            char_index = (random_bits & 0x3F) as usize; // Only use the last 6 bits (0-64)
+            encoded_chars.push(CHARSET[char_index] as char);
+            random_bits >>= 6; // Shift to the next 6 bits
+        }
+        encoded_chars
+    }
+
     fn randomized_class_name(&mut self, class_name: String) -> String {
         match self.classes.get(&class_name) {
             Some(random_class_name) => random_class_name.clone(),
-            None => apply_template(
-                &class_name,
-                &self.class_name_template,
-                &self.random_number_generator.rand_u32().to_string(),
-            ),
+            None => {
+                let id: String = self.randomized_class_id(6);
+                apply_template(&class_name, &self.class_name_template, &id)
+            },
         }
     }
 }
