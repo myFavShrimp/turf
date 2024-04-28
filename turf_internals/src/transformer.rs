@@ -57,39 +57,54 @@ impl<'i> Visitor<'i> for TransformationVisitor {
 
     fn visit_selector(&mut self, selectors: &mut Selector<'i>) -> Result<(), Self::Error> {
         for selector in selectors.iter_mut_raw_match_order() {
-            if let Component::Class(c) = selector {
-                let original_class_name = c.to_string();
+            match selector {
+                Component::Class(c) => {
+                    let original_class_name = c.to_string();
 
-                if self.class_name_exclude_patterns.is_empty()
-                    || !self
-                        .class_name_exclude_patterns
-                        .is_match(&original_class_name)
-                {
-                    let new_class_name = self
-                        .randomized_class_name(original_class_name.clone())
-                        .to_string();
-                    self.classes
-                        .insert(original_class_name.clone(), new_class_name.clone());
+                    if self.class_name_exclude_patterns.is_empty()
+                        || !self
+                            .class_name_exclude_patterns
+                            .is_match(&original_class_name)
+                    {
+                        let new_class_name = self
+                            .randomized_class_name(original_class_name.clone())
+                            .to_string();
+                        self.classes
+                            .insert(original_class_name.clone(), new_class_name.clone());
 
-                    if self.debug {
-                        crate::compile_message(&format!(
-                            "class name mapping - {:?} = {:?}",
-                            &original_class_name, &new_class_name
-                        ));
-                    }
+                        if self.debug {
+                            crate::compile_message(&format!(
+                                "class name mapping - {:?} = {:?}",
+                                &original_class_name, &new_class_name
+                            ));
+                        }
 
-                    *c = new_class_name.into();
-                } else {
-                    self.classes
-                        .insert(original_class_name.clone(), original_class_name.clone());
+                        *c = new_class_name.into();
+                    } else {
+                        self.classes
+                            .insert(original_class_name.clone(), original_class_name.clone());
 
-                    if self.debug {
-                        crate::compile_message(&format!(
-                            "class name excluded - {:?}",
-                            &original_class_name
-                        ));
+                        if self.debug {
+                            crate::compile_message(&format!(
+                                "class name excluded - {:?}",
+                                &original_class_name
+                            ));
+                        }
                     }
                 }
+                Component::Slotted(s) => {
+                    s.visit(self)?
+                },
+                Component::Host(s) => {
+                    if let Some(selector) = s {
+                        selector.visit(self)?
+                    }
+                },
+                Component::Negation(s) | Component::Where(s) | Component::Is(s) | 
+                        Component::Any(_, s) | Component::Has(s) => {
+                    s.iter_mut().try_for_each(|selector| selector.visit(self))?
+                },
+                _ => ()
             }
         }
 
@@ -154,6 +169,29 @@ mod tests {
         assert!(transformation_result.0.starts_with(&format!(
             ".{}",
             transformation_result.1.get("test").unwrap()
+        )));
+    }
+
+    #[test]
+    fn inner_selector_visitor() {
+        let style = r#"
+            .test:not(.withoutme) {
+                color: red;
+            }
+        "#;
+        let transformation_result =
+            transform_stylesheet(style, crate::Settings::default()).unwrap();
+
+        assert!(transformation_result.0.starts_with(".class-"));
+        assert!(transformation_result.0.ends_with("{color:red}"));
+        assert!(transformation_result.0.starts_with(&format!(
+            ".{}:not(.class-",
+            transformation_result.1.get("test").unwrap()
+        )));
+        assert!(transformation_result.0.starts_with(&format!(
+            ".{}:not(.{})",
+            transformation_result.1.get("test").unwrap(),
+            transformation_result.1.get("withoutme").unwrap()
         )));
     }
 
