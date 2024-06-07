@@ -22,9 +22,12 @@ impl TransformationVisitor {
         // Creates a random id as part of a class template. The id consists of `length` characters.
         // With the exception of the first character, each character can be an alphanumeric, `_` or `-`.
         // The first character can only be a letter or `_` to stay compliant with the CSS spec.
-        assert!(length <= 6, "Can be no longer than 6 characters, was {}", length); // Limited by rand_u32, must be rand_u64 for larger values
+        assert!(
+            length <= 6, // Limited by rand_u32, must be rand_u64 for larger values
+            "'randomized_class_id' can be no longer than 6 characters, was {}",
+            length
+        );
         let mut encoded_chars = String::new();
-        if length <= 0 { return encoded_chars; }
         // Only allow a letter or `_` for the first character, doesn't allow a number or `-`
         let mut char_index = self.random_number_generator.rand_range(10..63) as usize;
         encoded_chars.push(CHARSET[char_index] as char);
@@ -43,7 +46,7 @@ impl TransformationVisitor {
             None => {
                 let id: String = self.randomized_class_id(6);
                 apply_template(&class_name, &self.class_name_template, &id)
-            },
+            }
         }
     }
 }
@@ -92,19 +95,16 @@ impl<'i> Visitor<'i> for TransformationVisitor {
                         }
                     }
                 }
-                Component::Slotted(s) => {
-                    s.visit(self)?
-                },
-                Component::Host(s) => {
-                    if let Some(selector) = s {
-                        selector.visit(self)?
-                    }
-                },
-                Component::Negation(s) | Component::Where(s) | Component::Is(s) | 
-                        Component::Any(_, s) | Component::Has(s) => {
+                Component::Slotted(s) => s.visit(self)?,
+                Component::Host(Some(selector)) => selector.visit(self)?,
+                Component::Negation(s)
+                | Component::Where(s)
+                | Component::Is(s)
+                | Component::Any(_, s)
+                | Component::Has(s) => {
                     s.iter_mut().try_for_each(|selector| selector.visit(self))?
-                },
-                _ => ()
+                }
+                _ => (),
             }
         }
 
