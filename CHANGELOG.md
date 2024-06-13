@@ -3,8 +3,8 @@
 - Updated dependencies
 - Renamed the `inline_style_sheet` macro to `style_sheet_values` to avoid confusion
 - Added the `inline_style_sheet` and `inline_style_sheet_values` macros to allow inline SCSS style definitions
-- Changed `randomized_class_name` to use base64 ids rather than numeric ids for randomizing class ids
-- Added support for `any`, `has`, `host`, `is`, `not`, `slotted` and `where` CSS pseudo classes.
+- Changed `randomized_class_name` to use base64 ids rather than numeric ids for randomizing class ids (thank you @BToersche)
+- Added support for `any`, `has`, `host`, `is`, `not`, `slotted` and `where` CSS pseudo classes. (thank you @BToersche)
 
 # 0.8.0
 
