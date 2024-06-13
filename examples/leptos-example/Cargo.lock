@@ -817,9 +817,9 @@ checksum = "9c198f91728a82281a64e1f4f9eeb25d82cb32a5de251c6bd1b5154d63a8e7bd"
 
 [[package]]
 name = "lightningcss"
-version = "1.0.0-alpha.55"
+version = "1.0.0-alpha.57"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3bd5bed3814fb631bfc1e24c2be6f7e86a9837c660909acab79a38374dcb8798"
+checksum = "10bc10261f46b8df263b80e7779d1748b1880488cd951fbb9e096430cead10e6"
 dependencies = [
  "ahash",
  "bitflags 2.4.2",
@@ -929,9 +929,9 @@ checksum = "56d80efc4b6721e8be2a10a5df21a30fa0b470f1539e53d8b4e6e75faf938b63"
 
 [[package]]
 name = "parcel_selectors"
-version = "0.26.4"
+version = "0.26.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05d74befe2d076330d9a58bf9ca2da424568724ab278adf15fb5718253133887"
+checksum = "ce9c47a67c66fee4a5a42756f9784d92941bd0ab2b653539a9e90521a44b66f0"
 dependencies = [
  "bitflags 2.4.2",
  "cssparser",
@@ -1621,14 +1621,14 @@ dependencies = [
 
 [[package]]
 name = "turf"
-version = "0.8.0"
+version = "0.9.0"
 dependencies = [
  "turf_macros",
 ]
 
 [[package]]
 name = "turf_internals"
-version = "0.8.0"
+version = "0.9.0"
 dependencies = [
  "getrandom",
  "grass",
@@ -1643,7 +1643,7 @@ dependencies = [
 
 [[package]]
 name = "turf_macros"
-version = "0.8.0"
+version = "0.9.0"
 dependencies = [
  "convert_case",
  "proc-macro2",

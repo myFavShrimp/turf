@@ -1,0 +1,13 @@
+[package]
+name = "define_inline_style_sheet"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.turf]
+path = "../../"
+[dependencies.turf_internals]
+path = "../../turf_internals"
+
+[package.metadata.turf]
+load_paths = ["../variables"]
+minify = false

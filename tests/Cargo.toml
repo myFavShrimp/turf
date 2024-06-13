@@ -1,5 +1,6 @@
 [workspace]
-members = [
+members = [ "define_inline_style_sheet",
     "load_settings_from_cargo_manifest",
     "use_default_settings",
+    "define_inline_style_sheet",
 ]
