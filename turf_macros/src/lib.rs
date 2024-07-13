@@ -1,7 +1,7 @@
 //! You're probably looking for `turf` instead.
 
 use convert_case::{Case, Casing};
-use std::{collections::HashMap, path::PathBuf};
+use std::{collections::HashMap, path::PathBuf, time::Duration};
 use turf_internals::{CompiledStyleSheet, StyleSheetKind};
 
 use proc_macro::TokenStream;
@@ -125,7 +125,18 @@ fn to_compile_error<E>(e: E) -> TokenStream
 where
     E: std::error::Error,
 {
-    let message = e.to_string();
+    let mut message = format!("Error: {}", e.to_string());
+    let mut curr_err = e.source();
+
+    if curr_err.is_some() {
+        message.push_str(&format!("\nCaused by:"));
+    }
+
+    while let Some(current_error) = curr_err {
+        message.push_str(&format!("\n    {}", current_error));
+        curr_err = current_error.source();
+    }
+
     quote! {
         compile_error!(#message);
     }
