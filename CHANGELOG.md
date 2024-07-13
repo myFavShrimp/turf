@@ -1,3 +1,7 @@
+# 0.9.1
+
+- Added error source information to error messages
+
 # 0.9.0
 
 - Updated dependencies
