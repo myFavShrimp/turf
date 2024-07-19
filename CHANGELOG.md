@@ -1,6 +1,6 @@
 # 0.9.1
 
-- Fixed settings parsing for browser version target arrays with a single major version specification (thank you @emnul for reporting the issue)
+- Fixed settings parsing of browser version target arrays with a single major version specification (thank you @emnul for reporting the issue)
 
 # 0.9.1
 
