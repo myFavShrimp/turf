@@ -162,6 +162,7 @@ impl From<BrowserVersions> for lightningcss::targets::Browsers {
 #[serde(untagged)]
 pub enum BrowserVersion {
     Major(u8),
+    MajorSingleValueArray((u8,)),
     MajorMinor(u8, u8),
     MajorMinorPatch(u8, u8, u8),
 }
@@ -170,6 +171,7 @@ impl From<BrowserVersion> for u32 {
     fn from(value: BrowserVersion) -> Self {
         let version = match value {
             BrowserVersion::Major(major) => (major, 0, 0),
+            BrowserVersion::MajorSingleValueArray((major,)) => (major, 0, 0),
             BrowserVersion::MajorMinor(major, minor) => (major, minor, 0),
             BrowserVersion::MajorMinorPatch(major, minor, path) => (major, minor, path),
         };
