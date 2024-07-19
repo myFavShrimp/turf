@@ -1,5 +1,9 @@
 # 0.9.1
 
+- Fixed settings parsing for browser version target arrays with a single major version specification (thank you @emnul for reporting the issue)
+
+# 0.9.1
+
 - Added error source information to error messages
 
 # 0.9.0
