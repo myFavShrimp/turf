@@ -1,4 +1,8 @@
-# 0.9.1
+# 0.9.3
+
+- Updated lightningcss
+
+# 0.9.2
 
 - Fixed settings parsing of browser version target arrays with a single major version specification (thank you @emnul for reporting the issue)
 

@@ -9,7 +9,7 @@ exclude = [
 ]
 
 [workspace.package]
-version = "0.9.2"
+version = "0.9.3"
 edition = "2021"
 authors = ["myFavShrimp <myfavshrimp@tuta.io>"]
 license = "MIT"
@@ -34,4 +34,4 @@ publish.workspace = true
 
 [dependencies.turf_macros]
 path = "turf_macros"
-version = "0.9.2"
+version = "0.9.3"
