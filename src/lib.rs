@@ -108,7 +108,13 @@
 //!
 //! #### The `class_names` Key
 //!
-//! - `template` (default: `"class-<id>"`): Specifies the template for generating randomized CSS class names. The template can include placeholders to customize the output. `<id>` will be replaced with a unique identifier for each CSS class name, `<style_sheet_hash>`/`<style_sheet_hash_short>` will be replaced with the (short) hash of the CSS/SCSS source file, and `<original_name>` will be replaced with the original class name from the SCSS file.
+//! - `template` (default: `"class-<id>"`): Specifies the template for generating randomized CSS class names. The template can include placeholders to customize the output:
+//!     - `<id>` will be replaced with a unique identifier for each CSS class name
+//!     - `<original_name>` will be replaced with the original class name from the SCSS file
+//!     - `<name_hash>` will be replaced with the hash of the original class name from the SCSS file
+//!     - `<name_hash_short>` will be replaced with the first 5 characters of the hash of the original class name from the SCSS file
+//!     - `<style_sheet_hash>` will be replaced with the hash of the SCSS file
+//!     - `<style_sheet_hash_short>` will be replaced with the first 8 characters of the hash of the SCSS file
 //!
 //! - `excludes`: An array of regex patterns that exclude class names in your SCSS files from the class name uniquification process.
 //!
