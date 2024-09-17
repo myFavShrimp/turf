@@ -150,11 +150,14 @@ fn apply_template(
     id: &str,
     style_sheet_hash: &str,
 ) -> String {
+    let name_hash = hex::encode(blake3::hash(original_class_name.as_bytes()).as_bytes());
     class_name_template
         .replace("<original_name>", original_class_name)
-        .replace("<style_sheet_hash>", style_sheet_hash)
-        .replace("<style_sheet_hash_short>", &style_sheet_hash[..11])
         .replace("<id>", id)
+        .replace("<name_hash>", &name_hash)
+        .replace("<name_hash_short>", &name_hash[..6])
+        .replace("<style_sheet_hash>", style_sheet_hash)
+        .replace("<style_sheet_hash_short>", &style_sheet_hash[..9])
 }
 
 #[derive(Debug, thiserror::Error)]
