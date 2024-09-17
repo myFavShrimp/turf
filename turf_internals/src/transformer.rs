@@ -155,9 +155,9 @@ fn apply_template(
         .replace("<original_name>", original_class_name)
         .replace("<id>", id)
         .replace("<name_hash>", &name_hash)
-        .replace("<name_hash_short>", &name_hash[..6])
+        .replace("<name_hash_short>", &name_hash[..5])
         .replace("<style_sheet_hash>", style_sheet_hash)
-        .replace("<style_sheet_hash_short>", &style_sheet_hash[..9])
+        .replace("<style_sheet_hash_short>", &style_sheet_hash[..8])
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -210,8 +210,12 @@ mod tests {
                 color: red;
             }
         "#;
-        let transformation_result =
-            transform_stylesheet(style, "T35TH45H", crate::Settings::default()).unwrap();
+        let transformation_result = transform_stylesheet(
+            style,
+            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
+            crate::Settings::default(),
+        )
+        .unwrap();
 
         assert!(transformation_result.0.starts_with(".class-"));
         assert!(transformation_result.0.ends_with("{color:red}"));
@@ -228,8 +232,12 @@ mod tests {
                 color: red;
             }
         "#;
-        let transformation_result =
-            transform_stylesheet(style, "T35TH45H", crate::Settings::default()).unwrap();
+        let transformation_result = transform_stylesheet(
+            style,
+            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
+            crate::Settings::default(),
+        )
+        .unwrap();
 
         assert!(transformation_result.0.starts_with(".class-"));
         assert!(transformation_result.0.ends_with("{color:red}"));
@@ -252,18 +260,23 @@ mod tests {
             }
         "#;
         let class_name_generation = ClassNameGeneration {
-            template: String::from("fancy_style-<original_name>-<style_sheet_hash>-<id>"),
+            template: String::from("fancy_style-<original_name>-<style_sheet_hash_short>-<id>"),
             ..Default::default()
         };
         let settings = crate::Settings {
             class_names: class_name_generation,
             ..Default::default()
         };
-        let transformation_result = transform_stylesheet(style, "T35TH45H", settings).unwrap();
+        let transformation_result = transform_stylesheet(
+            style,
+            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
+            settings,
+        )
+        .unwrap();
 
         assert!(transformation_result
             .0
-            .starts_with(".fancy_style-test-T35TH45H-"));
+            .starts_with(".fancy_style-test-e1c6c770-"));
         assert!(transformation_result.0.ends_with("{color:red}"));
         assert!(transformation_result.0.starts_with(&format!(
             ".{}",
@@ -286,7 +299,12 @@ mod tests {
             class_names: class_name_generation,
             ..Default::default()
         };
-        let transformation_result = transform_stylesheet(style, "T35TH45H", settings).unwrap();
+        let transformation_result = transform_stylesheet(
+            style,
+            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
+            settings,
+        )
+        .unwrap();
 
         assert_eq!(transformation_result.0, ".fancy_style-test{color:red}");
         assert!(transformation_result.0.starts_with(&format!(
@@ -296,23 +314,31 @@ mod tests {
     }
 
     #[test]
-    fn custom_template_with_style_sheet_hash() {
+    fn custom_template_with_hashes() {
         let style = r#"
             .test {
                 color: red;
             }
         "#;
         let class_name_generation = ClassNameGeneration {
-            template: String::from("<style_sheet_hash>-<original_name>"),
+            template: String::from("<style_sheet_hash>-<style_sheet_hash_short>-<name_hash>-<name_hash_short>-<original_name>"),
             ..Default::default()
         };
         let settings = crate::Settings {
             class_names: class_name_generation,
             ..Default::default()
         };
-        let transformation_result = transform_stylesheet(style, "T35TH45H", settings).unwrap();
+        let transformation_result = transform_stylesheet(
+            style,
+            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
+            settings,
+        )
+        .unwrap();
 
-        assert_eq!(transformation_result.0, ".T35TH45H-test{color:red}");
+        assert_eq!(
+            transformation_result.0,
+            ".e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e-e1c6c770-4878ca0425c739fa427f7eda20fe845f6b2e46ba5fe2a14df5b1e32f50603215-4878c-test{color:red}"
+        );
         assert!(transformation_result.0.starts_with(&format!(
             ".{}",
             transformation_result.1.get("test").unwrap()
