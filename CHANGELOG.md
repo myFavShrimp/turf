@@ -1,3 +1,7 @@
+# Next
+
+- Add `<style_sheet_hash>` and `<style_sheet_hash_short>` placeholder into `package.metadata.turf.class_names.template` configuration option
+
 # 0.9.3
 
 - Updated lightningcss

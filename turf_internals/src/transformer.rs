@@ -9,15 +9,39 @@ use std::{collections::HashMap, convert::Infallible};
 
 const CHARSET: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
 
+#[derive(thiserror::Error, Debug)]
+pub enum TransformationVisitorInitializationError {
+    #[error("error obtaining random id - {0}")]
+    RandError(#[from] getrandom::Error),
+    #[error("class name exclude pattern invalid - {0}")]
+    RegexError(#[from] regex::Error),
+}
+
 pub struct TransformationVisitor {
     pub(crate) classes: HashMap<String, String>,
     pub(crate) random_number_generator: oorandom::Rand32,
     pub(crate) class_name_template: String,
     pub(crate) class_name_exclude_patterns: RegexSet,
+    pub(crate) style_sheet_hash: String,
     pub(crate) debug: bool,
 }
 
 impl TransformationVisitor {
+    fn try_new(
+        settings: &crate::Settings,
+        style_sheet_hash: &str,
+    ) -> Result<Self, TransformationVisitorInitializationError> {
+        let class_name_generation = settings.class_names.clone();
+        Ok(Self {
+            debug: settings.debug,
+            classes: Default::default(),
+            random_number_generator: oorandom::Rand32::new(random_seed()?),
+            class_name_template: class_name_generation.template,
+            class_name_exclude_patterns: RegexSet::new(class_name_generation.excludes)?,
+            style_sheet_hash: String::from(style_sheet_hash),
+        })
+    }
+
     fn randomized_class_id(&mut self, length: u32) -> String {
         // Creates a random id as part of a class template. The id consists of `length` characters.
         // With the exception of the first character, each character can be an alphanumeric, `_` or `-`.
@@ -40,12 +64,17 @@ impl TransformationVisitor {
         encoded_chars
     }
 
-    fn randomized_class_name(&mut self, class_name: String) -> String {
+    fn randomized_class_name(&mut self, class_name: String, style_sheet_hash: String) -> String {
         match self.classes.get(&class_name) {
             Some(random_class_name) => random_class_name.clone(),
             None => {
                 let id: String = self.randomized_class_id(6);
-                apply_template(&class_name, &self.class_name_template, &id)
+                apply_template(
+                    &self.class_name_template,
+                    &class_name,
+                    &id,
+                    &style_sheet_hash,
+                )
             }
         }
     }
@@ -70,7 +99,10 @@ impl<'i> Visitor<'i> for TransformationVisitor {
                             .is_match(&original_class_name)
                     {
                         let new_class_name = self
-                            .randomized_class_name(original_class_name.clone())
+                            .randomized_class_name(
+                                original_class_name.clone(),
+                                self.style_sheet_hash.clone(),
+                            )
                             .to_string();
                         self.classes
                             .insert(original_class_name.clone(), new_class_name.clone());
@@ -112,9 +144,16 @@ impl<'i> Visitor<'i> for TransformationVisitor {
     }
 }
 
-fn apply_template(original_class_name: &str, class_name_template: &str, id: &str) -> String {
+fn apply_template(
+    class_name_template: &str,
+    original_class_name: &str,
+    id: &str,
+    style_sheet_hash: &str,
+) -> String {
     class_name_template
         .replace("<original_name>", original_class_name)
+        .replace("<style_sheet_hash>", style_sheet_hash)
+        .replace("<style_sheet_hash_short>", &style_sheet_hash[..11])
         .replace("<id>", id)
 }
 
@@ -123,18 +162,19 @@ pub enum TransformationError {
     #[error("error transforming css - {0}")]
     Lightningcss(String),
     #[error("Initialization of css tranformer failed")]
-    Initialization(#[from] crate::settings::TransformationVisitorInitializationError),
+    Initialization(#[from] TransformationVisitorInitializationError),
 }
 
 pub fn transform_stylesheet(
     css: &str,
+    hash: &str,
     settings: crate::Settings,
 ) -> Result<(String, HashMap<String, String>), TransformationError> {
     let mut stylesheet = StyleSheet::parse(css, ParserOptions::default())
         .map_err(|e| e.to_string())
         .map_err(TransformationError::Lightningcss)?;
 
-    let mut visitor = TransformationVisitor::try_from(&settings)?;
+    let mut visitor = TransformationVisitor::try_new(&settings, hash)?;
 
     stylesheet
         .visit(&mut visitor)
@@ -146,6 +186,12 @@ pub fn transform_stylesheet(
         .map_err(TransformationError::Lightningcss)?;
 
     Ok((css_result.code, visitor.classes))
+}
+
+fn random_seed() -> Result<u64, getrandom::Error> {
+    let mut buf = [0u8; 8];
+    getrandom::getrandom(&mut buf)?;
+    Ok(u64::from_ne_bytes(buf))
 }
 
 #[cfg(test)]
@@ -162,7 +208,7 @@ mod tests {
             }
         "#;
         let transformation_result =
-            transform_stylesheet(style, crate::Settings::default()).unwrap();
+            transform_stylesheet(style, "T35TH45H", crate::Settings::default()).unwrap();
 
         assert!(transformation_result.0.starts_with(".class-"));
         assert!(transformation_result.0.ends_with("{color:red}"));
@@ -180,7 +226,7 @@ mod tests {
             }
         "#;
         let transformation_result =
-            transform_stylesheet(style, crate::Settings::default()).unwrap();
+            transform_stylesheet(style, "T35TH45H", crate::Settings::default()).unwrap();
 
         assert!(transformation_result.0.starts_with(".class-"));
         assert!(transformation_result.0.ends_with("{color:red}"));
@@ -203,16 +249,18 @@ mod tests {
             }
         "#;
         let class_name_generation = ClassNameGeneration {
-            template: String::from("fancy_style-<original_name>-<id>"),
+            template: String::from("fancy_style-<original_name>-<style_sheet_hash>-<id>"),
             ..Default::default()
         };
         let settings = crate::Settings {
             class_names: class_name_generation,
             ..Default::default()
         };
-        let transformation_result = transform_stylesheet(style, settings).unwrap();
+        let transformation_result = transform_stylesheet(style, "T35TH45H", settings).unwrap();
 
-        assert!(transformation_result.0.starts_with(".fancy_style-test-"));
+        assert!(transformation_result
+            .0
+            .starts_with(".fancy_style-test-T35TH45H-"));
         assert!(transformation_result.0.ends_with("{color:red}"));
         assert!(transformation_result.0.starts_with(&format!(
             ".{}",
@@ -235,9 +283,33 @@ mod tests {
             class_names: class_name_generation,
             ..Default::default()
         };
-        let transformation_result = transform_stylesheet(style, settings).unwrap();
+        let transformation_result = transform_stylesheet(style, "T35TH45H", settings).unwrap();
 
         assert_eq!(transformation_result.0, ".fancy_style-test{color:red}");
+        assert!(transformation_result.0.starts_with(&format!(
+            ".{}",
+            transformation_result.1.get("test").unwrap()
+        )));
+    }
+
+    #[test]
+    fn custom_template_with_style_sheet_hash() {
+        let style = r#"
+            .test {
+                color: red;
+            }
+        "#;
+        let class_name_generation = ClassNameGeneration {
+            template: String::from("<style_sheet_hash>-<original_name>"),
+            ..Default::default()
+        };
+        let settings = crate::Settings {
+            class_names: class_name_generation,
+            ..Default::default()
+        };
+        let transformation_result = transform_stylesheet(style, "T35TH45H", settings).unwrap();
+
+        assert_eq!(transformation_result.0, ".T35TH45H-test{color:red}");
         assert!(transformation_result.0.starts_with(&format!(
             ".{}",
             transformation_result.1.get("test").unwrap()
