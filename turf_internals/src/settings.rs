@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 
-use regex::RegexSet;
 use serde::Deserialize;
 
 use crate::{
@@ -98,35 +97,6 @@ impl<'a> From<Settings> for lightningcss::printer::PrinterOptions<'a> {
             pseudo_classes: None,
         }
     }
-}
-
-#[derive(thiserror::Error, Debug)]
-pub enum TransformationVisitorInitializationError {
-    #[error("error obtaining random id - {0}")]
-    RandError(#[from] getrandom::Error),
-    #[error("class name exclude pattern invalid - {0}")]
-    RegexError(#[from] regex::Error),
-}
-
-impl TryFrom<&crate::Settings> for crate::transformer::TransformationVisitor {
-    type Error = TransformationVisitorInitializationError;
-
-    fn try_from(value: &crate::Settings) -> Result<Self, Self::Error> {
-        let class_name_generation = value.class_names.clone();
-        Ok(Self {
-            debug: value.debug,
-            classes: Default::default(),
-            random_number_generator: oorandom::Rand32::new(random_seed()?),
-            class_name_template: class_name_generation.template,
-            class_name_exclude_patterns: RegexSet::new(class_name_generation.excludes)?,
-        })
-    }
-}
-
-fn random_seed() -> Result<u64, getrandom::Error> {
-    let mut buf = [0u8; 8];
-    getrandom::getrandom(&mut buf)?;
-    Ok(u64::from_ne_bytes(buf))
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]

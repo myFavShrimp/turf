@@ -11,5 +11,7 @@ test-build-examples:
 	cd examples/dioxus-example && trunk build --release
 	cd examples/axum-askama-htmx && cargo build
 	cd examples/axum-askama-htmx && cargo build --release
+	cd examples/leptos-hash-example && trunk build
+	cd examples/leptos-hash-example && trunk build --release
 
 test: test-lib test-build-examples
