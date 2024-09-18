@@ -1,3 +1,4 @@
+use base64::prelude::*;
 use lightningcss::{
     selector::{Component, Selector},
     stylesheet::{ParserOptions, StyleSheet},
@@ -150,7 +151,8 @@ fn apply_template(
     id: &str,
     style_sheet_hash: &str,
 ) -> String {
-    let name_hash = hex::encode(blake3::hash(original_class_name.as_bytes()).as_bytes());
+    let name_hash =
+        BASE64_URL_SAFE_NO_PAD.encode(blake3::hash(original_class_name.as_bytes()).as_bytes());
     class_name_template
         .replace("<original_name>", original_class_name)
         .replace("<id>", id)
@@ -212,7 +214,7 @@ mod tests {
         "#;
         let transformation_result = transform_stylesheet(
             style,
-            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
+            "SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ",
             crate::Settings::default(),
         )
         .unwrap();
@@ -234,7 +236,7 @@ mod tests {
         "#;
         let transformation_result = transform_stylesheet(
             style,
-            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
+            "SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ",
             crate::Settings::default(),
         )
         .unwrap();
@@ -267,16 +269,12 @@ mod tests {
             class_names: class_name_generation,
             ..Default::default()
         };
-        let transformation_result = transform_stylesheet(
-            style,
-            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
-            settings,
-        )
-        .unwrap();
+        let transformation_result =
+            transform_stylesheet(style, "SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ", settings).unwrap();
 
         assert!(transformation_result
             .0
-            .starts_with(".fancy_style-test-e1c6c770-"));
+            .starts_with(".fancy_style-test-SGVsbG8g-"));
         assert!(transformation_result.0.ends_with("{color:red}"));
         assert!(transformation_result.0.starts_with(&format!(
             ".{}",
@@ -299,12 +297,8 @@ mod tests {
             class_names: class_name_generation,
             ..Default::default()
         };
-        let transformation_result = transform_stylesheet(
-            style,
-            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
-            settings,
-        )
-        .unwrap();
+        let transformation_result =
+            transform_stylesheet(style, "SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ", settings).unwrap();
 
         assert_eq!(transformation_result.0, ".fancy_style-test{color:red}");
         assert!(transformation_result.0.starts_with(&format!(
@@ -328,16 +322,12 @@ mod tests {
             class_names: class_name_generation,
             ..Default::default()
         };
-        let transformation_result = transform_stylesheet(
-            style,
-            "e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e",
-            settings,
-        )
-        .unwrap();
+        let transformation_result =
+            transform_stylesheet(style, "SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ", settings).unwrap();
 
         assert_eq!(
             transformation_result.0,
-            ".e1c6c770b375ec1c3b9a112987f301c758f710948be63cad1109cf0b1884e59e-e1c6c770-4878ca0425c739fa427f7eda20fe845f6b2e46ba5fe2a14df5b1e32f50603215-4878c-test{color:red}"
+            ".SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ-SGVsbG8g-SHjKBCXHOfpCf37aIP6EX2suRrpf4qFN9bHjL1BgMhU-SHjKB-test{color:red}"
         );
         assert!(transformation_result.0.starts_with(&format!(
             ".{}",

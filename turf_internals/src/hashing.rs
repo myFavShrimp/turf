@@ -1,5 +1,7 @@
 use std::path::PathBuf;
 
+use base64::prelude::*;
+
 use crate::{Settings, StyleSheetKind};
 
 #[derive(thiserror::Error, Debug)]
@@ -34,10 +36,10 @@ pub fn hash_style_sheet(
                 .values()
                 .next()
                 .ok_or(HashingError::HashMetadataGenerationFailure(path.clone()))?;
-            hex::encode(&file_metadata.check_sum)
+            BASE64_URL_SAFE_NO_PAD.encode(&file_metadata.check_sum)
         }
         StyleSheetKind::Inline(ref style_sheet) => {
-            hex::encode(blake3::hash(style_sheet.as_bytes()).as_bytes())
+            BASE64_URL_SAFE_NO_PAD.encode(blake3::hash(style_sheet.as_bytes()).as_bytes())
         }
     })
 }
