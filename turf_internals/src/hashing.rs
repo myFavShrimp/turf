@@ -6,7 +6,7 @@ use crate::{Settings, StyleSheetKind};
 
 #[derive(thiserror::Error, Debug)]
 pub enum HashingError {
-    #[error("error represening file path '{0}' as str")]
+    #[error("error representing file path '{0}' as str")]
     PathStrRepresentation(PathBuf),
     #[error("error hashing file '{1}' - {0}")]
     FileHashing(Box<dyn std::error::Error + 'static + Send + Sync>, PathBuf),
