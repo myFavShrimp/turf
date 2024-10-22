@@ -1,0 +1,25 @@
+[package]
+name = "leptos-hash-example"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies.leptos]
+version = "0.6.5"
+features = ["csr"]
+
+[dependencies.turf]
+path = "../../"
+
+[package.metadata.turf]
+load_paths = ["variables"]
+minify = true
+
+[package.metadata.turf.class_names]
+template = "leptos-hash-example_<name_hash_short>_<style_sheet_hash_short>"
+
+[package.metadata.turf.browser_targets]
+chrome = [80, 1, 2]
+firefox = 65
+safari = [12, 3]

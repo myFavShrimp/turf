@@ -2,6 +2,7 @@
 
 mod css_compilation;
 mod file_output;
+mod hashing;
 mod manifest;
 mod path_utils;
 mod settings;
@@ -15,6 +16,8 @@ pub use settings::Settings;
 pub enum Error {
     #[error(transparent)]
     CssCompilation(#[from] css_compilation::CssCompilationError),
+    #[error(transparent)]
+    Hashing(#[from] hashing::HashingError),
     #[error("error transforming css - {0}")]
     CssTransformation(#[from] transformer::TransformationError),
     #[error("no input file was specified")]
@@ -49,9 +52,11 @@ fn style_sheet_with_compile_options(
     style_sheet_input: StyleSheetKind,
     settings: Settings,
 ) -> Result<CompiledStyleSheet, crate::Error> {
+    let hash = hashing::hash_style_sheet(&style_sheet_input, &settings)?;
     let css = css_compilation::compile_style_sheet(&style_sheet_input, &settings)?;
 
-    let (style_sheet_css, class_names) = transformer::transform_stylesheet(&css, settings.clone())?;
+    let (style_sheet_css, class_names) =
+        transformer::transform_stylesheet(&css, &hash, settings.clone())?;
 
     if let Some(file_output) = settings.file_output {
         file_output::perform_css_file_output(file_output, &style_sheet_css, &style_sheet_input)?;
