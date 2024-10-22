@@ -10,7 +10,7 @@ publish.workspace = true
 readme = "README.md"
 
 [lib]
-proc_macro = true
+proc-macro = true
 
 [dependencies]
 quote = "1.0"
