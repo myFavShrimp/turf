@@ -958,14 +958,14 @@ dependencies = [
 
 [[package]]
 name = "turf"
-version = "0.9.3"
+version = "0.9.4"
 dependencies = [
  "turf_macros",
 ]
 
 [[package]]
 name = "turf_internals"
-version = "0.9.3"
+version = "0.9.4"
 dependencies = [
  "base64",
  "blake3",
@@ -983,7 +983,7 @@ dependencies = [
 
 [[package]]
 name = "turf_macros"
-version = "0.9.3"
+version = "0.9.4"
 dependencies = [
  "convert_case",
  "proc-macro2",

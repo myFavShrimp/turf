@@ -1,4 +1,4 @@
-# Next
+# 0.9.4
 
 - Add `<style_sheet_hash>`, `<style_sheet_hash_short>`, `<name_hash>`, and `<name_hash_short>` placeholders into `package.metadata.turf.class_names.template` configuration option
 
