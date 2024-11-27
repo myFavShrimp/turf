@@ -327,7 +327,7 @@ mod tests {
 
         assert_eq!(
             transformation_result.0,
-            ".SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ-SGVsbG8g-SHjKBCXHOfpCf37aIP6EX2suRrpf4qFN9bHjL1BgMhU-SHjKB-test{color:red}"
+            ".SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ-SGVsbG8g-6c78e0e3bd51d358d01e758642b85fb8-6c78e-test{color:red}"
         );
         assert!(transformation_result.0.starts_with(&format!(
             ".{}",
