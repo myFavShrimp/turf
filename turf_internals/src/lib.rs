@@ -52,7 +52,7 @@ fn style_sheet_with_compile_options(
     style_sheet_input: StyleSheetKind,
     settings: Settings,
 ) -> Result<CompiledStyleSheet, crate::Error> {
-    let hash = hashing::hash_style_sheet(&style_sheet_input, &settings)?;
+    let hash = hashing::hash_style_sheet(&style_sheet_input)?;
     let css = css_compilation::compile_style_sheet(&style_sheet_input, &settings)?;
 
     let (style_sheet_css, class_names) =
