@@ -49,9 +49,7 @@ fn append_to_separate_file(
             separate_files_dir.set_extension("css");
         }
         StyleSheetKind::Inline(style_sheet) => {
-            let mut hasher = xxhash_rust::xxh64::Xxh64::new(0);
-            hasher.update(style_sheet.as_bytes());
-            let hash = hasher.digest();
+            let hash = xxhash_rust::xxh3::xxh3_64(style_sheet.as_bytes());
             separate_files_dir.push(&format!("{hash:x?}.css"));
         }
     };

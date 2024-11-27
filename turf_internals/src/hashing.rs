@@ -1,20 +1,18 @@
-use base64::prelude::*;
-
 use crate::StyleSheetKind;
 
 #[derive(thiserror::Error, Debug)]
 #[error("Failed to hash style sheet")]
-pub enum HashingError {
+pub enum StyleSheetHashingError {
     FileRead(#[from] std::io::Error),
 }
 
-pub fn hash_style_sheet(style_sheet: &StyleSheetKind) -> Result<String, HashingError> {
+pub fn hash_style_sheet(style_sheet: &StyleSheetKind) -> Result<String, StyleSheetHashingError> {
     let hash = match style_sheet {
-        StyleSheetKind::File(ref path) => blake3::hash(&std::fs::read(path).unwrap()).to_hex(),
+        StyleSheetKind::File(ref path) => xxhash_rust::xxh3::xxh3_128(&std::fs::read(path)?),
         StyleSheetKind::Inline(ref style_sheet) => {
-            blake3::hash(&std::fs::read(style_sheet).unwrap()).to_hex()
+            xxhash_rust::xxh3::xxh3_128(style_sheet.as_bytes())
         }
     };
 
-    Ok(BASE64_URL_SAFE_NO_PAD.encode(hash.to_string()))
+    Ok(format!("{hash:x}"))
 }

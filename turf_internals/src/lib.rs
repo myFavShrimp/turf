@@ -17,7 +17,7 @@ pub enum Error {
     #[error(transparent)]
     CssCompilation(#[from] css_compilation::CssCompilationError),
     #[error(transparent)]
-    Hashing(#[from] hashing::HashingError),
+    Hashing(#[from] hashing::StyleSheetHashingError),
     #[error("error transforming css - {0}")]
     CssTransformation(#[from] transformer::TransformationError),
     #[error("no input file was specified")]

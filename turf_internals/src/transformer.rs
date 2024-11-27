@@ -1,4 +1,3 @@
-use base64::prelude::*;
 use lightningcss::{
     selector::{Component, Selector},
     stylesheet::{ParserOptions, StyleSheet},
@@ -151,13 +150,14 @@ fn apply_template(
     id: &str,
     style_sheet_hash: &str,
 ) -> String {
-    let name_hash =
-        BASE64_URL_SAFE_NO_PAD.encode(blake3::hash(original_class_name.as_bytes()).as_bytes());
+    let name_hash = xxhash_rust::xxh3::xxh3_128(original_class_name.as_bytes());
+    let name_hash_string = format!("{name_hash:x}");
+
     class_name_template
         .replace("<original_name>", original_class_name)
         .replace("<id>", id)
-        .replace("<name_hash>", &name_hash)
-        .replace("<name_hash_short>", &name_hash[..5])
+        .replace("<name_hash>", &name_hash_string)
+        .replace("<name_hash_short>", &name_hash_string[..5])
         .replace("<style_sheet_hash>", style_sheet_hash)
         .replace("<style_sheet_hash_short>", &style_sheet_hash[..8])
 }
