@@ -81,16 +81,16 @@ Example configuration:
 ```toml
 [package.metadata.turf]
 minify = true
-load_paths = ["path/to/scss/files", "path/to/other/scss/files"]
-
-[package.metadata.turf.class_names]
-template = "custom-<id>-<original_name>"
-excludes = ["exclude-this-class-please", "^abc-[123]{4}"]
+load_paths = ["path/to/shared/scss/files", "path/to/other/shared/scss/files"]
 browser_targets = [
     "defaults",
     "> 5%",
     "safari 12",
 ]
+
+[package.metadata.turf.class_names]
+template = "<original_name>-with-custom-<id>"
+excludes = ["exclude-this-class-please", "^abc-[123]{4}"]
 
 [package.metadata.turf.file_output]
 global_css_file_path = "path/to/global.css"
