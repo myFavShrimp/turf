@@ -1,10 +1,10 @@
-use leptos::*;
+use leptos::prelude::*;
 
 turf::style_sheet!("src/counter_component.scss");
 
 #[component]
 pub fn CounterComponent() -> impl IntoView {
-    let (count, set_count) = create_signal(0);
+    let (count, set_count) = signal(0);
 
     view! {
         <style>{STYLE_SHEET}</style>

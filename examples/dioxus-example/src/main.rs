@@ -5,12 +5,12 @@ mod counter_component;
 mod hello_dioxus;
 
 fn main() {
-    dioxus_web::launch(App);
+    dioxus::launch(App);
 }
 
-fn App(cx: Scope) -> Element {
-    cx.render(rsx! {
+fn App() -> Element {
+    rsx! {
         hello_dioxus::HelloDioxus {}
         counter_component::CounterComponent {}
-    })
+    }
 }

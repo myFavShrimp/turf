@@ -1,4 +1,4 @@
-use leptos::*;
+use leptos::prelude::*;
 
 turf::style_sheet!("src/hello_leptos.scss");
 
