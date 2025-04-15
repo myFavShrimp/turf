@@ -15,11 +15,11 @@ path = "../../"
 [package.metadata.turf]
 load_paths = ["variables"]
 minify = true
+browser_targets = [
+    "firefox 65",
+    "chrome 80",
+    "safari 10",
+]
 
 [package.metadata.turf.class_names]
 template = "yew-example_<original_name>_<id>"
-
-[package.metadata.turf.browser_targets]
-chrome = [80, 1, 2]
-firefox = 65
-safari = [12, 3]

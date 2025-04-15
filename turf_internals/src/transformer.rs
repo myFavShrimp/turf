@@ -211,7 +211,7 @@ fn random_seed() -> Result<u64, getrandom::Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::settings::{BrowserVersion, BrowserVersions, ClassNameGeneration};
+    use crate::settings::{BrowserTargets, ClassNameGeneration};
 
     use super::transform_stylesheet;
 
@@ -362,12 +362,12 @@ mod tests {
         };
         let settings = crate::Settings {
             class_names: class_name_generation,
-            browser_targets: Some(BrowserVersions {
-                chrome: Some(BrowserVersion::Major(100)),
-                firefox: Some(BrowserVersion::Major(100)),
-                safari: Some(BrowserVersion::Major(12)),
-                ..Default::default()
-            }),
+            browser_targets: BrowserTargets(
+                lightningcss::targets::Browsers::from_browserslist([
+                    "chrome 100, firefox 100, safari 12",
+                ])
+                .unwrap(),
+            ),
             ..Default::default()
         };
         let transformation_result =

@@ -45,7 +45,8 @@ pub struct Settings {
     pub(crate) minify: bool,
     #[serde(default)]
     pub(crate) load_paths: Vec<PathBuf>,
-    pub(crate) browser_targets: Option<BrowserVersions>,
+    #[serde(default)]
+    pub(crate) browser_targets: BrowserTargets,
     #[serde(default)]
     pub(crate) class_names: ClassNameGeneration,
     pub(crate) file_output: Option<FileOutput>,
@@ -57,7 +58,7 @@ impl Default for Settings {
             debug: false,
             minify: DEFAULT_MINIFY,
             load_paths: Vec::new(),
-            browser_targets: None,
+            browser_targets: BrowserTargets(None),
             class_names: ClassNameGeneration::default(),
             file_output: None,
         }
@@ -89,10 +90,7 @@ impl<'a> From<Settings> for lightningcss::printer::PrinterOptions<'a> {
         lightningcss::printer::PrinterOptions {
             minify: val.minify,
             project_root: None,
-            targets: val
-                .browser_targets
-                .map(From::<BrowserVersions>::from)
-                .into(),
+            targets: val.browser_targets.0.into(),
             analyze_dependencies: None,
             pseudo_classes: None,
         }
@@ -100,52 +98,56 @@ impl<'a> From<Settings> for lightningcss::printer::PrinterOptions<'a> {
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
-pub struct BrowserVersions {
-    pub android: Option<BrowserVersion>,
-    pub chrome: Option<BrowserVersion>,
-    pub edge: Option<BrowserVersion>,
-    pub firefox: Option<BrowserVersion>,
-    pub ie: Option<BrowserVersion>,
-    pub ios_saf: Option<BrowserVersion>,
-    pub opera: Option<BrowserVersion>,
-    pub safari: Option<BrowserVersion>,
-    pub samsung: Option<BrowserVersion>,
+#[serde(try_from = "RawBrowserTargets")]
+pub struct BrowserTargets(pub Option<lightningcss::targets::Browsers>);
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct RawBrowserTargets(Vec<String>);
+
+#[derive(Debug, thiserror::Error)]
+#[error("Error reading browser_targets: {0:#?}")]
+pub struct FromRawTargetsErrorCollection(Vec<FromRawTargetsError>);
+
+#[derive(thiserror::Error)]
+#[error("Failed to read browser target: {target:?} - {error}")]
+pub struct FromRawTargetsError {
+    target: String,
+    error: String,
 }
 
-impl From<BrowserVersions> for lightningcss::targets::Browsers {
-    fn from(value: BrowserVersions) -> Self {
-        Self {
-            android: value.android.map(From::<BrowserVersion>::from),
-            chrome: value.chrome.map(From::<BrowserVersion>::from),
-            edge: value.edge.map(From::<BrowserVersion>::from),
-            firefox: value.firefox.map(From::<BrowserVersion>::from),
-            ie: value.ie.map(From::<BrowserVersion>::from),
-            ios_saf: value.ios_saf.map(From::<BrowserVersion>::from),
-            opera: value.opera.map(From::<BrowserVersion>::from),
-            safari: value.safari.map(From::<BrowserVersion>::from),
-            samsung: value.samsung.map(From::<BrowserVersion>::from),
-        }
+impl std::fmt::Debug for FromRawTargetsError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.to_string())
     }
 }
 
-#[derive(Deserialize, Debug, Clone)]
-#[serde(untagged)]
-pub enum BrowserVersion {
-    Major(u8),
-    MajorSingleValueArray((u8,)),
-    MajorMinor(u8, u8),
-    MajorMinorPatch(u8, u8, u8),
-}
+impl TryFrom<RawBrowserTargets> for BrowserTargets {
+    type Error = FromRawTargetsErrorCollection;
 
-impl From<BrowserVersion> for u32 {
-    fn from(value: BrowserVersion) -> Self {
-        let version = match value {
-            BrowserVersion::Major(major) => (major, 0, 0),
-            BrowserVersion::MajorSingleValueArray((major,)) => (major, 0, 0),
-            BrowserVersion::MajorMinor(major, minor) => (major, minor, 0),
-            BrowserVersion::MajorMinorPatch(major, minor, path) => (major, minor, path),
-        };
-        (version.0 as u32 & 0xff) << 16 | (version.1 as u32 & 0xff) << 8 | (version.2 as u32 & 0xff)
+    fn try_from(value: RawBrowserTargets) -> Result<Self, Self::Error> {
+        let errors = value
+            .0
+            .iter()
+            .filter_map(|target| {
+                match lightningcss::targets::Browsers::from_browserslist([target]) {
+                    Ok(_) => None,
+                    Err(e) => Some(FromRawTargetsError {
+                        error: e.to_string(),
+                        target: target.clone(),
+                    }),
+                }
+            })
+            .collect::<Vec<_>>();
+
+        if !errors.is_empty() {
+            return Err(FromRawTargetsErrorCollection(errors));
+        }
+
+        Ok(
+            lightningcss::targets::Browsers::from_browserslist(value.0.clone())
+                .map(BrowserTargets)
+                .unwrap(),
+        )
     }
 }
 
