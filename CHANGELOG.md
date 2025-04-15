@@ -1,3 +1,7 @@
+# 0.10.0
+
+- Replaced object-based browser targets configuration with browserslist format
+
 # 0.9.6
 
 - Fixed vendor prefixing
