@@ -81,11 +81,11 @@
 //! [package.metadata.turf.class_names]
 //! template = "custom-<id>-<original_name>"
 //! excludes = ["exclude-this-class-please", "^abc-[123]{4}"]
-//!
-//! [package.metadata.turf.browser_targets]
-//! chrome = [80, 1, 2]
-//! firefox = 65
-//! safari = [12, 3]
+//! browser_targets = [
+//!     "defaults",
+//!     "> 5%",
+//!     "safari 12",
+//! ]
 //!
 //! [package.metadata.turf.file_output]
 //! global_css_file_path = "path/to/global.css"
@@ -98,7 +98,7 @@
 //!
 //! - `load_paths`: Specifies additional paths to search for SCSS files to include during compilation. It accepts a list of string values, where each value represents a directory path to be included. This option allows you to import SCSS files from multiple directories.
 //!
-//! - `browser_targets`: Defines the target browser versions for compatibility when generating CSS. It expects a structure that contains specific versions for different browsers. Each browser can have its own version specified.
+//! - `browser_targets`: Defines the target browser versions for compatibility when generating CSS. It accepts an array of strings in [browserslist](https://browsersl.ist/) format (e.g., "defaults", "> 5%", "safari 12"). This ensures the generated CSS is compatible with the specified browser versions.
 //!
 //! - `class_names`: Allows configuration of the CSS class name generation. It expects a structure that contains two values for generating CSS class names and excluding class names from the uniquification process.
 //!
@@ -123,29 +123,6 @@
 //! - `global_css_file_path`: Specifies the file path for a global CSS file. If set, a CSS file will be created at the provided path, and all compiled styles will be written to this file. This allows you to have a single CSS file containing all the compiled styles.
 //!
 //! - `separate_css_files_path`: Specifies the directory path for separate CSS files. If set, all compiled CSS files will be saved in the specified directory. Each compiled SCSS file will have its corresponding CSS file in this directory, allowing for modular CSS management. The file name for inline SCSS style definitions will be a 64 bit hash that is computed from the original SCSS style.
-//!
-//! #### Browser Versions
-//!
-//! The available browsers are as follows:
-//!
-//! - android
-//! - chrome
-//! - edge
-//! - firefox
-//! - ie
-//! - ios_saf
-//! - opera
-//! - safari
-//! - samsung
-//!
-//! #### Browser Version Format
-//!
-//! Three formats are supported:
-//!
-//! | major | major.minor | major.minor.patch |
-//! | :---- | :---------- | :---------------- |
-//! | Use a single integer to specify the major version number. | Use an array `[major, minor]` to specify both the major and minor version numbers. | Use an array `[major, minor, patch]` to specify the major, minor, and patch version numbers. |
-//! | Example: `1` or `[1]` represent version `1.0.0` | Example: `[1, 2]` represents version `1.2.0` | Example: `[1, 2, 3]` represents version `1.2.3`. |
 //!
 //! ### Additional Macros
 //!
