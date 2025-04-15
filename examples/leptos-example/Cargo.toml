@@ -10,7 +10,7 @@ version = "0.7.8"
 features = ["csr"]
 
 [dependencies.turf]
-path = "../turf"
+path = "../.."
 
 [package.metadata.turf]
 load_paths = ["variables"]

@@ -1,6 +1,6 @@
 # turf 🌱
 
-> **Warning** | The repository might reflect the current development state, which may differ from the officially released version. While the repository provides insights into ongoing development and potential upcoming features, it may not necessarily represent the release available through crates.io or other distribution channels.
+> **Warning** | The repository reflects the current development state, which may differ from the officially released version. While the repository provides insights into ongoing development and potential upcoming features, it may not necessarily represent the release available through crates.io.
 
 `turf` allows you to build SCSS to CSS during compile time and inject those styles into your binary.
 
