@@ -164,7 +164,7 @@ fn apply_template(
 
 #[derive(Debug, thiserror::Error)]
 pub enum TransformationError {
-    #[error("error transforming css - {0}")]
+    #[error("error processing css - {0}")]
     Lightningcss(String),
     #[error("Initialization of css tranformer failed")]
     Initialization(#[from] TransformationVisitorInitializationError),
@@ -185,8 +185,18 @@ pub fn transform_stylesheet(
         .visit(&mut visitor)
         .expect("css visitor never fails");
 
+    let printer_options: lightningcss::printer::PrinterOptions<'_> = settings.into();
+
+    stylesheet
+        .minify(lightningcss::stylesheet::MinifyOptions {
+            targets: printer_options.targets,
+            unused_symbols: Default::default(),
+        })
+        .map_err(|e| e.to_string())
+        .map_err(TransformationError::Lightningcss)?;
+
     let css_result = stylesheet
-        .to_css(settings.into())
+        .to_css(printer_options)
         .map_err(|e| e.to_string())
         .map_err(TransformationError::Lightningcss)?;
 
@@ -201,7 +211,7 @@ fn random_seed() -> Result<u64, getrandom::Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::settings::ClassNameGeneration;
+    use crate::settings::{BrowserVersion, BrowserVersions, ClassNameGeneration};
 
     use super::transform_stylesheet;
 
@@ -328,6 +338,44 @@ mod tests {
         assert_eq!(
             transformation_result.0,
             ".SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ-SGVsbG8g-6c78e0e3bd51d358d01e758642b85fb8-6c78e-test{color:red}"
+        );
+        assert!(transformation_result.0.starts_with(&format!(
+            ".{}",
+            transformation_result.1.get("test").unwrap()
+        )));
+    }
+
+    #[test]
+    fn vendor_prefixes() {
+        let style = r#"
+            .test {
+                user-select: none;
+                background: image-set("1.jpg" 1x, "2.jpg" 2x);
+                -webkit-transition: background 200ms;
+                -moz-transition: background 200ms;
+                transition: background 200ms;
+            }
+        "#;
+        let class_name_generation = ClassNameGeneration {
+            template: String::from("<original_name>"),
+            ..Default::default()
+        };
+        let settings = crate::Settings {
+            class_names: class_name_generation,
+            browser_targets: Some(BrowserVersions {
+                chrome: Some(BrowserVersion::Major(100)),
+                firefox: Some(BrowserVersion::Major(100)),
+                safari: Some(BrowserVersion::Major(12)),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+        let transformation_result =
+            transform_stylesheet(style, "SGVsbG8gdHVyZiB3b3JsZCBvZiBzdHlsZQ", settings).unwrap();
+
+        assert_eq!(
+            transformation_result.0,
+            ".test{-webkit-user-select:none;user-select:none;background:-webkit-image-set(url(1.jpg) 1x,url(2.jpg) 2x);background:image-set(\"1.jpg\" 1x,\"2.jpg\" 2x);transition:background .2s}"
         );
         assert!(transformation_result.0.starts_with(&format!(
             ".{}",
