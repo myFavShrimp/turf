@@ -1,3 +1,7 @@
+# 0.9.6
+
+- Fixed vendor prefixing
+
 # 0.9.5
 
 - Fixed build on windows
