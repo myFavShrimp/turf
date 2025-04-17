@@ -2112,14 +2112,14 @@ dependencies = [
 
 [[package]]
 name = "turf"
-version = "0.9.6"
+version = "0.10.0"
 dependencies = [
  "turf_macros",
 ]
 
 [[package]]
 name = "turf_internals"
-version = "0.9.6"
+version = "0.10.0"
 dependencies = [
  "getrandom",
  "grass",
@@ -2134,7 +2134,7 @@ dependencies = [
 
 [[package]]
 name = "turf_macros"
-version = "0.9.6"
+version = "0.10.0"
 dependencies = [
  "convert_case",
  "proc-macro2",
