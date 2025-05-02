@@ -1,3 +1,7 @@
+# 0.10.1
+
+- Changed default class name template to a deterministic hash (thank you @TimTom2016 for creating a pr)
+
 # 0.10.0
 
 - Replaced object-based browser targets configuration with browserslist format
